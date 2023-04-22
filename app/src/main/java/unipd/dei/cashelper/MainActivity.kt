@@ -22,7 +22,7 @@ class MainActivity : AppCompatActivity() {
         val entries: MutableList<PieEntry> = ArrayList()
         entries.add(PieEntry(80f, "Entrate"))
         entries.add(PieEntry(40f, "Uscite"))
-        val set: PieDataSet = PieDataSet(entries, "")
+        val set = PieDataSet(entries, "")
         val data = PieData(set)
         pieChart.data = data
 
@@ -31,7 +31,7 @@ class MainActivity : AppCompatActivity() {
         val colors: MutableList<Int> = ArrayList()
         colors.add(Color.rgb(250, 16,32))
         colors.add(Color.rgb(48, 149,14))
-        set.setColors(colors)
+        set.colors = colors
         //not draw labels
         pieChart.setDrawEntryLabels(false)
         //enable percent values
