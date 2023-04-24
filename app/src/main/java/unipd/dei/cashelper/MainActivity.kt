@@ -7,6 +7,7 @@ import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 import android.graphics.Color
+import androidx.core.content.ContextCompat
 
 
 class MainActivity : AppCompatActivity() {
@@ -29,8 +30,10 @@ class MainActivity : AppCompatActivity() {
         //setting PieChart
         //color's Entry
         val colors: MutableList<Int> = ArrayList()
-        colors.add(Color.rgb(250, 16,32))
-        colors.add(Color.rgb(48, 149,14))
+        val exitColor = ContextCompat.getColor(this, R.color.Exits)
+        colors.add(exitColor)
+        val entriesColor = ContextCompat.getColor(this, R.color.Entries)
+        colors.add(entriesColor)
         set.colors = colors
         //not draw labels
         pieChart.setDrawEntryLabels(false)
@@ -41,15 +44,15 @@ class MainActivity : AppCompatActivity() {
         //set Entry label's color
         pieChart.data.setValueTextColor(Color.rgb(255, 255, 255))
         //set Entry label's color
-        pieChart.data.setValueTextSize(36f)
+        pieChart.data.setValueTextSize(20f)
         //delete description
         pieChart.description.text = ""
         //hole
-        pieChart.holeRadius = 40f
+        pieChart.holeRadius = 30f
         pieChart.setTransparentCircleAlpha(0)
 
         //Border
-        
+
 
         //Legend
         pieChart.legend.textSize = 20f
