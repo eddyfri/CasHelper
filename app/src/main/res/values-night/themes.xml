@@ -2,15 +2,26 @@
     <!-- Base application theme. -->
     <style name="Theme.CasHelper" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/purple_200</item>
-        <item name="colorPrimaryVariant">@color/purple_700</item>
-        <item name="colorOnPrimary">@color/black</item>
+        <item name="colorPrimary">@color/cobalt</item>
+        <item name="colorPrimaryVariant">@color/indaco</item>
+        <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/teal_200</item>
-        <item name="colorSecondaryVariant">@color/teal_200</item>
+        <item name="colorSecondary">@color/violet</item>
+        <item name="colorSecondaryVariant">@color/lilla</item>
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
-        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+        <item name="android:statusBarColor">?attr/colorPrimary</item>
         <!-- Customize your theme here. -->
+        <item name="colorBackgroundFloating">?attr/colorPrimary</item>
+        <item name="backgroundColor">?attr/colorPrimaryVariant</item>
+        <item name="colorContainer">?attr/colorSecondary</item>
+    </style>
+
+    <style name="TextStyle">
+
+        <item name="android:textColor">?attr/colorOnSecondary</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold</item>
+
     </style>
 </resources>

@@ -13,7 +13,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.fragment_home)
 
         //PieChart
         val pieChart = findViewById<PieChart>(R.id.chart)
@@ -37,7 +37,7 @@ class MainActivity : AppCompatActivity() {
         //enable percent values
         pieChart.setUsePercentValues(true)
         //set background color
-        pieChart.setBackgroundColor(Color.YELLOW)
+
         //set Entry label's color
         pieChart.data.setValueTextColor(Color.rgb(255, 255, 255))
         //set Entry label's color
@@ -47,7 +47,7 @@ class MainActivity : AppCompatActivity() {
         //hole
         pieChart.holeRadius = 40f
         pieChart.setTransparentCircleAlpha(0)
-        pieChart.setHoleColor(Color.YELLOW)
+
         //Border
         
 

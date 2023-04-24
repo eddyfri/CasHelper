@@ -3,7 +3,9 @@
     android:id="@+id/home"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:theme="@style/Theme.CasHelper"
+    android:background="?attr/backgroundColor">
 
     <com.github.mikephil.charting.charts.PieChart
         android:id="@+id/chart"
@@ -32,63 +34,79 @@
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.5" />
 
-   <TextView
-       android:id="@+id/entries_text_home"
-       android:layout_width="wrap_content"
-       android:layout_height="wrap_content"
-       android:text="@string/entries_total_title"
-       android:layout_marginStart="10pt"
-       app:layout_constraintLeft_toLeftOf="parent"
-       app:layout_constraintTop_toTopOf="@id/guideline1"
-       />
-    <TextView
-        android:id="@+id/exits_text_home"
-        android:layout_width="wrap_content"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/exits_total_title"
-        android:layout_marginStart="10pt"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/entries_text_home"
-        app:layout_constraintBottom_toTopOf="@id/total_text_home"
-        />
-    <TextView
-        android:id="@+id/total_text_home"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/total_title"
-        android:layout_marginStart="10pt"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/exits_text_home"
+        app:layout_constraintTop_toTopOf="@id/guideline1"
         app:layout_constraintBottom_toTopOf="@id/guideline2"
-        />
-    <TextView
-        android:id="@+id/entries_label_home"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/label_entries_totale"
-        android:layout_marginStart="10pt"
-        app:layout_constraintLeft_toRightOf="@id/entries_text_home"
-        app:layout_constraintBaseline_toBaselineOf="@id/entries_text_home"
+        android:background="@drawable/container_home"
+        android:layout_margin="10pt"
+        android:scaleType="fitCenter">
+        <TextView
+            android:id="@+id/entries_text_home"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/entries_total_title"
+            android:layout_marginStart="10pt"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:theme="@style/TextStyle"
+            />
+        <TextView
+            android:id="@+id/exits_text_home"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/exits_total_title"
+            android:layout_marginStart="10pt"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/entries_text_home"
+            app:layout_constraintBottom_toTopOf="@id/total_text_home"
+            android:theme="@style/TextStyle"
+            />
+        <TextView
+            android:id="@+id/total_text_home"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/total_title"
+            android:layout_marginStart="10pt"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/exits_text_home"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:theme="@style/TextStyle"
+            />
+        <TextView
+            android:id="@+id/entries_label_home"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/label_entries_totale"
+            android:layout_marginStart="10pt"
+            app:layout_constraintLeft_toRightOf="@id/entries_text_home"
+            app:layout_constraintBaseline_toBaselineOf="@id/entries_text_home"
+            android:theme="@style/TextStyle"
 
-        />
-    <TextView
-        android:id="@+id/exits_label_home"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/exits_label"
-        android:layout_marginStart="10pt"
-        app:layout_constraintLeft_toRightOf="@id/exits_text_home"
-        app:layout_constraintBaseline_toBaselineOf="@id/exits_text_home"
-        />
-    <TextView
-        android:id="@+id/total_label_home"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/label_entries_totale"
-        android:layout_marginStart="10pt"
-        app:layout_constraintLeft_toRightOf="@id/total_text_home"
-        app:layout_constraintBaseline_toBaselineOf="@id/total_text_home"
-        />
+            />
+        <TextView
+            android:id="@+id/exits_label_home"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/exits_label"
+            android:layout_marginStart="10pt"
+            app:layout_constraintLeft_toRightOf="@id/exits_text_home"
+            app:layout_constraintBaseline_toBaselineOf="@id/exits_text_home"
+            android:theme="@style/TextStyle"
+            />
+        <TextView
+            android:id="@+id/total_label_home"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/label_entries_totale"
+            android:layout_marginStart="10pt"
+            app:layout_constraintLeft_toRightOf="@id/total_text_home"
+            app:layout_constraintBaseline_toBaselineOf="@id/total_text_home"
+            android:theme="@style/TextStyle"
+            />
+    </androidx.constraintlayout.widget.ConstraintLayout>
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
@@ -97,6 +115,7 @@
         app:layout_constraintTop_toBottomOf="@id/guideline2"
         android:layout_marginStart="10pt"
         android:layout_marginEnd="10pt"
+        android:theme="@style/TextStyle"
         />
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/add_item"
@@ -105,7 +124,8 @@
         android:gravity="bottom|end"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
-        android:backgroundTint="@color/cardview_light_background"
+        android:theme="@style/Theme.CasHelper"
+        app:backgroundTint="?attr/colorBackgroundFloating"
         app:icon="@drawable/add_fab_home"
         android:contentDescription="@string/add_fab_home_desc"
         app:layout_constraintBottom_toBottomOf="parent"
