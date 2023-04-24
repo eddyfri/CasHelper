@@ -3,8 +3,7 @@
     android:id="@+id/home"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#BEEF9E">
+    android:layout_height="match_parent">
 
     <com.github.mikephil.charting.charts.PieChart
         android:id="@+id/chart"
@@ -99,5 +98,17 @@
         android:layout_marginStart="10pt"
         android:layout_marginEnd="10pt"
         />
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/add_item"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="bottom|end"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:backgroundTint="@color/cardview_light_background"
+        app:icon="@drawable/add_fab_home"
+        android:contentDescription="@string/add_fab_home_desc"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
