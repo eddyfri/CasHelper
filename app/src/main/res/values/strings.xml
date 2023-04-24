@@ -8,4 +8,8 @@
     <string name="exits_label">#exitsTot</string>
     <string name="add_fab_home_desc">aggiungi item</string>
     <string name="menu_home">menu_home</string>
+    <string name="month">Month</string>
+    <string name="year">Year</string>
+    <string name="back_month_button">back_month</string>
+    <string name="next_month_button">next_month_button</string>
 </resources>
