@@ -1,6 +1,8 @@
 package unipd.dei.cashelper.ui
 
 
+import android.content.Context
+import android.content.res.Configuration
 import android.graphics.Color
 import android.os.Bundle
 import android.view.Menu
@@ -15,6 +17,11 @@ import unipd.dei.cashelper.R
 
 
 class MainActivity : AppCompatActivity() {
+    //function that verify if we are in dark mode
+    fun isDarkModeOn(context: Context): Boolean{
+        val currentNightMode = context.resources.configuration.uiMode and  Configuration.UI_MODE_NIGHT_MASK
+        return currentNightMode == Configuration.UI_MODE_NIGHT_YES
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,7 +67,15 @@ class MainActivity : AppCompatActivity() {
         //hole
         pieChart.holeRadius = 30f
         pieChart.setTransparentCircleAlpha(0)
-        val holeColor = ContextCompat.getColor(this, R.color.violet)
+
+        val holeColor : Int
+        if(isDarkModeOn(this)) {
+            holeColor = ContextCompat.getColor(this, R.color.pink_salomon)
+
+        } else {
+            holeColor = ContextCompat.getColor(this, R.color.violet)
+
+        }
         pieChart.setHoleColor(holeColor)
 
 
