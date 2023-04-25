@@ -1,4 +1,4 @@
-package unipd.dei.cashelper
+package unipd.dei.cashelper.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -8,6 +8,7 @@ import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 import android.graphics.Color
 import androidx.core.content.ContextCompat
+import unipd.dei.cashelper.R
 
 
 class MainActivity : AppCompatActivity() {
@@ -58,7 +59,5 @@ class MainActivity : AppCompatActivity() {
         pieChart.legend.textSize = 20f
         // refresh
         pieChart.invalidate()
-
-
     }
 }

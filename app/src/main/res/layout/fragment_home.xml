@@ -26,6 +26,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/month"
+        android:theme="@style/TextStyle"
         app:layout_constraintRight_toLeftOf="@id/midline_home"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/guideline0"
@@ -36,6 +37,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/year"
+        android:theme="@style/TextStyle"
         app:layout_constraintLeft_toRightOf="@id/midline_home"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/guideline0"
@@ -52,7 +54,8 @@
         app:elevation="0dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/guideline0"/>
+        app:layout_constraintBottom_toTopOf="@id/guideline0"
+        android:layout_margin="2pt"/>
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/next_month"
@@ -66,7 +69,8 @@
         app:elevation="0dp"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/guideline0"/>
+        app:layout_constraintBottom_toTopOf="@id/guideline0"
+        android:layout_margin="2pt"/>
 
     <com.github.mikephil.charting.charts.PieChart
         android:id="@+id/chart"
