@@ -7,6 +7,7 @@ import android.view.Menu
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.github.mikephil.charting.charts.PieChart
+import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
@@ -50,23 +51,31 @@ class MainActivity : AppCompatActivity() {
         pieChart.setDrawEntryLabels(false)
         //enable percent values
         pieChart.setUsePercentValues(true)
-        //set background color
-
-        //set Entry label's color
+        //set Entry label's color (temporally dis-activated)
         pieChart.data.setValueTextColor(Color.rgb(255, 255, 255))
-        //set Entry label's color
-        pieChart.data.setValueTextSize(20f)
+        //set Entry text
+        pieChart.data.setValueTextSize(0f)
         //delete description
         pieChart.description.text = ""
         //hole
         pieChart.holeRadius = 30f
         pieChart.setTransparentCircleAlpha(0)
+        val holeColor = ContextCompat.getColor(this, R.color.violet)
+        pieChart.setHoleColor(holeColor)
 
-        //Border
+
+        //pieChart position
+        pieChart.setExtraOffsets(-70f, 0f, 0f, 0f)
+
 
 
         //Legend
         pieChart.legend.textSize = 20f
+        pieChart.legend.horizontalAlignment = Legend.LegendHorizontalAlignment.RIGHT
+        pieChart.legend.verticalAlignment = Legend.LegendVerticalAlignment.CENTER
+        pieChart.legend.yOffset = -50f
+        pieChart.legend.xOffset = 30f
+        pieChart.legend.orientation = Legend.LegendOrientation.VERTICAL
         // refresh
         pieChart.invalidate()
     }
