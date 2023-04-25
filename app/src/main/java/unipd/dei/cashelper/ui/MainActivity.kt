@@ -1,13 +1,15 @@
 package unipd.dei.cashelper.ui
 
+
+import android.graphics.Color
 import android.os.Bundle
+import android.view.Menu
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
-import android.graphics.Color
-import androidx.core.content.ContextCompat
 import unipd.dei.cashelper.R
 
 
@@ -15,7 +17,15 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContentView(R.layout.fragment_home)
+
+
+
+
+
+
+
 
         //PieChart
         val pieChart = findViewById<PieChart>(R.id.chart)
@@ -60,4 +70,12 @@ class MainActivity : AppCompatActivity() {
         // refresh
         pieChart.invalidate()
     }
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        val inflater = menuInflater
+        inflater.inflate(R.menu.app_bar, menu)
+
+
+        return true
+    }
+
 }

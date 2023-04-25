@@ -10,12 +10,20 @@
     <item name="colorSecondaryVariant">@color/lilla</item>
     <item name="colorOnSecondary">@color/black</item>
     <!-- Status bar color. -->
-    <item name="android:statusBarColor">?attr/colorPrimary</item>
+    <item name="android:statusBarColor">?attr/colorSecondary</item>
     <!-- Customize your theme here. -->
     <item name="colorBackgroundFloating">?attr/colorPrimary</item>
     <item name="backgroundColor">?attr/colorPrimaryVariant</item>
     <item name="colorContainer">?attr/colorSecondary</item>
+    <!-- Customize app_bar. -->
+    <item name="android:actionOverflowButtonStyle">@style/MenuStyle</item>
+
+
 </style>
+
+   <style name="MenuStyle" parent="Widget.AppCompat.ActionButton.Overflow">
+       <item name="android:src">@drawable/menu_home</item>
+   </style>
 
 <style name="TextStyle">
 

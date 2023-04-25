@@ -1,11 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
-    <item
-        android:id="@+id/menu_item"
-        android:icon="@drawable/menu_home"
-        app:showAsAction="always"
-        android:title="@string/menu_home"/>
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/menu">
 
+    <item
+        android:id="@+id/Spese"
+        app:showAsAction="never"
+        android:title="@string/menu_spese"/>
+    <item
+        android:id="@+id/Entrate"
+        app:showAsAction="never"
+        android:title="@string/menu_entrate"/>
+    <item
+        android:id="@+id/Categorie"
+        app:showAsAction="never"
+        android:title="@string/menu_categorie"/>
+    <item
+        android:id="@+id/Tema"
+        app:showAsAction="never"
+        android:title="@string/menu_tema"/>
+    <item
+        android:id="@+id/Crediti"
+        app:showAsAction="never"
+        android:title="@string/menu_crediti"/>
 </menu>
