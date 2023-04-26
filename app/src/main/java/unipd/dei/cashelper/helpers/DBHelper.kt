@@ -4,8 +4,6 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
-import java.text.SimpleDateFormat
-import java.util.*
 import kotlin.collections.ArrayList
 
 
@@ -136,8 +134,8 @@ class DBHelper(context: Context): SQLiteOpenHelper(context, DB_NAME, null, DB_VE
         val cursor = readableDatabase.rawQuery("SELECT * FROM Item WHERE Mese = $month AND Anno = $year", null)
         val ret = ArrayList<ItemInfo>()
 
-        where(cursor.moveToNext()) {
-            val item = ItemInfo()
+        while(cursor.moveToNext()) {
+            val item = ItemInfo("")
             item.category = cursor.getString(cursor.getColumnIndexOrThrow("Categoria"))
             item.price = cursor.getDouble(cursor.getColumnIndexOrThrow("Prezzo"))
             item.day = cursor.getInt(cursor.getColumnIndexOrThrow("Giorno"))
@@ -161,7 +159,7 @@ class DBHelper(context: Context): SQLiteOpenHelper(context, DB_NAME, null, DB_VE
         var year: Int = -1
     }
 
-    data class ItemInfo() {
+    data class ItemInfo(var changes: String) {
         var category: String = ""
         var price: Double = -1.0
         var day: Int = -1
