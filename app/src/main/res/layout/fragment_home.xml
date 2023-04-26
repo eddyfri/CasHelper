@@ -96,12 +96,13 @@
             android:layout_height="match_parent"
             />
     </androidx.constraintlayout.widget.ConstraintLayout>
+
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.4" />
+        app:layout_constraintGuide_begin="293dp" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline2"

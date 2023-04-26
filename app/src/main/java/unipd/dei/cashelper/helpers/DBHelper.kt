@@ -4,6 +4,9 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 class DBHelper(context: Context): SQLiteOpenHelper(context, DB_NAME, null, DB_VERSION) {
@@ -30,21 +33,7 @@ class DBHelper(context: Context): SQLiteOpenHelper(context, DB_NAME, null, DB_VE
                 "FOREIGN KEY (Giorno, Mese, Anno) REFERENCES Data(Giorno, Mese, Anno)\n" +
                 "ON DELETE CASCADE ON UPDATE CASCADE\n" +
                 ");"
-        /*
-        val monthValues = "INSERT INTO Data(Mese) VALUES\n" +
-                "('Gennaio'), \n" +
-                "('Febbraio'), \n" +
-                "('Marzo'), \n" +
-                "('Aprile'), \n" +
-                "('Maggio'), \n" +
-                "('Giugno'), \n" +
-                "('Luglio'), \n" +
-                "('Agosto'), \n" +
-                "('Settembre'), \n" +
-                "('Ottobre'), \n" +
-                "('Novembre'), \n" +
-                "('Dicembre');"
-        */
+
         val categoryValues = "INSERT INTO Categoria(Nome) VALUES\n" +
                 "('Salario'), \n" +
                 "('Alimentari'), \n" +
@@ -61,7 +50,6 @@ class DBHelper(context: Context): SQLiteOpenHelper(context, DB_NAME, null, DB_VE
         db.execSQL(categoryTable)
         db.execSQL(dateTable)
         db.execSQL(itemTable)
-        // db.execSQL(monthValues)
         db.execSQL(categoryValues)
     }
 
@@ -91,63 +79,75 @@ class DBHelper(context: Context): SQLiteOpenHelper(context, DB_NAME, null, DB_VE
         return names
     }
 
-
-    /*
-
-        Calendar c = Calendar.getInstance();
-        int day = c.get(Calendar.DAY_OF_MONTH);
-        int month = c.get(Calendar.MONTH);
-        int year = c.get(Calendar.YEAR);
-        String date = day + "/" + (month+1) + "/" + year;
-
-    */
-
     // DA CONTROLLARE !!!!!!!!
-    // se ritorna false vuol dire che la data non deve essere aggiornata
-    fun updateDate(day: Int, month: String, year: Int): Boolean {
-        val cursor = readableDatabase.rawQuery("SELECT Giorno, Mese, Anno FROM Data", null)
-        val ret = mutableListOf<DateInfo>()
-        var date: DateInfo
+    fun addDate(day: Int, month: String, year: Int): Boolean {
+        val values = ContentValues().apply {
+            put("Giorno", day)
+            put("Mese", month)
+            put("Anno", year)
+        }
+        return writableDatabase.insert("Data", null, values) != -1L
+    }
 
-        while(cursor.moveToNext()) {
-            date = DateInfo("")
-            date.day = cursor.getInt(cursor.getColumnIndexOrThrow("Giorno"))
-            date.month = cursor.getString(cursor.getColumnIndexOrThrow("Mese"))
-            date.year = cursor.getInt(cursor.getColumnIndexOrThrow("Anno"))
-            ret.add(date)
+    fun addItem(description: String, price: Double, type: Boolean, category: String, day: Int, month: String, year: Int): Boolean {
+        val values = ContentValues().apply {
+            put("Descrizione", description)
+            put("Prezzo", price)
+            put("Tipo", type)
+            put("Nome", category)
+            put("Giorno", day)
+            put("Mese", month)
+            put("Anno", year)
+        }
+        return writableDatabase.insert("Item", null, values) != -1L
+    }
+
+    // NON SICURO, CONTROLLARE !!!!
+    // true se l'aggiornamento dei valori item ha successo
+    fun updateItem(originalId: Int = -1, description: String = "", price: Double = -1.0, type: String = "", category: String = "", day: Int = -1, month: String = "", year: Int = -1): Boolean {
+        if(originalId == -1)
+            return false
+        val values = ContentValues().apply {
+            if(description != "")
+                put("Descrizione", description)
+            if(price != -1.0)
+                put("Prezzo", price)
+            if(type != "")
+                put("Tipo", type)
+            if(category != "")
+                put("Categoria", category)
+            if(day != -1)
+                put("Giorno", day)
+            if(month != "")
+                put("Mese", month)
+            if(year != -1)
+                put("Anno", year)
+        }
+        return writableDatabase.update("Item", values, "Id=?", arrayOf("$originalId")) > 0
+    }
+
+
+    // DA TESTARE !!!
+    fun removeItem(originalId: Int): Boolean {
+        return writableDatabase.delete("Item", "Id=?", arrayOf("$originalId")) > 0
+    }
+
+    fun getItem(month: String, year: Int): ArrayList<ItemInfo> {
+        val cursor = readableDatabase.rawQuery("SELECT * FROM Item WHERE Mese = $month AND Anno = $year", null)
+        val ret = ArrayList<ItemInfo>()
+
+        where(cursor.moveToNext()) {
+            val item = ItemInfo()
+            item.category = cursor.getString(cursor.getColumnIndexOrThrow("Categoria"))
+            item.price = cursor.getDouble(cursor.getColumnIndexOrThrow("Prezzo"))
+            item.day = cursor.getInt(cursor.getColumnIndexOrThrow("Giorno"))
+            item.month = cursor.getString(cursor.getColumnIndexOrThrow("Mese"))
+            item.year = cursor.getInt(cursor.getColumnIndexOrThrow("Anno"))
+            ret.add(item)
         }
         cursor.close()
-        // data da controllare
-        date = DateInfo("")
-        date.day = day
-        date.month = month
-        date.year = year
-        if(ret.contains(date))
-            return false
-        else {
-            val cv = ContentValues()
-            val values = ContentValues().apply {
-                put("Giorno", day)
-                put("Mese", month)
-                put("Anno", year)
-            }
-            return writableDatabase.insert("Data", null, values) != -1L
-        }
+        return ret
     }
-    /*
-    fun addItem() {
-
-    }
-
-    fun updateItem() {
-
-    }
-
-    fun removeItem() {
-
-    }
-    */
-
 
     companion object
     {
@@ -157,6 +157,14 @@ class DBHelper(context: Context): SQLiteOpenHelper(context, DB_NAME, null, DB_VE
 
     data class DateInfo(var changes: String) {
         var day : Int = -1
+        var month: String = ""
+        var year: Int = -1
+    }
+
+    data class ItemInfo() {
+        var category: String = ""
+        var price: Double = -1.0
+        var day: Int = -1
         var month: String = ""
         var year: Int = -1
     }
