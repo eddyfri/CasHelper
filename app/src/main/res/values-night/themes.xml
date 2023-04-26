@@ -30,4 +30,10 @@
     <style name="MenuStyle" parent="Widget.AppCompat.ActionButton.Overflow">
         <item name="android:src">@drawable/menu_home_dark</item>
     </style>
+
+    <style name="TitleStyle">
+    <item name="android:textColor">?attr/colorOnPrimary</item>
+    <item name="android:textSize">24sp</item>
+    <item name="android:textStyle">bold</item>
+    </style>
 </resources>
