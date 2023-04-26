@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Ca$Helper</string>
+    <string name="app_name">CasHelper</string>
     <string name="entries_total_title">Totale entrate:</string>
     <string name="exits_total_title">Totale uscite:</string>
     <string name="total_title">Totale:</string>

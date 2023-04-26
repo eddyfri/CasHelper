@@ -28,6 +28,6 @@
     </style>
 
     <style name="MenuStyle" parent="Widget.AppCompat.ActionButton.Overflow">
-        <item name="android:src">@drawable/menu_home</item>
+        <item name="android:src">@drawable/menu_home_dark</item>
     </style>
 </resources>
