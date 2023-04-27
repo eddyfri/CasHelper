@@ -47,7 +47,7 @@
         app:layout_constraintBottom_toTopOf="@id/guidelineIncoming1"
         android:layout_margin="10pt">
         <com.github.mikephil.charting.charts.PieChart
-            android:id="@+id/chart"
+            android:id="@+id/chart_Incoming"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             />
