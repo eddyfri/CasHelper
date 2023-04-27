@@ -11,7 +11,7 @@
     <string name="year">Year</string>
     <string name="back_month_button">back_month</string>
     <string name="next_month_button">next_month_button</string>
-    <string name="entries_title">ENTRATE</string>
+    <string name="incoming_title">ENTRATE</string>
 
     //menu
     <string name="menu_home">menu_home</string>
