@@ -26,7 +26,8 @@ class DBHelper(context: Context): SQLiteOpenHelper(context, DB_NAME, null, DB_VE
                 "Descrizione VARCHAR(50), \n" +
                 "Prezzo REAL NOT NULL, \n" +
                 "Tipo VARCHAR(10) NOT NULL, \n" +
-                "Nome VARCHAR(20) NOT NULL, \n" + "Giorno INTEGER NOT NULL, \n" +
+                "Nome VARCHAR(20) NOT NULL, \n" +
+                "Giorno INTEGER NOT NULL, \n" +
                 "Mese INTEGER NOT NULL, \n" +
                 "Anno INTEGER NOT NULL,\n" +
                 "FOREIGN KEY(Nome) REFERENCES Categoria(Nome)\n" +
@@ -90,7 +91,7 @@ class DBHelper(context: Context): SQLiteOpenHelper(context, DB_NAME, null, DB_VE
         return writableDatabase.insert("Data", null, values) != -1L
     }
 
-    fun addItem(description: String, price: Double, type: Boolean, category: String, day: Int, month: String, year: Int): Boolean {
+    fun addItem(description: String, price: Double, type: String, category: String, day: Int, month: String, year: Int): Boolean {
         val values = ContentValues().apply {
             put("Descrizione", description)
             put("Prezzo", price)
@@ -134,7 +135,7 @@ class DBHelper(context: Context): SQLiteOpenHelper(context, DB_NAME, null, DB_VE
     }
 
     fun getItem(month: String, year: Int): ArrayList<ItemInfo> {
-        val cursor = readableDatabase.rawQuery("SELECT * FROM Item WHERE Mese = $month AND Anno = $year", null)
+        val cursor = readableDatabase.rawQuery("SELECT * FROM Item WHERE Mese ='${month}' AND Anno ='${year}'", null)
         val ret = ArrayList<ItemInfo>()
 
         while(cursor.moveToNext()) {

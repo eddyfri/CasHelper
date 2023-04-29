@@ -12,6 +12,9 @@ import android.view.View
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.navigation.NavController
+import androidx.navigation.NavHost
+import androidx.navigation.fragment.NavHostFragment
 import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.data.PieData
@@ -20,14 +23,17 @@ import com.github.mikephil.charting.data.PieEntry
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import unipd.dei.cashelper.R
 import unipd.dei.cashelper.ui.AdapterFragmentAddItem
+import unipd.dei.cashelper.ui.HomeFragment
 import unipd.dei.cashelper.ui.IncomingActivity
 
 
 class MainActivity : AppCompatActivity() {
 
+    private lateinit var navController: NavController
+
 
     //function that verify if we are in dark mode
-    fun isDarkModeOn(context: Context): Boolean{
+    private fun isDarkModeOn(context: Context): Boolean{
         val currentNightMode = context.resources.configuration.uiMode and  Configuration.UI_MODE_NIGHT_MASK
         return currentNightMode == Configuration.UI_MODE_NIGHT_YES
     }
@@ -35,8 +41,11 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setContentView(R.layout.fragment_home)
+        setContentView(R.layout.activity_main)
 
+        val navHostFragment = supportFragmentManager.beginTransaction().add(R.id.nav_host_fragment, HomeFragment()).commit()
+
+        /*
         //floatingButtonAdd
 
         val add_button : View = findViewById<FloatingActionButton>(R.id.add_item)
@@ -105,6 +114,8 @@ class MainActivity : AppCompatActivity() {
         pieChart.legend.orientation = Legend.LegendOrientation.VERTICAL
         // refresh
         pieChart.invalidate()
+
+         */
     }
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         val inflater = menuInflater
