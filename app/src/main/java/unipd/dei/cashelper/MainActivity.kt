@@ -1,11 +1,15 @@
-package unipd.dei.cashelper.ui
+package unipd.dei.cashelper
 
 
 import android.content.Context
+import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.Color
 import android.os.Bundle
 import android.view.Menu
+import android.view.MenuItem
+import android.view.View
+import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.github.mikephil.charting.charts.PieChart
@@ -13,10 +17,15 @@ import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import unipd.dei.cashelper.R
+import unipd.dei.cashelper.ui.AdapterFragmentAddItem
+import unipd.dei.cashelper.ui.IncomingActivity
 
 
 class MainActivity : AppCompatActivity() {
+
+
     //function that verify if we are in dark mode
     fun isDarkModeOn(context: Context): Boolean{
         val currentNightMode = context.resources.configuration.uiMode and  Configuration.UI_MODE_NIGHT_MASK
@@ -28,11 +37,14 @@ class MainActivity : AppCompatActivity() {
 
         setContentView(R.layout.fragment_home)
 
+        //floatingButtonAdd
 
+        val add_button : View = findViewById<FloatingActionButton>(R.id.add_item)
 
-
-
-
+        add_button.setOnClickListener {
+            val intent = Intent(this@MainActivity, AdapterFragmentAddItem::class.java)
+            startActivity(intent)
+        }
 
 
         //PieChart
@@ -101,5 +113,18 @@ class MainActivity : AppCompatActivity() {
 
         return true
     }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId){
+            R.id.Entrate -> {
+                val intent = Intent(this, IncomingActivity::class.java)
+                startActivity(intent)
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+
 
 }

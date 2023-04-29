@@ -5,7 +5,9 @@ import android.content.res.Configuration
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.AttributeSet
 import android.view.Menu
+import android.view.View
 import androidx.core.content.ContextCompat
 import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.components.Legend
@@ -20,16 +22,25 @@ class IncomingActivity : AppCompatActivity() {
         val currentNightMode = context.resources.configuration.uiMode and  Configuration.UI_MODE_NIGHT_MASK
         return currentNightMode == Configuration.UI_MODE_NIGHT_YES
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContentView(R.layout.fragment_incoming)
+
+
+
+
+
+
+
+
         //PieChart
-        /*
-        val pieChart = findViewById<PieChart>(R.id.chart_Incoming)
+        val pieChart = findViewById<PieChart>(R.id.chart_incoming)
 
         //entries values
         val entries: MutableList<PieEntry> = ArrayList()
-        entries.add(PieEntry(80f, "Entrate"))
+        entries.add(PieEntry(80f, "Categorie"))
         entries.add(PieEntry(40f, "Uscite"))
         val set = PieDataSet(entries, "")
         val data = PieData(set)
@@ -82,6 +93,5 @@ class IncomingActivity : AppCompatActivity() {
         pieChart.legend.orientation = Legend.LegendOrientation.VERTICAL
         // refresh
         pieChart.invalidate()
-    */
     }
 }

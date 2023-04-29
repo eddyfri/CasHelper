@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:theme="@style/Theme.CasHelper"
+    android:background="?attr/backgroundColor">
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline0_add_item"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.1"
+        />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline1_add_item"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.2"
+        />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline2_add_item"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.3"
+        />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline3_add_item"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.5"
+        />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/midline_add"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5"/>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline4_add_item"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.7"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@id/guideline0_add_item"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:text="@string/add_title"
+        android:theme="@style/TitleStyle"
+        />
+
+    <Spinner
+        android:id="@+id/category_select"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20pt"
+        android:layout_marginEnd="20pt"
+        android:minHeight="48dp"
+        android:gravity="center"
+        android:background="@drawable/container_home"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/guideline1_add_item"
+        app:layout_constraintBottom_toTopOf="@id/guideline2_add_item"/>
+
+    <EditText
+        android:id="@+id/value_add_item"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/container_home"
+        android:hint="@string/value_add"
+        android:inputType="numberDecimal"
+        app:layout_constraintBottom_toTopOf="@+id/guideline3_add_item"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/guideline2_add_item" />
+
+    <EditText
+        android:id="@+id/description_add_item"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/container_home"
+        android:hint="@string/description_add"
+        android:inputType="textMultiLine"
+        app:layout_constraintBottom_toTopOf="@+id/guideline4_add_item"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/guideline3_add_item" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/container_home"
+        app:layout_constraintTop_toBottomOf="@id/guideline4_add_item"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:backgroundTint="@color/violet"
+        android:id="@+id/date_add_item"/>
+
+    <Button
+        android:id="@+id/confirm_button"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/container_home"
+        android:layout_marginBottom="20pt"
+        android:text="@string/confirm_button"
+        />
+    <Switch
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/guideline0_add_item"
+        app:layout_constraintBottom_toTopOf="@id/guideline1_add_item"
+        android:id="@+id/Switch_add_item"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintRight_toLeftOf="@id/Switch_add_item"
+        android:text="@string/exits_add_item"
+        android:layout_marginRight="10pt"
+        android:theme="@style/TextStyle"
+        app:layout_constraintBaseline_toBaselineOf="@id/Switch_add_item"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toRightOf="@id/Switch_add_item"
+        android:text="@string/incoming_add_item"
+        android:layout_marginLeft="10pt"
+        android:theme="@style/TextStyle"
+        app:layout_constraintBaseline_toBaselineOf="@id/Switch_add_item"/>
+
+
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

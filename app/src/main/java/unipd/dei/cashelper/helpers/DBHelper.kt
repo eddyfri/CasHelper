@@ -26,6 +26,9 @@ class DBHelper(context: Context): SQLiteOpenHelper(context, DB_NAME, null, DB_VE
                 "Descrizione VARCHAR(50), \n" +
                 "Prezzo REAL NOT NULL, \n" +
                 "Tipo VARCHAR(10) NOT NULL, \n" +
+                "Nome VARCHAR(20) NOT NULL, \n" + "Giorno INTEGER NOT NULL, \n" +
+                "Mese INTEGER NOT NULL, \n" +
+                "Anno INTEGER NOT NULL,\n" +
                 "FOREIGN KEY(Nome) REFERENCES Categoria(Nome)\n" +
                 "ON DELETE CASCADE ON UPDATE CASCADE, \n" +
                 "FOREIGN KEY (Giorno, Mese, Anno) REFERENCES Data(Giorno, Mese, Anno)\n" +

@@ -12,6 +12,13 @@
     <string name="back_month_button">back_month</string>
     <string name="next_month_button">next_month_button</string>
     <string name="incoming_title">ENTRATE</string>
+    <string name="entries_title">ENTRATE</string>
+    <string name="add_title">AGGIUNGI TRANSAZIONE</string>
+    <string name ="category_spinner">Seleziona una categoria</string>
+    <string name="value_add">Inserisci valore € </string>
+    <string name="description_add">Descrizione (opzionale)</string>
+    <string name="incoming_add_item">Entrate</string>
+    <string name="exits_add_item">Uscite</string>
 
     //menu
     <string name="menu_home">menu_home</string>
@@ -20,4 +27,5 @@
     <string name="menu_categorie">Categorie</string>
     <string name="menu_tema">Tema</string>
     <string name="menu_crediti">Crediti</string>
+    <string name="confirm_button">Aggiungi</string>
 </resources>

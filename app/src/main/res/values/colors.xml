@@ -25,4 +25,7 @@
     //pieChart colors
     <color name="Exits">#FA1020</color>
     <color name="Entries">#30950E</color>
+
+
+    <color name="confirm">#DDFFBB</color>
 </resources>
