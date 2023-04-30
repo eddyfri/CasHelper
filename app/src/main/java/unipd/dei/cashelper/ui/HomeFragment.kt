@@ -119,7 +119,8 @@ class HomeFragment: Fragment() {
         }
 
         addButton.setOnClickListener {
-            view.findNavController().navigate(R.id.action_homeFragment_to_addFragment)
+            val action = HomeFragmentDirections.actionHomeFragmentToAddFragment()
+            view.findNavController().navigate(action)
         }
         return view
     }
