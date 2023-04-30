@@ -15,9 +15,6 @@
             android:name=".ui.IncomingActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.AdapterFragmentAddItem"
-            android:exported="false" />
-        <activity
             android:name="MainActivity"
             android:exported="true">
             <intent-filter>

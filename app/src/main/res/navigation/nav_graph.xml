@@ -7,8 +7,26 @@
     <fragment
         android:id="@+id/homeFragment"
         android:name="unipd.dei.cashelper.ui.HomeFragment"
-        android:label = "Home"
+        android:label= "Home"
         tools:layout="@layout/fragment_home">
+        <action
+            android:id="@+id/action_homeFragment_to_addFragment"
+            app:destination="@id/addFragment"
+        />
     </fragment>
+
+
+    <fragment
+        android:id="@+id/addFragment"
+        android:name="unipd.dei.cashelper.ui.AddItemFragment"
+        android:label="AddItem"
+        tools:layout="@layout/fragment_add_item"
+        >
+       <action
+           android:id="@+id/action_addFragment_to_homeFragment"
+           app:destination="@id/homeFragment"
+           />
+    </fragment>
+
 
 </navigation>

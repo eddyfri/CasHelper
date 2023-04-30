@@ -1,6 +1,7 @@
 package unipd.dei.cashelper.ui
 
 import android.content.Context
+import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.Color
 import android.os.Bundle
@@ -10,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.github.mikephil.charting.charts.PieChart
@@ -35,6 +37,8 @@ class HomeFragment: Fragment() {
     private lateinit var totIncomingTextView: TextView
     private lateinit var totExitsTextView: TextView
     private lateinit var totalTextView: TextView
+    private lateinit var addButton: ExtendedFloatingActionButton
+
     private lateinit var db: DBHelper
 
     // variabili per il chart
@@ -67,6 +71,7 @@ class HomeFragment: Fragment() {
         totIncomingTextView = view.findViewById<TextView>(R.id.entries_label_home)
         totExitsTextView = view.findViewById<TextView>(R.id.exits_label_home)
         totalTextView = view.findViewById<TextView>(R.id.total_label_home)
+        addButton = view.findViewById<ExtendedFloatingActionButton>(R.id.add_item)
         recyclerView = view.findViewById(R.id.recycler_view)
         recyclerView.adapter = HomeListAdapter(itemInfo)
         recyclerView.layoutManager = LinearLayoutManager(this.context, LinearLayoutManager.VERTICAL, false)
@@ -113,6 +118,9 @@ class HomeFragment: Fragment() {
 
         }
 
+        addButton.setOnClickListener {
+            view.findNavController().navigate(R.id.action_homeFragment_to_addFragment)
+        }
         return view
     }
 

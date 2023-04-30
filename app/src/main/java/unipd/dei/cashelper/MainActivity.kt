@@ -4,25 +4,11 @@ package unipd.dei.cashelper
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
-import android.graphics.Color
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
-import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
-import androidx.navigation.NavHost
-import androidx.navigation.fragment.NavHostFragment
-import com.github.mikephil.charting.charts.PieChart
-import com.github.mikephil.charting.components.Legend
-import com.github.mikephil.charting.data.PieData
-import com.github.mikephil.charting.data.PieDataSet
-import com.github.mikephil.charting.data.PieEntry
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import unipd.dei.cashelper.R
-import unipd.dei.cashelper.ui.AdapterFragmentAddItem
 import unipd.dei.cashelper.ui.HomeFragment
 import unipd.dei.cashelper.ui.IncomingActivity
 

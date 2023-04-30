@@ -89,7 +89,7 @@ class IncomingActivity : AppCompatActivity() {
         pieChart.legend.horizontalAlignment = Legend.LegendHorizontalAlignment.RIGHT
         pieChart.legend.verticalAlignment = Legend.LegendVerticalAlignment.CENTER
         pieChart.legend.yOffset = -50f
-        pieChart.legend.xOffset = 30f
+        pieChart.legend.xOffset = 3f
         pieChart.legend.orientation = Legend.LegendOrientation.VERTICAL
         // refresh
         pieChart.invalidate()
