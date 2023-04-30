@@ -3,8 +3,10 @@ package unipd.dei.cashelper.ui
 
 
 import android.app.DatePickerDialog
+import android.content.ContentValues.TAG
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -26,6 +28,7 @@ class AddItemFragment : Fragment() {
     private lateinit var selected_category : String
     private lateinit var switch: Switch
     private lateinit var description: EditText
+    private lateinit var spinner : Spinner
 
     //variables for picking
     private lateinit var switch_choose : String
@@ -46,7 +49,7 @@ class AddItemFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_add_item, container, false)
 
         db = DBHelper(this.requireContext() as Context)
-        val spinner = view.findViewById<Spinner>(R.id.category_select)
+        spinner = view.findViewById<Spinner>(R.id.category_select)
         val categories = db.getCategoryName()
         //add first element the default string
         categories.add(0, getString(R.string.category_spinner))
@@ -55,6 +58,25 @@ class AddItemFragment : Fragment() {
         spinner.adapter = adapter
         //set the default string as default value of the spinner
         spinner.setSelection(0)
+
+        //take category
+        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                //give the position of the category selected
+                selected_category = parent.getItemAtPosition(position).toString()
+
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                //nothing
+            }
+
+        }
 
 
         //ediText value
@@ -80,7 +102,6 @@ class AddItemFragment : Fragment() {
         add.setOnClickListener{
             //picking the current values
             picker(view)
-
             //write in database
             onClickListener(switch_choose, selected_category, price, day, monthString, year, desc.trim())
 
@@ -99,7 +120,6 @@ class AddItemFragment : Fragment() {
         //contain the state of the switch
         switch = view.findViewById(R.id.Switch_add_item)
         switch_choose = onCheckedChanged(switch, false)
-
 
         //take value
         val stringPrice : String = value.text.toString()
@@ -141,25 +161,7 @@ class AddItemFragment : Fragment() {
             return "Uscita"
         }
     }
-    private fun getCategory(spinner: Spinner, categories : Array<String>) {
-        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(
-                parent: AdapterView<*>,
-                view: View?,
-                position: Int,
-                id: Long
-            ) {
-                //give the position of the category selected
-                selected_category = parent.getItemAtPosition(position).toString()
 
-            }
-
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-                //nothing
-            }
-
-        }
-    }
 
     private fun onClickListener(type : String, category : String, value: Double, day: Int, month: String, year: Int, description : String ){
         db.addItem(description, value, type, category, day, month, year)
