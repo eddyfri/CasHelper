@@ -9,7 +9,7 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
-import unipd.dei.cashelper.ui.HomeFragment
+import androidx.navigation.fragment.NavHostFragment
 import unipd.dei.cashelper.ui.IncomingActivity
 
 
@@ -29,7 +29,26 @@ class MainActivity : AppCompatActivity() {
 
         setContentView(R.layout.activity_main)
 
-        val navHostFragment = supportFragmentManager.beginTransaction().add(R.id.nav_host_fragment, HomeFragment()).commit()
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        navController = navHostFragment.navController
+
+
+        /*
+        // per eventuali cambiamenti nelle destinazioni future
+        navController.addOnDestinationChangedListener {_, destination, _ ->
+            if (destination.id == R.id.homeFragment) {
+                supportActionBar?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            }
+            else {
+                val typedValue = TypedValue()
+                theme.resolveAttribute(com.google.android.material.R.attr.colorSurface, typedValue, true)
+                @ColorInt val color = typedValue.data
+
+                supportActionBar?.setBackgroundDrawable(ColorDrawable(color))
+            }
+        }
+
+         */
 
         /*
         //floatingButtonAdd

@@ -85,7 +85,8 @@ class AddItemFragment : Fragment() {
             onClickListener(switch_choose, selected_category, price, day, monthString, year, desc.trim())
 
             //back to HomeFragment
-            view.findNavController().navigate(R.id.action_addFragment_to_homeFragment)
+            val action = AddItemFragmentDirections.actionAddFragmentToHomeFragment()
+            view.findNavController().navigate(action)
         }
 
 
