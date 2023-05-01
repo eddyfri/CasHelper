@@ -6,6 +6,8 @@ import android.app.DatePickerDialog
 import android.content.ContentValues.TAG
 import android.content.Context
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -49,6 +51,7 @@ class AddItemFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_add_item, container, false)
 
         db = DBHelper(this.requireContext() as Context)
+        add = view.findViewById(R.id.confirm_button)
         spinner = view.findViewById<Spinner>(R.id.category_select)
         val categories = db.getCategoryName()
         //add first element the default string
@@ -59,6 +62,10 @@ class AddItemFragment : Fragment() {
         //set the default string as default value of the spinner
         spinner.setSelection(0)
 
+        //variables for checking that the category and value fields are not empty
+        var category_check = false
+        var value_check = false
+
         //take category
         spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
@@ -67,8 +74,14 @@ class AddItemFragment : Fragment() {
                 position: Int,
                 id: Long
             ) {
-                //give the position of the category selected
+                //give the category selected
                 selected_category = parent.getItemAtPosition(position).toString()
+                //confirm button disabled if the selected category is "Seleziona una categoria" (position = 0)
+                if(selected_category.equals(getString(R.string.category_spinner))) {
+                    category_check = false
+                } else {
+                    category_check = true
+                }
 
             }
 
@@ -97,8 +110,33 @@ class AddItemFragment : Fragment() {
             showDatePickerDialog(day, month + 1, year)
         }
 
+        //value must be not empty
+        value.addTextChangedListener( object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                //nothing
+            }
 
-        add = view.findViewById(R.id.confirm_button)
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                val stringPrice : String = value.text.toString()
+                if(stringPrice.isNotEmpty()) {
+                    value_check = true
+                } else {
+                    value_check = false
+                }
+
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+                //nothing
+            }
+
+        })
+
+
+
+
+        add.isEnabled = (value_check && category_check)
+
         add.setOnClickListener{
             //picking the current values
             picker(view)
