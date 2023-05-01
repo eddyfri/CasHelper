@@ -77,12 +77,8 @@ class AddItemFragment : Fragment() {
                 //give the category selected
                 selected_category = parent.getItemAtPosition(position).toString()
                 //confirm button disabled if the selected category is "Seleziona una categoria" (position = 0)
-                if(selected_category.equals(getString(R.string.category_spinner))) {
-                    category_check = false
-                } else {
-                    category_check = true
-                }
-
+                category_check = selected_category != getString(R.string.category_spinner)
+                add.isEnabled = (value_check && category_check)
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -118,12 +114,8 @@ class AddItemFragment : Fragment() {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 val stringPrice : String = value.text.toString()
-                if(stringPrice.isNotEmpty()) {
-                    value_check = true
-                } else {
-                    value_check = false
-                }
-
+                value_check = stringPrice.isNotEmpty()
+                add.isEnabled = (value_check && category_check)
             }
 
             override fun afterTextChanged(s: Editable?) {
@@ -132,10 +124,6 @@ class AddItemFragment : Fragment() {
 
         })
 
-
-
-
-        add.isEnabled = (value_check && category_check)
 
         add.setOnClickListener{
             //picking the current values
