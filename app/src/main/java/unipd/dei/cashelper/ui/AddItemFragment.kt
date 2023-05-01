@@ -13,6 +13,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import unipd.dei.cashelper.R
@@ -50,43 +51,28 @@ class AddItemFragment : Fragment() {
 
         val view = inflater.inflate(R.layout.fragment_add_item, container, false)
 
+
+        //hide the app_bar in this fragment
+        (requireActivity() as AppCompatActivity).supportActionBar?.hide()
+
+
+
+
         db = DBHelper(this.requireContext() as Context)
         add = view.findViewById(R.id.confirm_button)
         spinner = view.findViewById<Spinner>(R.id.category_select)
         val categories = db.getCategoryName()
         //add first element the default string
         categories.add(0, getString(R.string.category_spinner))
-        val adapter = ArrayAdapter<String>(this.requireContext(), android.R.layout.simple_spinner_item, categories)
+        val adapter = ArrayAdapter<String>(
+            this.requireContext(),
+            android.R.layout.simple_spinner_item,
+            categories
+        )
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinner.adapter = adapter
         //set the default string as default value of the spinner
         spinner.setSelection(0)
-
-        //variables for checking that the category and value fields are not empty
-        var category_check = false
-        var value_check = false
-
-        //take category
-        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(
-                parent: AdapterView<*>,
-                view: View?,
-                position: Int,
-                id: Long
-            ) {
-                //give the category selected
-                selected_category = parent.getItemAtPosition(position).toString()
-                //confirm button disabled if the selected category is "Seleziona una categoria" (position = 0)
-                category_check = selected_category != getString(R.string.category_spinner)
-                add.isEnabled = (value_check && category_check)
-            }
-
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-                //nothing
-            }
-
-        }
-
 
         //ediText value
         value = view.findViewById<EditText>(R.id.value_add_item)
@@ -102,6 +88,42 @@ class AddItemFragment : Fragment() {
 
         //Set date's text
         date.text = "$day/${month + 1}/$year"
+
+        return view
+
+    }
+
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        //variables for checking that the category and value fields are not empty
+        var categoryCheck = false
+        var valueCheck = false
+
+        //take category
+        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                //give the category selected
+                selected_category = parent.getItemAtPosition(position).toString()
+                //confirm button disabled if the selected category is "Seleziona una categoria" (position = 0)
+                categoryCheck = selected_category != getString(R.string.category_spinner)
+                add.isEnabled = (valueCheck && categoryCheck)
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                //nothing
+            }
+
+        }
+
+
+
         date.setOnClickListener{
             showDatePickerDialog(day, month + 1, year)
         }
@@ -114,8 +136,8 @@ class AddItemFragment : Fragment() {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 val stringPrice : String = value.text.toString()
-                value_check = stringPrice.isNotEmpty()
-                add.isEnabled = (value_check && category_check)
+                valueCheck = stringPrice.isNotEmpty()
+                add.isEnabled = (valueCheck && categoryCheck)
             }
 
             override fun afterTextChanged(s: Editable?) {
@@ -135,9 +157,6 @@ class AddItemFragment : Fragment() {
             val action = AddItemFragmentDirections.actionAddFragmentToHomeFragment()
             view.findNavController().navigate(action)
         }
-
-
-        return view
     }
 
 
@@ -211,6 +230,13 @@ class AddItemFragment : Fragment() {
         //set max date = today
         datePickerDialog.datePicker.maxDate = calendar.timeInMillis
         datePickerDialog.show()
+    }
+
+
+    override fun onPause() {
+        super.onPause()
+        //when return to the home fragment show the app bar
+        (requireActivity() as AppCompatActivity).supportActionBar?.show()
     }
 
 
