@@ -55,9 +55,6 @@ class AddItemFragment : Fragment() {
         //hide the app_bar in this fragment
         (requireActivity() as AppCompatActivity).supportActionBar?.hide()
 
-
-
-
         db = DBHelper(this.requireContext() as Context)
         add = view.findViewById(R.id.confirm_button)
         spinner = view.findViewById<Spinner>(R.id.category_select)
@@ -80,6 +77,11 @@ class AddItemFragment : Fragment() {
         //button date
         date = view.findViewById(R.id.date_add_item)
 
+        //contain the state of the switch
+        switch = view.findViewById(R.id.Switch_add_item)
+        // default choose
+        switch_choose = "Uscita"
+
         // set current date as default
         val calendar = Calendar.getInstance()
         year = calendar.get(Calendar.YEAR)
@@ -101,6 +103,13 @@ class AddItemFragment : Fragment() {
         var categoryCheck = false
         var valueCheck = false
 
+        switch.setOnCheckedChangeListener { _, isChecked ->
+            switch_choose = if(isChecked)
+                "Entrata"
+            else
+                "Uscita"
+        }
+
         //take category
         spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
@@ -121,8 +130,6 @@ class AddItemFragment : Fragment() {
             }
 
         }
-
-
 
         date.setOnClickListener{
             showDatePickerDialog(day, month + 1, year)
@@ -146,7 +153,6 @@ class AddItemFragment : Fragment() {
 
         })
 
-
         add.setOnClickListener{
             //picking the current values
             picker(view)
@@ -162,10 +168,6 @@ class AddItemFragment : Fragment() {
 
     //function that pick the values when the user press the confirm button
     private fun picker(view :View) {
-        //contain the state of the switch
-        switch = view.findViewById(R.id.Switch_add_item)
-        switch_choose = onCheckedChanged(switch, false)
-
         //take value
         val stringPrice : String = value.text.toString()
         price = stringPrice.toDouble()
@@ -214,8 +216,6 @@ class AddItemFragment : Fragment() {
 
     }
 
-
-
     private fun showDatePickerDialog(day : Int, month: Int, year : Int) {
         val datePickerDialog = DatePickerDialog(
             this.requireContext(),
@@ -231,7 +231,6 @@ class AddItemFragment : Fragment() {
         datePickerDialog.datePicker.maxDate = calendar.timeInMillis
         datePickerDialog.show()
     }
-
 
     override fun onPause() {
         super.onPause()

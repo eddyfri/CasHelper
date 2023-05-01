@@ -11,9 +11,9 @@
     <string name="year">Year</string>
     <string name="back_month_button">back_month</string>
     <string name="next_month_button">next_month_button</string>
-    <string name="incoming_title">ENTRATE</string>
-    <string name="entries_title">ENTRATE</string>
-    <string name="add_title">AGGIUNGI TRANSAZIONE</string>
+    <string name="incoming_title">Entrate</string>
+    <string name="entries_title">Entrate</string>
+    <string name="add_title">Aggiungi Transazione</string>
     <string name ="category_spinner">Seleziona una categoria</string>
     <string name="value_add">Inserisci valore € </string>
     <string name="description_add">Descrizione (opzionale)</string>

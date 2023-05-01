@@ -17,20 +17,30 @@ class HomeListAdapter(private val itemList: MutableList<DBHelper.ItemInfo>): Rec
 
         fun bind(itemInfo: DBHelper.ItemInfo) {
             itemCategory.text = itemInfo.category
-            itemPrice.text = itemInfo.price.toString()
+            itemPrice.text = itemInfo.price.toString() + " €"
             val date =
-                itemInfo.day.toString() + "/" + itemInfo.month + "/" + itemInfo.year.toString()
+                itemInfo.day.toString() + "/" + getNumberMonth(itemInfo.month) + "/" + itemInfo.year.toString()
             itemDate.text = date
-            // da testare e decommentare dopo la creazione di AddItemActivity
-            /*
-            itemView.setOnClickListener { view ->
-                val intent = Intent(view.context, AddItemActivity::class.java)
-                intent.putExtra("category", itemCategory)
-                intent.putExtra("price", itemPrice)
-                intent.putExtra("date", itemDate)
-                itemView.context.startActivity(intent)
+            itemView.setOnClickListener {
+                // view -> updateItem con updateItemFragment
             }
-            */
+        }
+
+        private fun getNumberMonth(month: String): String {
+            return when(month) {
+                "Gennaio" -> "01"
+                "Febbraio" -> "02"
+                "Marzo" -> "03"
+                "Aprile" -> "04"
+                "Maggio" -> "05"
+                "Giugno" -> "06"
+                "Luglio" -> "07"
+                "Agosto" -> "08"
+                "Settembre" -> "09"
+                "Ottobre" -> "10"
+                "Novembre" -> "11"
+                else -> "12"
+            }
         }
     }
 

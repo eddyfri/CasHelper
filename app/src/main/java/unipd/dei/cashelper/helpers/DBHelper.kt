@@ -16,7 +16,7 @@ class DBHelper(context: Context): SQLiteOpenHelper(context, DB_NAME, null, DB_VE
 
         val dateTable = "CREATE TABLE Data(\n" +
                 "Giorno INTEGER NOT NULL, \n" +
-                "Mese INTEGER NOT NULL, \n" +
+                "Mese VARCHAR(10) NOT NULL, \n" +
                 "Anno INTEGER NOT NULL,\n" +
                 "PRIMARY KEY(Giorno, Mese, Anno)\n" +
                 ");"
@@ -28,7 +28,7 @@ class DBHelper(context: Context): SQLiteOpenHelper(context, DB_NAME, null, DB_VE
                 "Tipo VARCHAR(10) NOT NULL, \n" +
                 "Nome VARCHAR(20) NOT NULL, \n" +
                 "Giorno INTEGER NOT NULL, \n" +
-                "Mese INTEGER NOT NULL, \n" +
+                "Mese VARCHAR(10) NOT NULL, \n" +
                 "Anno INTEGER NOT NULL,\n" +
                 "FOREIGN KEY(Nome) REFERENCES Categoria(Nome)\n" +
                 "ON DELETE CASCADE ON UPDATE CASCADE, \n" +
@@ -92,6 +92,11 @@ class DBHelper(context: Context): SQLiteOpenHelper(context, DB_NAME, null, DB_VE
     }
 
     fun addItem(description: String, price: Double, type: String, category: String, day: Int, month: String, year: Int): Boolean {
+        val cv = ContentValues()
+        cv.put("Giorno", day)
+        cv.put("Mese", month)
+        cv.put("Anno", year)
+        writableDatabase.insertWithOnConflict("Data", null, cv, SQLiteDatabase.CONFLICT_IGNORE) != -1L
         val values = ContentValues().apply {
             put("Descrizione", description)
             put("Prezzo", price)
@@ -140,11 +145,12 @@ class DBHelper(context: Context): SQLiteOpenHelper(context, DB_NAME, null, DB_VE
 
         while(cursor.moveToNext()) {
             val item = ItemInfo("")
-            item.category = cursor.getString(cursor.getColumnIndexOrThrow("Categoria"))
+            item.category = cursor.getString(cursor.getColumnIndexOrThrow("Nome"))
             item.price = cursor.getDouble(cursor.getColumnIndexOrThrow("Prezzo"))
             item.day = cursor.getInt(cursor.getColumnIndexOrThrow("Giorno"))
             item.month = cursor.getString(cursor.getColumnIndexOrThrow("Mese"))
             item.year = cursor.getInt(cursor.getColumnIndexOrThrow("Anno"))
+            item.type = cursor.getString(cursor.getColumnIndexOrThrow("Tipo"))
             ret.add(item)
         }
         cursor.close()
@@ -169,5 +175,6 @@ class DBHelper(context: Context): SQLiteOpenHelper(context, DB_NAME, null, DB_VE
         var day: Int = -1
         var month: String = ""
         var year: Int = -1
+        var type: String = ""
     }
 }

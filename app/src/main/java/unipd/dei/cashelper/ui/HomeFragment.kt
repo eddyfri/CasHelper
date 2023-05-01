@@ -1,10 +1,12 @@
 package unipd.dei.cashelper.ui
 
+import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -78,9 +80,9 @@ class HomeFragment: Fragment() {
 
         monthTextView.text = month
         yearTextView.text = year.toString()
-        totIncomingTextView.text = getIncoming(itemInfo).toString()
-        totExitsTextView.text = getExits(itemInfo).toString()
-        totalTextView.text = getTotal(itemInfo).toString()
+        totIncomingTextView.text = getIncoming(itemInfo).toString() + " €"
+        totExitsTextView.text = getExits(itemInfo).toString() + " €"
+        totalTextView.text = getTotal(itemInfo).toString() + " €"
         createPieChart(view, itemInfo)
 
         fabBack.setOnClickListener {
@@ -97,6 +99,7 @@ class HomeFragment: Fragment() {
             // aggiorna text view totali
             updateTotalTextViews(itemInfo)
             // aggiorna recyclerView
+            recyclerView.adapter = HomeListAdapter(itemInfo)
         }
         fabNext.setOnClickListener {
             // non posso andare più avanti del mese corrente, no mesi futuri
@@ -114,11 +117,13 @@ class HomeFragment: Fragment() {
                 // aggiorna text view totali
                 updateTotalTextViews(itemInfo)
                 // aggiorna recyclerView
+                recyclerView.adapter = HomeListAdapter(itemInfo)
             }
 
         }
 
         addButton.setOnClickListener {
+            Log.d(TAG, "items: $itemInfo")
             val action = HomeFragmentDirections.actionHomeFragmentToAddFragment()
             view.findNavController().navigate(action)
         }
@@ -128,7 +133,7 @@ class HomeFragment: Fragment() {
     private fun getIncoming(itemInfo: MutableList<DBHelper.ItemInfo>): Double {
         var totIncoming = 0.0
         for (item in itemInfo) {
-            if(item.category == "Entrata")
+            if(item.type == "Entrata")
                 totIncoming += item.price
         }
         return totIncoming
@@ -137,7 +142,7 @@ class HomeFragment: Fragment() {
     private fun getExits(itemInfo: MutableList<DBHelper.ItemInfo>): Double {
         var totExits = 0.0
         for (item in itemInfo) {
-            if(item.category == "Uscita")
+            if(item.type == "Uscita")
                 totExits += item.price
         }
         return totExits
@@ -272,6 +277,12 @@ class HomeFragment: Fragment() {
         set = PieDataSet(entries, "")
         data = PieData(set)
         pieChart.data = data
+        val colors: MutableList<Int> = ArrayList()
+        val exitColor = ContextCompat.getColor(this.requireContext(), R.color.Exits)
+        colors.add(exitColor)
+        val entriesColor = ContextCompat.getColor(this.requireContext(), R.color.Entries)
+        colors.add(entriesColor)
+        set.colors = colors
         data.notifyDataChanged()
         set.notifyDataSetChanged()
         pieChart.notifyDataSetChanged()
