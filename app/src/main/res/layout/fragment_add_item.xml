@@ -41,6 +41,20 @@
         app:layout_constraintGuide_percent="0.5"/>
 
     <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineDescriptionSX"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.1"/>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineDescriptionDX"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.9"/>
+
+    <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline4_add_item"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -84,17 +98,28 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/guideline2_add_item" />
 
-    <EditText
-        android:id="@+id/description_add_item"
-        android:layout_width="wrap_content"
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="@drawable/container_home"
-        android:hint="@string/description_add"
-        android:inputType="textMultiLine"
         app:layout_constraintBottom_toTopOf="@+id/guideline4_add_item"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/guideline3_add_item" />
+        app:layout_constraintStart_toEndOf="@+id/guidelineDescriptionSX"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineDescriptionDX"
+        app:layout_constraintTop_toBottomOf="@id/guideline3_add_item"
+        app:counterMaxLength="50"
+        app:counterEnabled="true">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textMultiLine"
+            android:hint="@string/description_add"
+            android:id="@+id/description_add_item"
+            android:backgroundTint="@color/violet"
+            android:maxLength="50"
+
+            />
+    </com.google.android.material.textfield.TextInputLayout>
 
     <Button
         android:layout_width="wrap_content"
