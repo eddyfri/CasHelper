@@ -15,10 +15,11 @@
     <string name="entries_title">Entrate</string>
     <string name="add_title">Aggiungi Transazione</string>
     <string name ="category_spinner">Seleziona una categoria</string>
-    <string name="value_add">Inserisci valore € </string>
+    <string name="value_add">Inserisci importo</string>
     <string name="description_add">Descrizione (opzionale)</string>
     <string name="incoming_add_item">Entrate</string>
     <string name="exits_add_item">Uscite</string>
+    <string name="delete_button">Annulla</string>
 
     //menu
     <string name="menu_home">menu_home</string>
