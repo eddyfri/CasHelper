@@ -126,8 +126,8 @@
     <Button
         android:id="@+id/confirm_button"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@id/midline_add"
+        app:layout_constraintEnd_toEndOf="@id/guidelineDescriptionDX"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/container_home"
@@ -135,6 +135,20 @@
         android:text="@string/confirm_button"
         android:enabled="false"
         />
+
+    <Button
+        android:id="@+id/delete_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@id/guidelineDescriptionSX"
+        app:layout_constraintEnd_toEndOf="@id/midline_add"
+        android:background="@drawable/container_delete_button"
+        android:layout_marginBottom="20pt"
+        android:text="Annulla"
+        style="@style/delete_button"
+        />
+
     <Switch
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
