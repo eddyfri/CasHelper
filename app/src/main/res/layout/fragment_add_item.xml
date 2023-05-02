@@ -82,6 +82,17 @@
         app:layout_constraintTop_toBottomOf="@id/guideline1_add_item"
         app:layout_constraintBottom_toTopOf="@id/guideline2_add_item"/>
 
+    <Button
+        android:id="@+id/add_category"
+        app:icon="@drawable/add_fab_home"
+        android:layout_width="55dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toEndOf="@id/category_select"
+        app:layout_constraintTop_toBottomOf="@id/guideline1_add_item"
+        app:layout_constraintBottom_toTopOf="@id/guideline2_add_item"
+        android:gravity="center"
+        />
+
     <EditText
         android:id="@+id/value_add_item"
         android:layout_width="wrap_content"
@@ -90,7 +101,17 @@
         android:inputType="numberDecimal"
         app:layout_constraintBottom_toTopOf="@+id/guideline3_add_item"
         app:layout_constraintStart_toStartOf="@+id/guidelineDescriptionSX"
-        app:layout_constraintTop_toBottomOf="@id/guideline2_add_item" />
+        app:layout_constraintTop_toBottomOf="@id/guideline2_add_item"
+        />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/baseline_euro"
+        app:layout_constraintStart_toEndOf="@id/value_add_item"
+        app:layout_constraintBottom_toTopOf="@+id/guideline3_add_item"
+        app:layout_constraintTop_toBottomOf="@id/guideline2_add_item"
+        />
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="0dp"
@@ -145,7 +166,7 @@
         app:layout_constraintEnd_toEndOf="@id/midline_add"
         android:background="@drawable/container_delete_button"
         android:layout_marginBottom="20pt"
-        android:text="Annulla"
+        android:text="@string/delete_button"
         style="@style/delete_button"
         />
 
