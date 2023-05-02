@@ -176,8 +176,7 @@ class AddItemFragment : Fragment() {
         description = view.findViewById(R.id.description_add_item)
         desc = description.text.toString()
 
-        //take date
-        monthString = dateConverter(month)
+
     }
 
     //function that convert month from Int to String
@@ -221,6 +220,8 @@ class AddItemFragment : Fragment() {
             this.requireContext(),
             DatePickerDialog.OnDateSetListener { view, year, month, day ->
                 date.text = "$day/${month + 1}/$year"
+                //take date
+                monthString = dateConverter(month)
             },
             year,
             month,
