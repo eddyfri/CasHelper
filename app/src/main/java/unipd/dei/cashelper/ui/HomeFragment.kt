@@ -28,6 +28,7 @@ import unipd.dei.cashelper.helpers.DBHelper
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.properties.Delegates
 
 
 class HomeFragment: Fragment() {
@@ -49,6 +50,9 @@ class HomeFragment: Fragment() {
     private lateinit var set: PieDataSet
     private lateinit var data: PieData
 
+    private lateinit var month : String
+    private var year by Delegates.notNull<Int>()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,8 +64,9 @@ class HomeFragment: Fragment() {
 
         db = DBHelper(context as Context)
 
-        var month = getCurrentMonth()
-        var year = getCurrentYear()
+        month = getCurrentMonth()
+        year = getCurrentYear()
+
 
         var itemInfo = mutableListOf<DBHelper.ItemInfo>()
         itemInfo = db.getItem(month, year)
@@ -78,12 +83,26 @@ class HomeFragment: Fragment() {
         recyclerView.adapter = HomeListAdapter(itemInfo)
         recyclerView.layoutManager = LinearLayoutManager(this.context, LinearLayoutManager.VERTICAL, false)
 
+
+        return view
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        var itemInfo = mutableListOf<DBHelper.ItemInfo>()
+        itemInfo = db.getItem(month, year)
+
+
+
+
         monthTextView.text = month
         yearTextView.text = year.toString()
         totIncomingTextView.text = getIncoming(itemInfo).toString() + " €"
         totExitsTextView.text = getExits(itemInfo).toString() + " €"
         totalTextView.text = getTotal(itemInfo).toString() + " €"
         createPieChart(view, itemInfo)
+        fabNext.hide()
 
         fabBack.setOnClickListener {
             // cambia mese anno
@@ -92,6 +111,8 @@ class HomeFragment: Fragment() {
             month = backMonth(month)
             monthTextView.text = month
             yearTextView.text = year.toString()
+            if(!(month == getCurrentMonth() && year == getCurrentYear()))
+                fabNext.show()
             // aggiorna dati
             itemInfo = db.getItem(month, year)
             // aggiorna pieChart
@@ -110,6 +131,9 @@ class HomeFragment: Fragment() {
                 month = nextMonth(month)
                 monthTextView.text = month
                 yearTextView.text = year.toString()
+                if(!(month == getCurrentMonth() && year == getCurrentYear()))
+                    fabNext.show()
+                else fabNext.hide()
                 // aggiorna dati
                 itemInfo = db.getItem(month, year)
                 // aggiorna pieChart
@@ -119,6 +143,8 @@ class HomeFragment: Fragment() {
                 // aggiorna recyclerView
                 recyclerView.adapter = HomeListAdapter(itemInfo)
             }
+            else
+                fabNext.hide()
 
         }
 
@@ -127,8 +153,8 @@ class HomeFragment: Fragment() {
             val action = HomeFragmentDirections.actionHomeFragmentToAddFragment()
             view.findNavController().navigate(action)
         }
-        return view
     }
+
 
     private fun getIncoming(itemInfo: MutableList<DBHelper.ItemInfo>): Double {
         var totIncoming = 0.0

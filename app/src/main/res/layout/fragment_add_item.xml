@@ -3,8 +3,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:theme="@style/Theme.CasHelper"
-    android:background="?attr/backgroundColor">
+    android:background="?attr/backgroundColor"
+    android:id="@+id/Constraint_add_item"
+    android:clickable="true"
+    android:onClick="hideKeyboard">
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline0_add_item"
         android:layout_width="wrap_content"
@@ -151,10 +153,10 @@
         app:layout_constraintEnd_toEndOf="@id/guidelineDescriptionDX"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/container_home"
+        android:background="@drawable/container_add_button"
         android:layout_marginBottom="20pt"
         android:text="@string/confirm_button"
-        android:enabled="false"
+
         />
 
     <Button

@@ -3,17 +3,20 @@ package unipd.dei.cashelper.ui
 
 
 import android.app.DatePickerDialog
-import android.content.ContentValues.TAG
 import android.content.Context
+import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.OnFocusChangeListener
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import unipd.dei.cashelper.R
@@ -32,6 +35,7 @@ class AddItemFragment : Fragment() {
     private lateinit var switch: Switch
     private lateinit var description: EditText
     private lateinit var spinner : Spinner
+    private lateinit var constraintLayout : ConstraintLayout
 
     //variables for picking
     private lateinit var switch_choose : String
@@ -50,10 +54,7 @@ class AddItemFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         val view = inflater.inflate(R.layout.fragment_add_item, container, false)
-
-
-        //hide the app_bar in this fragment
-        (requireActivity() as AppCompatActivity).supportActionBar?.hide()
+        constraintLayout = view.findViewById<ConstraintLayout>(R.id.Constraint_add_item)
 
         db = DBHelper(this.requireContext() as Context)
         add = view.findViewById(R.id.confirm_button)
@@ -99,6 +100,13 @@ class AddItemFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+
+        //hide keyboard when click anywhere in the screen
+        constraintLayout.setOnClickListener {
+            hideKeyboard(view)
+        }
+
+
         //variables for checking that the category and value fields are not empty
         var categoryCheck = false
         var valueCheck = false
@@ -122,7 +130,13 @@ class AddItemFragment : Fragment() {
                 selected_category = parent.getItemAtPosition(position).toString()
                 //confirm button disabled if the selected category is "Seleziona una categoria" (position = 0)
                 categoryCheck = selected_category != getString(R.string.category_spinner)
-                add.isEnabled = (valueCheck && categoryCheck)
+                if(valueCheck && categoryCheck) {
+                    add.isEnabled = true
+                    add.setTextAppearance(R.style.add_button)
+                } else {
+                    add.isEnabled = false
+                    add.setTextAppearance(R.style.disable_button)
+                }
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -130,6 +144,8 @@ class AddItemFragment : Fragment() {
             }
 
         }
+
+        monthString = dateConverter(month)
 
         date.setOnClickListener{
             val datePickerDialog = DatePickerDialog(
@@ -161,7 +177,13 @@ class AddItemFragment : Fragment() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 val stringPrice : String = value.text.toString()
                 valueCheck = stringPrice.isNotEmpty()
-                add.isEnabled = (valueCheck && categoryCheck)
+                if(valueCheck && categoryCheck) {
+                    add.isEnabled = true
+                    add.setTextAppearance(R.style.add_button)
+                } else {
+                    add.isEnabled = false
+                    add.setTextAppearance(R.style.disable_button)
+                }
             }
 
             override fun afterTextChanged(s: Editable?) {
@@ -226,6 +248,9 @@ class AddItemFragment : Fragment() {
         (requireActivity() as AppCompatActivity).supportActionBar?.show()
     }
 
-
+    private fun hideKeyboard(view: View) {
+        val hide = view.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        hide.hideSoftInputFromWindow(view.windowToken, 0)
+    }
 
 }

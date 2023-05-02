@@ -23,9 +23,9 @@
     <color name="sand">#F4EEE0</color>
 
     //pieChart colors
-    <color name="Exits">#FA1020</color>
+    <color name="Exits">#EF0B1B</color>
     <color name="Entries">#30950E</color>
 
-
+    <color name="Disable">#CFCCCC</color>
     <color name="confirm">#DDFFBB</color>
 </resources>

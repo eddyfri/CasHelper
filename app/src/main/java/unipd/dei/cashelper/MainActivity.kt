@@ -33,6 +33,7 @@ class MainActivity : AppCompatActivity() {
         navController = navHostFragment.navController
 
 
+
         /*
         // per eventuali cambiamenti nelle destinazioni future
         navController.addOnDestinationChangedListener {_, destination, _ ->
