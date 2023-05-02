@@ -283,6 +283,7 @@ class HomeFragment: Fragment() {
         val entriesColor = ContextCompat.getColor(this.requireContext(), R.color.Entries)
         colors.add(entriesColor)
         set.colors = colors
+        pieChart.data.setValueTextSize(0f)
         data.notifyDataChanged()
         set.notifyDataSetChanged()
         pieChart.notifyDataSetChanged()
@@ -290,9 +291,9 @@ class HomeFragment: Fragment() {
     }
 
     private fun updateTotalTextViews(itemInfo: MutableList<DBHelper.ItemInfo>) {
-        totIncomingTextView.text = getIncoming(itemInfo).toString()
-        totExitsTextView.text = getExits(itemInfo).toString()
-        totalTextView.text = getTotal(itemInfo).toString()
+        totIncomingTextView.text = getIncoming(itemInfo).toString() + " €"
+        totExitsTextView.text = getExits(itemInfo).toString() + " €"
+        totalTextView.text = getTotal(itemInfo).toString() + " €"
     }
 
 }

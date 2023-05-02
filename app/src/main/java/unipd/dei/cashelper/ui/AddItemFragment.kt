@@ -132,7 +132,24 @@ class AddItemFragment : Fragment() {
         }
 
         date.setOnClickListener{
-            showDatePickerDialog(day, month + 1, year)
+            val datePickerDialog = DatePickerDialog(
+                this.requireContext(),
+                DatePickerDialog.OnDateSetListener { _, year, month, day ->
+                    date.text = "$day/${month + 1}/$year"
+                    //take date
+                    this.year = year
+                    this.day = day
+                    monthString = dateConverter(month)
+                },
+                year,
+                month,
+                day
+            )
+
+            val calendar = Calendar.getInstance()
+            //set max date = today
+            datePickerDialog.datePicker.maxDate = calendar.timeInMillis
+            datePickerDialog.show()
         }
 
         //value must be not empty
@@ -198,40 +215,10 @@ class AddItemFragment : Fragment() {
         }
     }
 
-
-    private fun onCheckedChanged(buttonView: CompoundButton, isChecked : Boolean) : String {
-        if(isChecked) {
-            return "Entrata"
-        }
-        else {
-            return "Uscita"
-        }
-    }
-
-
     private fun onClickListener(type : String, category : String, value: Double, day: Int, month: String, year: Int, description : String ){
         db.addItem(description, value, type, category, day, month, year)
-
-
     }
 
-    private fun showDatePickerDialog(day : Int, month: Int, year : Int) {
-        val datePickerDialog = DatePickerDialog(
-            this.requireContext(),
-            DatePickerDialog.OnDateSetListener { view, year, month, day ->
-                date.text = "$day/${month + 1}/$year"
-                //take date
-                monthString = dateConverter(month)
-            },
-            year,
-            month,
-            day
-        )
-        val calendar = Calendar.getInstance()
-        //set max date = today
-        datePickerDialog.datePicker.maxDate = calendar.timeInMillis
-        datePickerDialog.show()
-    }
 
     override fun onPause() {
         super.onPause()
