@@ -251,9 +251,9 @@ class HomeFragment: Fragment() {
         //setting PieChart
         //color's Entry
         val colors: MutableList<Int> = ArrayList()
-        val exitColor = ContextCompat.getColor(this.requireContext(), R.color.Exits)
+        val exitColor = ContextCompat.getColor(this.requireContext(), R.color.Entries)
         colors.add(exitColor)
-        val entriesColor = ContextCompat.getColor(this.requireContext(), R.color.Entries)
+        val entriesColor = ContextCompat.getColor(this.requireContext(), R.color.Exits)
         colors.add(entriesColor)
         set.colors = colors
         //not draw labels
