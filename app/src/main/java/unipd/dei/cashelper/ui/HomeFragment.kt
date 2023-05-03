@@ -304,9 +304,9 @@ class HomeFragment: Fragment() {
         data = PieData(set)
         pieChart.data = data
         val colors: MutableList<Int> = ArrayList()
-        val exitColor = ContextCompat.getColor(this.requireContext(), R.color.Exits)
+        val exitColor = ContextCompat.getColor(this.requireContext(), R.color.Entries)
         colors.add(exitColor)
-        val entriesColor = ContextCompat.getColor(this.requireContext(), R.color.Entries)
+        val entriesColor = ContextCompat.getColor(this.requireContext(), R.color.Exits)
         colors.add(entriesColor)
         set.colors = colors
         pieChart.data.setValueTextSize(0f)
