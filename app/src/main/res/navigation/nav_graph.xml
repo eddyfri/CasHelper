@@ -13,6 +13,10 @@
             android:id="@+id/action_homeFragment_to_addFragment"
             app:destination="@id/addFragment"
         />
+        <action
+            android:id="@+id/action_homeFragment_to_updateFragment"
+            app:destination="@id/updateFragment"
+            />
     </fragment>
     <fragment
         android:id="@+id/addFragment"
@@ -21,6 +25,19 @@
         tools:layout="@layout/fragment_add_item">
         <action
             android:id="@+id/action_addFragment_to_homeFragment"
+            app:destination="@id/homeFragment"
+            />
+    </fragment>
+    <fragment
+        android:id="@+id/updateFragment"
+        android:name="unipd.dei.cashelper.ui.UpdateItemFragment"
+        android:label="updateItem"
+        tools:layout="@layout/fragment_update_item">
+        <argument
+            android:name="idItem"
+            app:argType="integer" />
+        <action
+            android:id="@+id/action_updateFragment_to_homeFragment"
             app:destination="@id/homeFragment"
             />
     </fragment>
