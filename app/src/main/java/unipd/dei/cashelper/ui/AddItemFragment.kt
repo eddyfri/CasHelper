@@ -36,7 +36,7 @@ class AddItemFragment : Fragment() {
     private lateinit var description: EditText
     private lateinit var spinner : Spinner
     private lateinit var constraintLayout : ConstraintLayout
-
+    private lateinit var delete :Button
     //variables for picking
     private lateinit var switch_choose : String
     private var price by Delegates.notNull<Double>()
@@ -77,6 +77,9 @@ class AddItemFragment : Fragment() {
 
         //button date
         date = view.findViewById(R.id.date_add_item)
+
+        //button delete_button
+        delete = view.findViewById(R.id.delete_button)
 
         //contain the state of the switch
         switch = view.findViewById(R.id.Switch_add_item)
@@ -168,6 +171,10 @@ class AddItemFragment : Fragment() {
             datePickerDialog.show()
         }
 
+        delete.setOnClickListener{
+            view.findNavController().navigate(R.id.action_addFragment_to_homeFragment)
+        }
+
         //value must be not empty
         value.addTextChangedListener( object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -179,7 +186,7 @@ class AddItemFragment : Fragment() {
                 valueCheck = stringPrice.isNotEmpty()
                 if(valueCheck && categoryCheck) {
                     add.isEnabled = true
-                    add.setTextAppearance(R.style.add_button)
+                    add.setBackgroundColor(resources.getColor(R.color.Entries))
                 } else {
                     add.isEnabled = false
                     add.setTextAppearance(R.style.disable_button)

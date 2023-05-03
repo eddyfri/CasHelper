@@ -156,7 +156,7 @@
         android:background="@drawable/container_add_button"
         android:layout_marginBottom="20pt"
         android:text="@string/confirm_button"
-
+        style="@style/add_button"
         />
 
     <Button
