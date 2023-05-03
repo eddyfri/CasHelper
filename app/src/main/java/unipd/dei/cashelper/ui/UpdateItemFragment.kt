@@ -1,22 +1,16 @@
 package unipd.dei.cashelper.ui
 
-
-
 import android.app.DatePickerDialog
 import android.content.Context
-import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.OnFocusChangeListener
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
-import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import unipd.dei.cashelper.R
@@ -24,18 +18,17 @@ import unipd.dei.cashelper.helpers.DBHelper
 import java.util.*
 import kotlin.properties.Delegates
 
-
-class AddItemFragment : Fragment() {
-
+class UpdateItemFragment: Fragment() {
     private lateinit var db: DBHelper
     private lateinit var value : EditText
     private lateinit var date : Button
-    private lateinit var add :Button
+    private lateinit var update : Button
     private lateinit var selected_category : String
     private lateinit var switch: Switch
     private lateinit var description: EditText
     private lateinit var spinner : Spinner
     private lateinit var constraintLayout : ConstraintLayout
+    private var idItem by Delegates.notNull<Int>()
 
     //variables for picking
     private lateinit var switch_choose : String
@@ -46,19 +39,19 @@ class AddItemFragment : Fragment() {
     private var year by Delegates.notNull<Int>()
     private lateinit var monthString :String
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-
-        val view = inflater.inflate(R.layout.fragment_add_item, container, false)
-        constraintLayout = view.findViewById<ConstraintLayout>(R.id.Constraint_add_item)
+        val view = inflater.inflate(R.layout.fragment_update_item, container, false)
+        idItem = UpdateItemFragmentArgs.fromBundle(requireArguments()).idItem
+        constraintLayout = view.findViewById<ConstraintLayout>(R.id.constraint_update_item)
 
         db = DBHelper(this.requireContext() as Context)
-        add = view.findViewById(R.id.confirm_button)
-        spinner = view.findViewById<Spinner>(R.id.category_select)
+        var itemInfo = db.getItemById(idItem)
+        update = view.findViewById(R.id.update_button)
+        spinner = view.findViewById<Spinner>(R.id.category_select_update)
         val categories = db.getCategoryName()
         //add first element the default string
         categories.add(0, getString(R.string.category_spinner))
@@ -70,46 +63,46 @@ class AddItemFragment : Fragment() {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinner.adapter = adapter
         //set the default string as default value of the spinner
-        spinner.setSelection(0)
+        spinner.setSelection(categories.indexOf(itemInfo.category))
 
         //ediText value
-        value = view.findViewById<EditText>(R.id.value_add_item)
+        value = view.findViewById<EditText>(R.id.value_update_item)
+        value.setText(itemInfo.price.toString())
 
         //button date
-        date = view.findViewById(R.id.date_add_item)
+        date = view.findViewById(R.id.date_update_item)
 
         //contain the state of the switch
-        switch = view.findViewById(R.id.Switch_add_item)
+        switch = view.findViewById(R.id.Switch_update_item)
+        if(itemInfo.type == "Entrata")
+            switch.isChecked = true
         // default choose
-        switch_choose = "Uscita"
+        switch_choose = itemInfo.type
 
         // set current date as default
-        val calendar = Calendar.getInstance()
-        year = calendar.get(Calendar.YEAR)
-        month = calendar.get(Calendar.MONTH)
-        day = calendar.get(Calendar.DAY_OF_MONTH)
+        year = itemInfo.year
+        month = getIntMonth(itemInfo.month)
+        day = itemInfo.day
+
+        description = view.findViewById(R.id.description_update_item)
+        description.setText(itemInfo.description)
 
         //Set date's text
         date.text = "$day/${month + 1}/$year"
 
         return view
-
     }
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
 
         //hide keyboard when click anywhere in the screen
         constraintLayout.setOnClickListener {
             hideKeyboard(view)
         }
 
-
-        //variables for checking that the category and value fields are not empty
-        var categoryCheck = false
-        var valueCheck = false
+        var categoryCheck = true
+        var valueCheck = true
 
         switch.setOnCheckedChangeListener { _, isChecked ->
             switch_choose = if(isChecked)
@@ -118,7 +111,6 @@ class AddItemFragment : Fragment() {
                 "Uscita"
         }
 
-        //take category
         spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                 parent: AdapterView<*>,
@@ -131,18 +123,17 @@ class AddItemFragment : Fragment() {
                 //confirm button disabled if the selected category is "Seleziona una categoria" (position = 0)
                 categoryCheck = selected_category != getString(R.string.category_spinner)
                 if(valueCheck && categoryCheck) {
-                    add.isEnabled = true
-                    add.setTextAppearance(R.style.add_button)
+                    update.isEnabled = true
+                    update.setTextAppearance(R.style.add_button)
                 } else {
-                    add.isEnabled = false
-                    add.setTextAppearance(R.style.disable_button)
+                    update.isEnabled = false
+                    update.setTextAppearance(R.style.disable_button)
                 }
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {
                 //nothing
             }
-
         }
 
         monthString = dateConverter(month)
@@ -168,7 +159,6 @@ class AddItemFragment : Fragment() {
             datePickerDialog.show()
         }
 
-        //value must be not empty
         value.addTextChangedListener( object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
                 //nothing
@@ -178,11 +168,11 @@ class AddItemFragment : Fragment() {
                 val stringPrice : String = value.text.toString()
                 valueCheck = stringPrice.isNotEmpty()
                 if(valueCheck && categoryCheck) {
-                    add.isEnabled = true
-                    add.setTextAppearance(R.style.add_button)
+                    update.isEnabled = true
+                    update.setTextAppearance(R.style.add_button)
                 } else {
-                    add.isEnabled = false
-                    add.setTextAppearance(R.style.disable_button)
+                    update.isEnabled = false
+                    update.setTextAppearance(R.style.disable_button)
                 }
             }
 
@@ -192,33 +182,51 @@ class AddItemFragment : Fragment() {
 
         })
 
-        add.setOnClickListener{
+        update.setOnClickListener{
             //picking the current values
             picker(view)
             //write in database
-            onClickListener(switch_choose, selected_category, price, day, monthString, year, desc.trim())
+            onClickListener(idItem, switch_choose, selected_category, price, day, monthString, year, desc.trim())
 
             //back to HomeFragment
-            val action = AddItemFragmentDirections.actionAddFragmentToHomeFragment()
+            val action = UpdateItemFragmentDirections.actionUpdateFragmentToHomeFragment()
             view.findNavController().navigate(action)
         }
     }
 
-
-    //function that pick the values when the user press the confirm button
     private fun picker(view :View) {
         //take value
         val stringPrice : String = value.text.toString()
         price = stringPrice.toDouble()
 
         //take description
-        description = view.findViewById(R.id.description_add_item)
+        description = view.findViewById(R.id.description_update_item)
         desc = description.text.toString()
 
 
     }
 
-    //function that convert month from Int to String
+    private fun onClickListener(idItem: Int, type : String, category : String, value: Double, day: Int, month: String, year: Int, description : String){
+        db.updateItem(idItem, description, value, type, category, day, month, year)
+    }
+
+    private fun getIntMonth(month: String): Int {
+        return when(month) {
+            "Gennaio" -> 0
+            "Febbraio" -> 1
+            "Marzo" -> 2
+            "Aprile" -> 3
+            "Maggio" -> 4
+            "Giugno" -> 5
+            "Luglio" -> 6
+            "Agosto" -> 7
+            "Settembre" -> 8
+            "Ottobre" -> 9
+            "Novembre" -> 10
+            else -> 11
+        }
+    }
+
     private fun dateConverter(month :Int) : String {
         return when(month) {
             0 -> "Gennaio"
@@ -237,20 +245,8 @@ class AddItemFragment : Fragment() {
         }
     }
 
-    private fun onClickListener(type : String, category : String, value: Double, day: Int, month: String, year: Int, description : String ){
-        db.addItem(description, value, type, category, day, month, year)
-    }
-
-
-    override fun onPause() {
-        super.onPause()
-        //when return to the home fragment show the app bar
-        (requireActivity() as AppCompatActivity).supportActionBar?.show()
-    }
-
     private fun hideKeyboard(view: View) {
         val hide = view.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         hide.hideSoftInputFromWindow(view.windowToken, 0)
     }
-
 }

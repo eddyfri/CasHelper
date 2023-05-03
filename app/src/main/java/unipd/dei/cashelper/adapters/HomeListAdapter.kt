@@ -4,9 +4,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import unipd.dei.cashelper.R
 import unipd.dei.cashelper.helpers.DBHelper
+import unipd.dei.cashelper.ui.HomeFragmentDirections
 
 class HomeListAdapter(private val itemList: MutableList<DBHelper.ItemInfo>): RecyclerView.Adapter<HomeListAdapter.ItemViewHolder>() {
 
@@ -22,7 +24,8 @@ class HomeListAdapter(private val itemList: MutableList<DBHelper.ItemInfo>): Rec
                 itemInfo.day.toString() + "/" + getNumberMonth(itemInfo.month) + "/" + itemInfo.year.toString()
             itemDate.text = date
             itemView.setOnClickListener {
-                // view -> updateItem con updateItemFragment
+                val action = HomeFragmentDirections.actionHomeFragmentToUpdateFragment(itemInfo.id)
+                itemView.findNavController().navigate(action)
             }
         }
 

@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:theme="@style/Theme.CasHelper"
+    android:background="?attr/backgroundColor"
+    android:id="@+id/constraint_update_item">
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline0_update_item"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.1"
+        />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline1_update_item"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.2"
+        />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline2_update_item"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.3"
+        />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline3_update_item"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.5"
+        />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/midline_update"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5"/>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineDescriptionSX_update"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.1"/>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineDescriptionDX_update"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.9"/>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline4_update_item"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.7"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@id/guideline0_update_item"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:text="@string/update_item"
+        android:theme="@style/TitleStyle"
+        />
+
+    <Spinner
+        android:id="@+id/category_select_update"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minHeight="48dp"
+        android:gravity="center"
+        app:layout_constraintStart_toStartOf="@id/guidelineDescriptionSX_update"
+        app:layout_constraintTop_toBottomOf="@id/guideline1_update_item"
+        app:layout_constraintBottom_toTopOf="@id/guideline2_update_item"/>
+
+    <Button
+        android:id="@+id/update_category"
+        app:icon="@drawable/add_fab_home"
+        android:layout_width="55dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toEndOf="@id/category_select_update"
+        app:layout_constraintTop_toBottomOf="@id/guideline1_update_item"
+        app:layout_constraintBottom_toTopOf="@id/guideline2_update_item"
+        android:gravity="center"
+        />
+
+    <EditText
+        android:id="@+id/value_update_item"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="@string/value_add"
+        android:inputType="numberDecimal"
+        app:layout_constraintBottom_toTopOf="@+id/guideline3_update_item"
+        app:layout_constraintStart_toStartOf="@+id/guidelineDescriptionSX_update"
+        app:layout_constraintTop_toBottomOf="@id/guideline2_update_item"
+        />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/baseline_euro"
+        app:layout_constraintStart_toEndOf="@id/value_update_item"
+        app:layout_constraintBottom_toTopOf="@+id/guideline3_update_item"
+        app:layout_constraintTop_toBottomOf="@id/guideline2_update_item"
+        />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/guideline4_update_item"
+        app:layout_constraintStart_toEndOf="@+id/guidelineDescriptionSX_update"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineDescriptionDX_update"
+        app:layout_constraintTop_toBottomOf="@id/guideline3_update_item"
+        app:counterMaxLength="50"
+        app:counterEnabled="true">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textMultiLine"
+            android:hint="@string/description_add"
+            android:id="@+id/description_update_item"
+            android:maxLength="50"
+
+            />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/container_home"
+        app:layout_constraintTop_toBottomOf="@id/guideline4_update_item"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:backgroundTint="@color/violet"
+        android:id="@+id/date_update_item"
+        />
+
+    <Button
+        android:id="@+id/update_button"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@id/midline_update"
+        app:layout_constraintEnd_toEndOf="@id/guidelineDescriptionDX_update"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/container_home"
+        android:layout_marginBottom="20pt"
+        android:text="@string/update_button"
+        android:enabled="false"
+        />
+
+    <Button
+        android:id="@+id/delete_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@id/guidelineDescriptionSX_update"
+        app:layout_constraintEnd_toEndOf="@id/midline_update"
+        android:background="@drawable/container_delete_button"
+        android:layout_marginBottom="20pt"
+        android:text="@string/delete_button"
+        style="@style/delete_button"
+        />
+
+    <Switch
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/guideline0_update_item"
+        app:layout_constraintBottom_toTopOf="@id/guideline1_update_item"
+        android:id="@+id/Switch_update_item"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintRight_toLeftOf="@id/Switch_update_item"
+        android:text="@string/exits_add_item"
+        android:layout_marginEnd="10pt"
+        android:theme="@style/TextStyle"
+        app:layout_constraintBaseline_toBaselineOf="@id/Switch_update_item"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toRightOf="@id/Switch_update_item"
+        android:text="@string/incoming_add_item"
+        android:layout_marginStart="10pt"
+        android:theme="@style/TextStyle"
+        app:layout_constraintBaseline_toBaselineOf="@id/Switch_update_item"/>
+
+
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

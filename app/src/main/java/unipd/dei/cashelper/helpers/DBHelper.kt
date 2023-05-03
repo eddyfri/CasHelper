@@ -114,6 +114,11 @@ class DBHelper(context: Context): SQLiteOpenHelper(context, DB_NAME, null, DB_VE
     fun updateItem(originalId: Int = -1, description: String = "", price: Double = -1.0, type: String = "", category: String = "", day: Int = -1, month: String = "", year: Int = -1): Boolean {
         if(originalId == -1)
             return false
+        val cv = ContentValues()
+        cv.put("Giorno", day)
+        cv.put("Mese", month)
+        cv.put("Anno", year)
+        writableDatabase.insertWithOnConflict("Data", null, cv, SQLiteDatabase.CONFLICT_IGNORE) != -1L
         val values = ContentValues().apply {
             if(description != "")
                 put("Descrizione", description)
@@ -122,7 +127,7 @@ class DBHelper(context: Context): SQLiteOpenHelper(context, DB_NAME, null, DB_VE
             if(type != "")
                 put("Tipo", type)
             if(category != "")
-                put("Categoria", category)
+                put("Nome", category)
             if(day != -1)
                 put("Giorno", day)
             if(month != "")
@@ -145,6 +150,7 @@ class DBHelper(context: Context): SQLiteOpenHelper(context, DB_NAME, null, DB_VE
 
         while(cursor.moveToNext()) {
             val item = ItemInfo("")
+            item.id = cursor.getInt(cursor.getColumnIndexOrThrow("Id"))
             item.category = cursor.getString(cursor.getColumnIndexOrThrow("Nome"))
             item.price = cursor.getDouble(cursor.getColumnIndexOrThrow("Prezzo"))
             item.day = cursor.getInt(cursor.getColumnIndexOrThrow("Giorno"))
@@ -155,6 +161,24 @@ class DBHelper(context: Context): SQLiteOpenHelper(context, DB_NAME, null, DB_VE
         }
         cursor.close()
         return ret
+    }
+
+    fun getItemById(id: Int): ItemInfo {
+        val cursor = readableDatabase.rawQuery("SELECT * FROM Item WHERE Id ='${id}'", null)
+
+        val item = ItemInfo("")
+        while(cursor.moveToNext()) {
+            item.id = cursor.getInt(cursor.getColumnIndexOrThrow("Id"))
+            item.description = cursor.getString(cursor.getColumnIndexOrThrow("Descrizione"))
+            item.category = cursor.getString(cursor.getColumnIndexOrThrow("Nome"))
+            item.price = cursor.getDouble(cursor.getColumnIndexOrThrow("Prezzo"))
+            item.day = cursor.getInt(cursor.getColumnIndexOrThrow("Giorno"))
+            item.month = cursor.getString(cursor.getColumnIndexOrThrow("Mese"))
+            item.year = cursor.getInt(cursor.getColumnIndexOrThrow("Anno"))
+            item.type = cursor.getString(cursor.getColumnIndexOrThrow("Tipo"))
+        }
+
+        return item
     }
 
     companion object
@@ -170,11 +194,13 @@ class DBHelper(context: Context): SQLiteOpenHelper(context, DB_NAME, null, DB_VE
     }
 
     data class ItemInfo(var changes: String) {
+        var id: Int = -1
         var category: String = ""
         var price: Double = -1.0
         var day: Int = -1
         var month: String = ""
         var year: Int = -1
         var type: String = ""
+        var description: String = ""
     }
 }

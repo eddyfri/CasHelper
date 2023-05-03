@@ -29,4 +29,6 @@
     <string name="menu_tema">Tema</string>
     <string name="menu_crediti">Crediti</string>
     <string name="confirm_button">Aggiungi</string>
+    <string name="update_item">Modifica Transazione</string>
+    <string name="update_button">MODIFICA</string>
 </resources>
