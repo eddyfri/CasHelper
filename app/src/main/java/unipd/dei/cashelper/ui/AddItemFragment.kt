@@ -8,6 +8,7 @@ import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.ContextThemeWrapper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnFocusChangeListener
@@ -36,7 +37,8 @@ class AddItemFragment : Fragment() {
     private lateinit var description: EditText
     private lateinit var spinner : Spinner
     private lateinit var constraintLayout : ConstraintLayout
-    private lateinit var delete :Button
+    private lateinit var delete : Button
+    private lateinit var disable : Button
     //variables for picking
     private lateinit var switch_choose : String
     private var price by Delegates.notNull<Double>()
@@ -58,6 +60,8 @@ class AddItemFragment : Fragment() {
 
         db = DBHelper(this.requireContext() as Context)
         add = view.findViewById(R.id.confirm_button)
+        disable = view.findViewById(R.id.disable_buttonFAKE)
+        add.visibility = View.INVISIBLE
         spinner = view.findViewById<Spinner>(R.id.category_select)
         val categories = db.getCategoryName()
         //add first element the default string
@@ -135,10 +139,13 @@ class AddItemFragment : Fragment() {
                 categoryCheck = selected_category != getString(R.string.category_spinner)
                 if(valueCheck && categoryCheck) {
                     add.isEnabled = true
-                    add.setTextAppearance(R.style.add_button)
+                    add.visibility = View.VISIBLE
+                    disable.visibility = View.INVISIBLE
+                    disable.isEnabled = false
                 } else {
                     add.isEnabled = false
-                    add.setTextAppearance(R.style.disable_button)
+                    add.visibility = View.INVISIBLE
+                    disable.visibility = View.VISIBLE
                 }
             }
 
@@ -186,10 +193,13 @@ class AddItemFragment : Fragment() {
                 valueCheck = stringPrice.isNotEmpty()
                 if(valueCheck && categoryCheck) {
                     add.isEnabled = true
-                    add.setBackgroundColor(resources.getColor(R.color.Entries))
+                    add.visibility = View.VISIBLE
+                    disable.visibility = View.INVISIBLE
+                    disable.isEnabled = false
                 } else {
                     add.isEnabled = false
-                    add.setTextAppearance(R.style.disable_button)
+                    add.visibility = View.INVISIBLE
+                    disable.visibility = View.VISIBLE
                 }
             }
 

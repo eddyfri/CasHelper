@@ -29,6 +29,7 @@ class UpdateItemFragment: Fragment() {
     private lateinit var spinner : Spinner
     private lateinit var constraintLayout : ConstraintLayout
     private var idItem by Delegates.notNull<Int>()
+    private lateinit var disable : Button
 
     //variables for picking
     private lateinit var switch_choose : String
@@ -51,6 +52,8 @@ class UpdateItemFragment: Fragment() {
         db = DBHelper(this.requireContext() as Context)
         var itemInfo = db.getItemById(idItem)
         update = view.findViewById(R.id.update_button)
+        disable = view.findViewById(R.id.disable_buttonFAKE_update)
+        update.visibility = View.INVISIBLE
         spinner = view.findViewById<Spinner>(R.id.category_select_update)
         val categories = db.getCategoryName()
         //add first element the default string
@@ -124,10 +127,13 @@ class UpdateItemFragment: Fragment() {
                 categoryCheck = selected_category != getString(R.string.category_spinner)
                 if(valueCheck && categoryCheck) {
                     update.isEnabled = true
-                    update.setTextAppearance(R.style.add_button)
+                    update.visibility = View.VISIBLE
+                    disable.visibility = View.INVISIBLE
+                    disable.isEnabled = false
                 } else {
                     update.isEnabled = false
-                    update.setTextAppearance(R.style.disable_button)
+                    update.visibility = View.INVISIBLE
+                    disable.visibility = View.VISIBLE
                 }
             }
 
@@ -169,10 +175,13 @@ class UpdateItemFragment: Fragment() {
                 valueCheck = stringPrice.isNotEmpty()
                 if(valueCheck && categoryCheck) {
                     update.isEnabled = true
-                    update.setTextAppearance(R.style.add_button)
+                    update.visibility = View.VISIBLE
+                    disable.visibility = View.INVISIBLE
+                    disable.isEnabled = false
                 } else {
                     update.isEnabled = false
-                    update.setTextAppearance(R.style.disable_button)
+                    update.visibility = View.INVISIBLE
+                    disable.visibility = View.VISIBLE
                 }
             }
 

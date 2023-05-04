@@ -24,14 +24,18 @@
         <item name="android:textColor">@color/white</item>
     </style>
 
-    <style name="add_button">
-        <item name="backgroundTint">@color/Entries</item>
+
+    <style name="add_button" parent="Widget.MaterialComponents.Button">
+        <item name="backgroundTint">@color/confirm</item>
         <item name="android:textColor">@color/white</item>
+        <item name="android:state_enabled">true</item>
+
     </style>
 
-    <style name="disable_button">
+    <style name="disable_button" parent="Widget.MaterialComponents.Button">
         <item name="backgroundTint">@color/Disable</item>
         <item name="android:textColor">@color/white</item>
+        <item name="android:state_enabled">false</item>
     </style>
 
 
