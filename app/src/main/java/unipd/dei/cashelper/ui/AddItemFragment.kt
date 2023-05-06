@@ -8,17 +8,16 @@ import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.ContextThemeWrapper
-import android.view.LayoutInflater
-import android.view.View
+import android.view.*
 import android.view.View.OnFocusChangeListener
-import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import androidx.navigation.findNavController
 import unipd.dei.cashelper.R
 import unipd.dei.cashelper.helpers.DBHelper
@@ -26,7 +25,7 @@ import java.util.*
 import kotlin.properties.Delegates
 
 
-class AddItemFragment : Fragment() {
+class AddItemFragment : Fragment(), MenuProvider {
 
     private lateinit var db: DBHelper
     private lateinit var value : EditText
@@ -106,6 +105,8 @@ class AddItemFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        activity?.addMenuProvider(this, viewLifecycleOwner, Lifecycle.State.RESUMED)
 
 
         //hide keyboard when click anywhere in the screen
@@ -268,6 +269,19 @@ class AddItemFragment : Fragment() {
     private fun hideKeyboard(view: View) {
         val hide = view.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         hide.hideSoftInputFromWindow(view.windowToken, 0)
+    }
+
+    //inflate the correct menu for this fragment
+    override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+        menuInflater.inflate(R.menu.menu_empty, menu)
+    }
+
+    //action for every menuItem selected
+    override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+       /* when(menuItem.itemId){
+            R.id.Spese -> Toast.makeText(requireContext(),"Spese cliccato", Toast.LENGTH_SHORT).show()
+        }*/
+        return true
     }
 
 }

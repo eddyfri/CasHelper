@@ -65,8 +65,8 @@ class IncomingFragment : Fragment() {
 
         db = DBHelper(context as Context)
 
-        month = getCurrentMonth()
-        year = getCurrentYear()
+        month = IncomingFragmentArgs.fromBundle(requireArguments()).month
+        year = IncomingFragmentArgs.fromBundle(requireArguments()).year
 
 
         var itemInfo = mutableListOf<DBHelper.ItemInfo>()
@@ -80,6 +80,9 @@ class IncomingFragment : Fragment() {
         recyclerView.adapter = HomeListAdapter(itemInfo)
         recyclerView.layoutManager = LinearLayoutManager(this.context, LinearLayoutManager.VERTICAL, false)
 
+        //test
+        monthTextView.text = month
+        yearTextView.text = year.toString()
 
         return view
     }

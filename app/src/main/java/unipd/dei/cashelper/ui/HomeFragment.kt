@@ -7,12 +7,13 @@ import android.content.res.Configuration
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.TextView
+import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -31,7 +32,7 @@ import kotlin.collections.ArrayList
 import kotlin.properties.Delegates
 
 
-class HomeFragment: Fragment() {
+class HomeFragment: Fragment(), MenuProvider {
     private lateinit var recyclerView: RecyclerView
     private lateinit var fabBack: ExtendedFloatingActionButton
     private lateinit var fabNext: ExtendedFloatingActionButton
@@ -62,6 +63,8 @@ class HomeFragment: Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_home, container, false)
 
+
+
         db = DBHelper(context as Context)
 
         month = getCurrentMonth()
@@ -89,6 +92,8 @@ class HomeFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        activity?.addMenuProvider(this, viewLifecycleOwner, Lifecycle.State.RESUMED)
 
         var itemInfo = mutableListOf<DBHelper.ItemInfo>()
         itemInfo = db.getItem(month, year)
@@ -322,4 +327,20 @@ class HomeFragment: Fragment() {
         totalTextView.text = getTotal(itemInfo).toString() + " €"
     }
 
+    //inflate the correct menu for this fragment
+    override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+        menuInflater.inflate(R.menu.menu_home, menu)
+    }
+
+    //action for every menuItem selected
+    override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+        when(menuItem.itemId){
+            R.id.Spese -> Toast.makeText(requireContext(),"Spese cliccato", Toast.LENGTH_SHORT).show()
+            R.id.Entrate -> {
+                val action = HomeFragmentDirections.actionHomeFragmentToIncomingFragment(month, year)
+                view?.findNavController()?.navigate(action)
+            }
+        }
+        return true
+    }
 }
