@@ -69,13 +69,10 @@ class HomeFragment: Fragment(), MenuProvider, HomeListAdapter.OnItemDeletedListe
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_home, container, false)
 
-
-
         db = DBHelper(context as Context)
 
         month = getCurrentMonth()
         year = getCurrentYear()
-
 
         var itemInfo = mutableListOf<DBHelper.ItemInfo>()
         itemInfo = db.getItem(month, year)
@@ -146,27 +143,6 @@ class HomeFragment: Fragment(), MenuProvider, HomeListAdapter.OnItemDeletedListe
         // aggiorna tutta la schermata
         updateAll(month, year)
     }
-/*
-    override fun onContextItemSelected(item: MenuItem): Boolean {
-        Log.d(TAG, "item id: ${item.itemId}")
-        when(item.itemId) {
-            R.id.delete_item -> {
-                val itemId = (recyclerView.adapter as HomeListAdapter).selectedItemId
-                val contextView = (view as View).findViewById<View>(R.id.coordinator_layout_message)
-
-                if(db.removeItem(itemId)) {
-                    updateAll(month, year)
-                    Snackbar.make(contextView, "Item eliminato con successo", Snackbar.LENGTH_SHORT).setAction("Chiudi") {}.show()
-                }
-                else {
-                    Snackbar.make(contextView, "Errore nell'eliminazione dell'item", Snackbar.LENGTH_SHORT).setAction("Chiudi") {}.show()
-                }
-            }
-        }
-        return super.onContextItemSelected(item)
-    }
-
- */
 
     private fun getIncoming(itemInfo: MutableList<DBHelper.ItemInfo>): Double {
         var totIncoming = 0.0
