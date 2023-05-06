@@ -141,6 +141,8 @@ class HomeFragment: Fragment(), MenuProvider, HomeListAdapter.OnItemDeletedListe
 
     override fun onItemDeleted() {
         // aggiorna tutta la schermata
+        val contextView = (view as View).findViewById<View>(R.id.coordinator_layout_message)
+        Snackbar.make(contextView, "Item eliminato con successo", Snackbar.LENGTH_SHORT).setAction("Chiudi") {}.show()
         updateAll(month, year)
     }
 

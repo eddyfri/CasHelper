@@ -30,7 +30,7 @@ class HomeListAdapter(private val itemList: MutableList<DBHelper.ItemInfo>, priv
         builder.setMessage("Sei sicuro di voler eliminare questo elemento?")
             .setPositiveButton("Elimina") { _, _ ->
                 db.removeItem(selectedItemId)
-                Snackbar.make(v, "Item eliminato con successo", Snackbar.LENGTH_SHORT).setAction("Chiudi") {}.show()
+
                 listener.onItemDeleted()
             }
             .setNegativeButton("Annulla") { dialog, _ ->
