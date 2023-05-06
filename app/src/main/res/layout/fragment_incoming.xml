@@ -2,8 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
 
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/home"
+    android:id="@+id/constraint_incoming"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -11,83 +10,121 @@
     android:background="?attr/backgroundColor">
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineIncoming0"
+        android:id="@+id/guideline_incoming0"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.05" />
-
+        app:layout_constraintGuide_percent="0.15"/>
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/midline_homeIncoming"
+        android:id="@+id/midline_incoming"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.5"/>
-
-
     <TextView
-        android:id="@+id/incoming_title"
+        android:id="@+id/month_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/incoming_title"
-        app:layout_constraintBottom_toTopOf="@id/guidelineIncoming0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:theme="@style/TitleStyle"
-        />
+        android:text="@string/month"
+        app:layout_constraintRight_toLeftOf="@id/midline_incoming"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/guideline_incoming0"
+        android:layout_margin="2pt"/>
+
+    <TextView
+        android:id="@+id/year_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/year"
+        app:layout_constraintLeft_toRightOf="@id/midline_incoming"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/guideline_incoming0"
+        android:layout_margin="2pt"/>
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/back_month"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="top"
+        android:theme="@style/Theme.CasHelper"
+        app:backgroundTint="?attr/colorBackgroundFloating"
+        app:icon="@drawable/baseline_arrow_back"
+        android:contentDescription="@string/back_month_button"
+        app:elevation="0dp"
+        android:layout_marginStart="5pt"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/guideline_incoming0"/>
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/next_month"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="top"
+        android:theme="@style/Theme.CasHelper"
+        app:backgroundTint="?attr/colorBackgroundFloating"
+        app:icon="@drawable/baseline_arrow_next"
+        android:contentDescription="@string/next_month_button"
+        app:elevation="0dp"
+        android:layout_marginEnd="5pt"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/guideline_incoming0"/>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="@drawable/container_home"
-        app:layout_constraintTop_toBottomOf="@id/guidelineIncoming0"
+        app:layout_constraintTop_toBottomOf="@id/guideline_incoming0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/guidelineIncoming1"
-        android:layout_margin="10pt">
+        app:layout_constraintBottom_toTopOf="@id/guideline_incoming1"
+        android:layout_marginStart="10pt"
+        android:layout_marginEnd="10pt"
+        android:layout_marginBottom="5pt"
+        android:layout_marginTop="5pt"
+        >
         <com.github.mikephil.charting.charts.PieChart
             android:id="@+id/chart_incoming"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_centerHorizontal="true"
             />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineIncoming1"
+        android:id="@+id/guideline_incoming1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.30" />
+        app:layout_constraintGuide_percent="0.5" />
+
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineIncoming2"
+        android:id="@+id/guideline_incomingEnd"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.6" />
+        app:layout_constraintGuide_percent="0.95" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycle_view_categories"
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:background="@drawable/container_home"
-        app:layout_constraintBottom_toTopOf="@id/guidelineIncoming2"
-        app:layout_constraintTop_toBottomOf="@id/guidelineIncoming1"
         android:layout_marginStart="10pt"
         android:layout_marginEnd="10pt"
-        android:theme="@style/TextStyle"
-        />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_view_incoming"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/container_home"
-        app:layout_constraintTop_toBottomOf="@id/guidelineIncoming2"
-        android:layout_marginStart="10pt"
-        android:layout_marginEnd="10pt"
-        android:theme="@style/TextStyle"
-        />
-
+        android:layout_marginTop="5pt"
+        app:layout_constraintTop_toBottomOf="@id/guideline_incoming1"
+        app:layout_constraintBottom_toTopOf="@id/guideline_incomingEnd"
+        app:layout_constraintStart_toStartOf="parent"
+        >
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:theme="@style/TextStyle"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            />
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
