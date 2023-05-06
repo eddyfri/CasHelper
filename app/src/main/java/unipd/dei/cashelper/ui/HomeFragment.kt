@@ -8,12 +8,14 @@ import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.github.mikephil.charting.charts.PieChart
@@ -22,6 +24,7 @@ import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+import com.google.android.material.snackbar.Snackbar
 import unipd.dei.cashelper.R
 import unipd.dei.cashelper.adapters.HomeListAdapter
 import unipd.dei.cashelper.helpers.DBHelper
@@ -31,7 +34,7 @@ import kotlin.collections.ArrayList
 import kotlin.properties.Delegates
 
 
-class HomeFragment: Fragment() {
+class HomeFragment: Fragment(), HomeListAdapter.OnItemDeletedListener {
     private lateinit var recyclerView: RecyclerView
     private lateinit var fabBack: ExtendedFloatingActionButton
     private lateinit var fabNext: ExtendedFloatingActionButton
@@ -80,9 +83,8 @@ class HomeFragment: Fragment() {
         totalTextView = view.findViewById<TextView>(R.id.total_label_home)
         addButton = view.findViewById<ExtendedFloatingActionButton>(R.id.add_item)
         recyclerView = view.findViewById(R.id.recycler_view)
-        recyclerView.adapter = HomeListAdapter(itemInfo)
+        recyclerView.adapter = HomeListAdapter(itemInfo, this)
         recyclerView.layoutManager = LinearLayoutManager(this.context, LinearLayoutManager.VERTICAL, false)
-
 
         return view
     }
@@ -92,9 +94,6 @@ class HomeFragment: Fragment() {
 
         var itemInfo = mutableListOf<DBHelper.ItemInfo>()
         itemInfo = db.getItem(month, year)
-
-
-
 
         monthTextView.text = month
         yearTextView.text = year.toString()
@@ -111,16 +110,7 @@ class HomeFragment: Fragment() {
             month = backMonth(month)
             monthTextView.text = month
             yearTextView.text = year.toString()
-            if(!(month == getCurrentMonth() && year == getCurrentYear()))
-                fabNext.show()
-            // aggiorna dati
-            itemInfo = db.getItem(month, year)
-            // aggiorna pieChart
-            updatePieChart(itemInfo)
-            // aggiorna text view totali
-            updateTotalTextViews(itemInfo)
-            // aggiorna recyclerView
-            recyclerView.adapter = HomeListAdapter(itemInfo)
+            updateAll(month, year)
         }
         fabNext.setOnClickListener {
             // non posso andare più avanti del mese corrente, no mesi futuri
@@ -131,17 +121,7 @@ class HomeFragment: Fragment() {
                 month = nextMonth(month)
                 monthTextView.text = month
                 yearTextView.text = year.toString()
-                if(!(month == getCurrentMonth() && year == getCurrentYear()))
-                    fabNext.show()
-                else fabNext.hide()
-                // aggiorna dati
-                itemInfo = db.getItem(month, year)
-                // aggiorna pieChart
-                updatePieChart(itemInfo)
-                // aggiorna text view totali
-                updateTotalTextViews(itemInfo)
-                // aggiorna recyclerView
-                recyclerView.adapter = HomeListAdapter(itemInfo)
+                updateAll(month, year)
             }
             else
                 fabNext.hide()
@@ -149,12 +129,36 @@ class HomeFragment: Fragment() {
         }
 
         addButton.setOnClickListener {
-            Log.d(TAG, "items: $itemInfo")
             val action = HomeFragmentDirections.actionHomeFragmentToAddFragment()
             view.findNavController().navigate(action)
         }
     }
 
+    override fun onItemDeleted() {
+        // aggiorna tutta la schermata
+        updateAll(month, year)
+    }
+/*
+    override fun onContextItemSelected(item: MenuItem): Boolean {
+        Log.d(TAG, "item id: ${item.itemId}")
+        when(item.itemId) {
+            R.id.delete_item -> {
+                val itemId = (recyclerView.adapter as HomeListAdapter).selectedItemId
+                val contextView = (view as View).findViewById<View>(R.id.coordinator_layout_message)
+
+                if(db.removeItem(itemId)) {
+                    updateAll(month, year)
+                    Snackbar.make(contextView, "Item eliminato con successo", Snackbar.LENGTH_SHORT).setAction("Chiudi") {}.show()
+                }
+                else {
+                    Snackbar.make(contextView, "Errore nell'eliminazione dell'item", Snackbar.LENGTH_SHORT).setAction("Chiudi") {}.show()
+                }
+            }
+        }
+        return super.onContextItemSelected(item)
+    }
+
+ */
 
     private fun getIncoming(itemInfo: MutableList<DBHelper.ItemInfo>): Double {
         var totIncoming = 0.0
@@ -320,6 +324,22 @@ class HomeFragment: Fragment() {
         totIncomingTextView.text = getIncoming(itemInfo).toString() + " €"
         totExitsTextView.text = getExits(itemInfo).toString() + " €"
         totalTextView.text = getTotal(itemInfo).toString() + " €"
+    }
+
+    fun updateAll(month: String, year: Int) {
+        var itemInfo = mutableListOf<DBHelper.ItemInfo>()
+
+        if(!(month == getCurrentMonth() && year == getCurrentYear()))
+            fabNext.show()
+        else fabNext.hide()
+        // aggiorna dati
+        itemInfo = db.getItem(month, year)
+        // aggiorna pieChart
+        updatePieChart(itemInfo)
+        // aggiorna text view totali
+        updateTotalTextViews(itemInfo)
+        // aggiorna recyclerView
+        recyclerView.adapter = HomeListAdapter(itemInfo, this)
     }
 
 }

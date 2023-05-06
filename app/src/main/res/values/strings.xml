@@ -31,4 +31,5 @@
     <string name="confirm_button">Aggiungi</string>
     <string name="update_item">Dettagli Transazione</string>
     <string name="update_button">MODIFICA</string>
+    <string name="deleteItem">Elimina</string>
 </resources>
