@@ -5,20 +5,20 @@ import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import androidx.navigation.findNavController
 import unipd.dei.cashelper.R
 import unipd.dei.cashelper.helpers.DBHelper
 import java.util.*
 import kotlin.properties.Delegates
 
-class UpdateItemFragment: Fragment() {
+class UpdateItemFragment: Fragment(), MenuProvider {
     private lateinit var db: DBHelper
     private lateinit var value : EditText
     private lateinit var date : Button
@@ -30,6 +30,7 @@ class UpdateItemFragment: Fragment() {
     private lateinit var constraintLayout : ConstraintLayout
     private var idItem by Delegates.notNull<Int>()
     private lateinit var disable : Button
+    private lateinit var delete : Button
 
     //variables for picking
     private lateinit var switch_choose : String
@@ -46,6 +47,9 @@ class UpdateItemFragment: Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_update_item, container, false)
+
+        activity?.addMenuProvider(this, viewLifecycleOwner, Lifecycle.State.RESUMED)
+
         idItem = UpdateItemFragmentArgs.fromBundle(requireArguments()).idItem
         constraintLayout = view.findViewById<ConstraintLayout>(R.id.constraint_update_item)
 
@@ -53,6 +57,7 @@ class UpdateItemFragment: Fragment() {
         var itemInfo = db.getItemById(idItem)
         update = view.findViewById(R.id.update_button)
         disable = view.findViewById(R.id.disable_buttonFAKE_update)
+        delete = view.findViewById((R.id.delete_button))
         update.visibility = View.INVISIBLE
         spinner = view.findViewById<Spinner>(R.id.category_select_update)
         val categories = db.getCategoryName()
@@ -191,6 +196,13 @@ class UpdateItemFragment: Fragment() {
 
         })
 
+        //when clicked return to the HomeFragment
+        delete.setOnClickListener{
+            val action = UpdateItemFragmentDirections.actionUpdateFragmentToHomeFragment()
+            view.findNavController().navigate(action)
+        }
+
+        //when clicked add the item and return to the HomeFragment
         update.setOnClickListener{
             //picking the current values
             picker(view)
@@ -257,5 +269,21 @@ class UpdateItemFragment: Fragment() {
     private fun hideKeyboard(view: View) {
         val hide = view.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         hide.hideSoftInputFromWindow(view.windowToken, 0)
+    }
+
+    //inflate the correct menu for this fragment
+    override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+        menuInflater.inflate(R.menu.menu_update_item, menu)
+    }
+
+    //action for every menuItem selected
+    override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+        if(menuItem.itemId == R.id.remove_item){
+            db.removeItem(idItem)
+            Toast.makeText(requireContext(),"Elemento eliminato", Toast.LENGTH_SHORT).show()
+            val action = UpdateItemFragmentDirections.actionUpdateFragmentToHomeFragment()
+            view?.findNavController()?.navigate(action)
+        }
+        return true
     }
 }

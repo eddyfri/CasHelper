@@ -17,6 +17,11 @@
             android:id="@+id/action_homeFragment_to_updateFragment"
             app:destination="@id/updateFragment"
             />
+        <action
+            android:id="@+id/action_homeFragment_to_incomingFragment"
+            app:destination="@id/incomingFragment"
+            />
+
     </fragment>
     <fragment
         android:id="@+id/addFragment"
@@ -41,6 +46,25 @@
             app:destination="@id/homeFragment"
             />
     </fragment>
+
+    <fragment
+        android:id="@+id/incomingFragment"
+        android:name="unipd.dei.cashelper.ui.IncomingFragment"
+        android:label="Incoming"
+        tools:layout="@layout/fragment_incoming">
+        <argument
+            android:name="month"
+            app:argType="string" />
+        <argument
+            android:name="year"
+            app:argType="integer" />
+        <action
+            android:id="@+id/action_incomingFragment_to_homeFragment"
+            app:destination="@id/homeFragment"
+            />
+    </fragment>
+
+
 
 
 </navigation>

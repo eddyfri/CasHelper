@@ -11,9 +11,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.CasHelper"
         tools:targetApi="31">
-        <activity
-            android:name=".ui.IncomingActivity"
-            android:exported="false" />
+
         <activity
             android:name="MainActivity"
             android:exported="true">

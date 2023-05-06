@@ -10,7 +10,6 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
-import unipd.dei.cashelper.ui.IncomingActivity
 
 
 class MainActivity : AppCompatActivity() {
@@ -123,24 +122,9 @@ class MainActivity : AppCompatActivity() {
 
          */
     }
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        val inflater = menuInflater
-        inflater.inflate(R.menu.app_bar, menu)
 
 
-        return true
-    }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId){
-            R.id.Entrate -> {
-                val intent = Intent(this, IncomingActivity::class.java)
-                startActivity(intent)
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
-        }
-    }
 
 
 
