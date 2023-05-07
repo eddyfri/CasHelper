@@ -257,6 +257,7 @@ class AddItemFragment : Fragment(), MenuProvider {
 
     private fun onClickListener(type : String, category : String, value: Double, day: Int, month: String, year: Int, description : String ){
         db.addItem(description, value, type, category, day, month, year)
+        Toast.makeText(requireContext(),"Elemento aggiunto", Toast.LENGTH_SHORT).show()
     }
 
 
