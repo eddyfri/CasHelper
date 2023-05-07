@@ -1,5 +1,6 @@
 package unipd.dei.cashelper.ui
 
+import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.content.Context
 import android.os.Bundle
@@ -279,10 +280,19 @@ class UpdateItemFragment: Fragment(), MenuProvider {
     //action for every menuItem selected
     override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
         if(menuItem.itemId == R.id.remove_item){
-            db.removeItem(idItem)
-            Toast.makeText(requireContext(),"Elemento eliminato", Toast.LENGTH_SHORT).show()
-            val action = UpdateItemFragmentDirections.actionUpdateFragmentToHomeFragment()
-            view?.findNavController()?.navigate(action)
+            val builder = AlertDialog.Builder(view?.context)
+            builder.setMessage("Sei sicuro di voler eliminare questo elemento?")
+                .setPositiveButton("Elimina") { _, _ ->
+                    db.removeItem(idItem)
+                    Toast.makeText(requireContext(),"Elemento eliminato", Toast.LENGTH_SHORT).show()
+                    val action = UpdateItemFragmentDirections.actionUpdateFragmentToHomeFragment()
+                    view?.findNavController()?.navigate(action)
+                }
+                .setNegativeButton("Annulla") { dialog, _ ->
+                    dialog.cancel()
+                }
+                .show()
+
         }
         return true
     }
