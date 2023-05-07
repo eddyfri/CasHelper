@@ -21,6 +21,10 @@
             android:id="@+id/action_homeFragment_to_incomingFragment"
             app:destination="@id/incomingFragment"
             />
+        <action
+            android:id="@+id/action_homeFragment_to_outflowFragment"
+            app:destination="@id/outflowFragment"
+            />
 
     </fragment>
     <fragment
@@ -60,6 +64,23 @@
             app:argType="integer" />
         <action
             android:id="@+id/action_incomingFragment_to_homeFragment"
+            app:destination="@id/homeFragment"
+            />
+    </fragment>
+
+    <fragment
+        android:id="@+id/outflowFragment"
+        android:name="unipd.dei.cashelper.ui.OutflowFragment"
+        android:label="Outflow"
+        tools:layout="@layout/fragment_outflow">
+        <argument
+            android:name="month"
+            app:argType="string" />
+        <argument
+            android:name="year"
+            app:argType="integer" />
+        <action
+            android:id="@+id/action_outflowFragment_to_homeFragment"
             app:destination="@id/homeFragment"
             />
     </fragment>

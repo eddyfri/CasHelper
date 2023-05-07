@@ -130,7 +130,6 @@ class HomeFragment: Fragment(), MenuProvider, HomeListAdapter.OnItemDeletedListe
             }
             else
                 fabNext.hide()
-
         }
 
         addButton.setOnClickListener {
@@ -318,7 +317,10 @@ class HomeFragment: Fragment(), MenuProvider, HomeListAdapter.OnItemDeletedListe
     //action for every menuItem selected
     override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
         when(menuItem.itemId){
-            R.id.Spese -> Toast.makeText(requireContext(),"Spese cliccato", Toast.LENGTH_SHORT).show()
+            R.id.Spese -> {
+                val action =HomeFragmentDirections.actionHomeFragmentToOutflowFragment(month, year)
+                view?.findNavController()?.navigate(action)
+            }
             R.id.Entrate -> {
                 val action = HomeFragmentDirections.actionHomeFragmentToIncomingFragment(month, year)
                 view?.findNavController()?.navigate(action)

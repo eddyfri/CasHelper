@@ -34,7 +34,7 @@ import java.util.*
 import kotlin.properties.Delegates
 
 
-class IncomingFragment : Fragment() {
+class OutflowFragment : Fragment() {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var fabBack: ExtendedFloatingActionButton
@@ -83,13 +83,14 @@ class IncomingFragment : Fragment() {
         return view
     }
 
-    private fun getOnlyIncoming(allItem: MutableList<DBHelper.ItemInfo>): MutableList<DBHelper.ItemInfo>{
-        var onlyIncoming = mutableListOf<DBHelper.ItemInfo>()
+    //metodo per farsi restituire una lista di sole uscite
+    private fun getOnlyOutflow(allItem: MutableList<DBHelper.ItemInfo>): MutableList<DBHelper.ItemInfo>{
+        var onlyOutflow = mutableListOf<DBHelper.ItemInfo>()
         for (item in allItem) {
             if(item.type == "Entrata")
-                onlyIncoming.add(item)
+                onlyOutflow.add(item)
         }
-        return onlyIncoming
+        return onlyOutflow
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -99,29 +100,6 @@ class IncomingFragment : Fragment() {
         monthTextView.text = month
         yearTextView.text = year.toString()
 
-        fabBack.setOnClickListener {
-            // cambia mese anno
-            if(month == "Gennaio")
-                year--
-            month = backMonth(month)
-            monthTextView.text = month
-            yearTextView.text = year.toString()
-            updateAll(month, year)
-        }
-        fabNext.setOnClickListener {
-            // non posso andare più avanti del mese corrente, no mesi futuri
-            if(month != getCurrentMonth() || year != getCurrentYear()) {
-                // cambia mese anno
-                if(month == "Dicembre")
-                    year++
-                month = nextMonth(month)
-                monthTextView.text = month
-                yearTextView.text = year.toString()
-                updateAll(month, year)
-            }
-            else
-                fabNext.hide()
-        }
 
         //se entro nel fragment nel mese corrente nascondo il bottone per spostarsi al mese successivo
         if((month == getCurrentMonth()) && (year == getCurrentYear()))
