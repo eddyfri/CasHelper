@@ -1,17 +1,12 @@
 package unipd.dei.cashelper.adapters
 
 import android.app.AlertDialog
-import android.content.ContentValues.TAG
-import android.content.Context
-import android.util.Log
 import android.view.*
 import android.widget.TextView
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.snackbar.Snackbar
 import unipd.dei.cashelper.R
 import unipd.dei.cashelper.helpers.DBHelper
-import unipd.dei.cashelper.ui.HomeFragment
 import unipd.dei.cashelper.ui.HomeFragmentDirections
 
 class HomeListAdapter(private val itemList: MutableList<DBHelper.ItemInfo>, private var listener: OnItemDeletedListener): RecyclerView.Adapter<HomeListAdapter.ItemViewHolder>() {
@@ -30,7 +25,6 @@ class HomeListAdapter(private val itemList: MutableList<DBHelper.ItemInfo>, priv
         builder.setMessage("Sei sicuro di voler eliminare questo elemento?")
             .setPositiveButton("Elimina") { _, _ ->
                 db.removeItem(selectedItemId)
-
                 listener.onItemDeleted()
             }
             .setNegativeButton("Annulla") { dialog, _ ->
