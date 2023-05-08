@@ -35,7 +35,7 @@ import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.properties.Delegates
 import android.util.Log
-
+import unipd.dei.cashelper.adapters.IncomingListAdapter
 
 
 class IncomingFragment : Fragment() {
@@ -72,7 +72,7 @@ class IncomingFragment : Fragment() {
         //qui mi serve per passare all'adapter gli elementi
         var allItemIncoming = db.getItemsByType("Entrata", month, year)
         var allCategories = db.getCategoryName()
-
+        var itemByCategory = getIncomingByCategory(allCategories, allItemIncoming)
 
 
         fabBack = view.findViewById<ExtendedFloatingActionButton>(R.id.back_month)
@@ -80,7 +80,7 @@ class IncomingFragment : Fragment() {
         monthTextView = view.findViewById<TextView>(R.id.month_text)
         yearTextView = view.findViewById<TextView>(R.id.year_text)
         recyclerView = view.findViewById(R.id.recycler_view)
-        //creare un nuovo adapter e passargli itemInfo come parametro
+        recyclerView.adapter = IncomingListAdapter(itemByCategory)
         recyclerView.layoutManager = LinearLayoutManager(this.context, LinearLayoutManager.VERTICAL, false)
 
 
@@ -96,19 +96,22 @@ class IncomingFragment : Fragment() {
         return incomingsByCategory
     }
 
+    //metodo che restituisce un associazione "nome categoria"->"array di item di quella categoria"
+    //se l'associazione contiene un arraylisst vuoto allora elimina l'associazione
     private fun getIncomingByCategory(categories: ArrayList<String>, allItem: MutableList<DBHelper.ItemInfo>): MutableMap<String, ArrayList<DBHelper.ItemInfo>> {
         var incomingByCategory = mutableMapOf<String, ArrayList<DBHelper.ItemInfo>>()
         for (element in categories)
             incomingByCategory.put(element, getCategoryWithIncomings(element, allItem))
+        for (element in categories) {
+            if (incomingByCategory.containsKey(element)) {
+                val testList = incomingByCategory[element]
+                if (testList != null)
+                    if (testList.isEmpty())
+                        incomingByCategory.remove(element)
+            }
+        }
         return incomingByCategory
     }
-
-
-    //TEST
-    var allItemIncoming = db.getItemsByType("Entrata", month, year)
-    var allCategories = db.getCategoryName()
-    public var testMutableList = getIncomingByCategory(allCategories, allItemIncoming)
-
 
 
 

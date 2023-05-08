@@ -15,7 +15,7 @@ import unipd.dei.cashelper.helpers.DBHelper
 import unipd.dei.cashelper.ui.HomeFragment
 import unipd.dei.cashelper.ui.HomeFragmentDirections
 
-class IncomingListAdapter(private val categoryList: MutableList<DBHelper.ItemInfo>) : RecyclerView.Adapter<IncomingListAdapter.CategoryViewHolder>() {
+class IncomingListAdapter(private val categoryList: MutableMap<String, ArrayList<DBHelper.ItemInfo>>) : RecyclerView.Adapter<IncomingListAdapter.CategoryViewHolder>() {
     private var selectedCategory =""
     private lateinit var db :DBHelper
 
@@ -35,7 +35,7 @@ class IncomingListAdapter(private val categoryList: MutableList<DBHelper.ItemInf
     }
 
     override fun getItemCount(): Int {
-        TODO("Not yet implemented")
+        return categoryList.size
     }
 
     override fun onBindViewHolder(holder: CategoryViewHolder, position: Int) {
