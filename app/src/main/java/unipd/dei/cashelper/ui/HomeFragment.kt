@@ -36,6 +36,10 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AlphaAnimation
+import android.view.animation.Animation
+import com.google.android.material.transition.MaterialElevationScale
+import com.google.android.material.transition.MaterialFadeThrough
 
 
 class HomeFragment: Fragment(), MenuProvider, HomeListAdapter.OnItemDeletedListener {
@@ -64,6 +68,9 @@ class HomeFragment: Fragment(), MenuProvider, HomeListAdapter.OnItemDeletedListe
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         // transizioni ingresso e uscita schermata
+        // exitTransition = MaterialFadeThrough()
+        exitTransition = MaterialElevationScale(/* growing= */ false)
+        reenterTransition = MaterialElevationScale(/* growing= */ true)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -113,9 +120,28 @@ class HomeFragment: Fragment(), MenuProvider, HomeListAdapter.OnItemDeletedListe
             if(month == "Gennaio")
                 year--
             month = backMonth(month)
-            monthTextView.text = month
-            yearTextView.text = year.toString()
-            updateAll(month, year)
+            val anim = AlphaAnimation(1.0f, 0.0f)
+            anim.duration = 200
+            anim.repeatCount = 1
+            anim.repeatMode = Animation.REVERSE
+            anim.setAnimationListener(object : Animation.AnimationListener {
+                override fun onAnimationEnd(animation: Animation?) {}
+                override fun onAnimationStart(animation: Animation?) {}
+                override fun onAnimationRepeat(animation: Animation?) {
+                    monthTextView.text = month
+                    yearTextView.text = year.toString()
+                    updateAll(month, year)
+                }
+            })
+            monthTextView.startAnimation(anim)
+            yearTextView.startAnimation(anim)
+            totIncomingTextView.startAnimation(anim)
+            totExitsTextView.startAnimation(anim)
+            totalTextView.startAnimation(anim)
+            fabBack.startAnimation(anim)
+            fabNext.startAnimation(anim)
+            recyclerView.startAnimation(anim)
+            pieChart.startAnimation(anim)
         }
         fabNext.setOnClickListener {
             // non posso andare più avanti del mese corrente, no mesi futuri
@@ -124,9 +150,28 @@ class HomeFragment: Fragment(), MenuProvider, HomeListAdapter.OnItemDeletedListe
                 if(month == "Dicembre")
                     year++
                 month = nextMonth(month)
-                monthTextView.text = month
-                yearTextView.text = year.toString()
-                updateAll(month, year)
+                val anim = AlphaAnimation(1.0f, 0.0f)
+                anim.duration = 200
+                anim.repeatCount = 1
+                anim.repeatMode = Animation.REVERSE
+                anim.setAnimationListener(object : Animation.AnimationListener {
+                    override fun onAnimationEnd(animation: Animation?) {}
+                    override fun onAnimationStart(animation: Animation?) {}
+                    override fun onAnimationRepeat(animation: Animation?) {
+                        monthTextView.text = month
+                        yearTextView.text = year.toString()
+                        updateAll(month, year)
+                    }
+                })
+                monthTextView.startAnimation(anim)
+                yearTextView.startAnimation(anim)
+                totIncomingTextView.startAnimation(anim)
+                totExitsTextView.startAnimation(anim)
+                totalTextView.startAnimation(anim)
+                fabBack.startAnimation(anim)
+                fabNext.startAnimation(anim)
+                recyclerView.startAnimation(anim)
+                pieChart.startAnimation(anim)
             }
             else
                 fabNext.hide()
