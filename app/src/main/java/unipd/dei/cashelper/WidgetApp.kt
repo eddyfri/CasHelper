@@ -1,4 +1,4 @@
-package unipd.dei.cashelper.widgets
+package unipd.dei.cashelper
 
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider

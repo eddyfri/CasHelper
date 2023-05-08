@@ -201,6 +201,26 @@ class DBHelper(context: Context): SQLiteOpenHelper(context, DB_NAME, null, DB_VE
         cursor.close()
         return ret
     }
+    
+    fun getItemsByType(type: String, month: String, year:Int): ArrayList<ItemInfo> {
+        val cursor = readableDatabase.rawQuery("SELECT * FROM Item WHERE Mese ='${month}' AND Anno ='${year}' AND Tipo='${type}'", null)
+        val ret = ArrayList<ItemInfo>()
+
+        while(cursor.moveToNext()) {
+            val item = ItemInfo("")
+            item.id = cursor.getInt(cursor.getColumnIndexOrThrow("Id"))
+            item.category = cursor.getString(cursor.getColumnIndexOrThrow("Nome"))
+            item.price = cursor.getDouble(cursor.getColumnIndexOrThrow("Prezzo"))
+            item.day = cursor.getInt(cursor.getColumnIndexOrThrow("Giorno"))
+            item.month = cursor.getString(cursor.getColumnIndexOrThrow("Mese"))
+            item.year = cursor.getInt(cursor.getColumnIndexOrThrow("Anno"))
+            item.type = cursor.getString(cursor.getColumnIndexOrThrow("Tipo"))
+            item.description = cursor.getString(cursor.getColumnIndexOrThrow("Descrizione"))
+            ret.add(item)
+        }
+        cursor.close()
+        return ret
+    }
 
     companion object
     {
