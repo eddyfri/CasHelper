@@ -20,7 +20,7 @@
     </style>
 
 
-    <style name = "toolbar">
+    <style name="toolbar">
         <item name="backgroundTint">?attr/colorPrimary</item>
         <item name="android:textColor">@color/white</item>
     </style>
@@ -45,7 +45,7 @@
     </style>
 
     <style name="MenuStyle_update" parent="Widget.AppCompat.ActionButton.Overflow">
-       <item name="android:src">@drawable/basket_light</item>
+        <item name="android:src">@drawable/basket_light</item>
     </style>
 
     <style name="MenuStyle" parent="Widget.AppCompat.ActionButton.Overflow">
@@ -53,16 +53,32 @@
     </style>
 
 
-<style name="TextStyle">
+    <style name="TextStyle">
 
-    <item name="android:textColor">?attr/colorOnSecondary</item>
-    <item name="android:textSize">16sp</item>
-    <item name="android:textStyle">bold</item>
+        <item name="android:textColor">?attr/colorOnSecondary</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold</item>
 
-</style>
+    </style>
+
     <style name="TitleStyle">
         <item name="android:textColor">?attr/colorOnSecondary</item>
         <item name="android:textSize">24sp</item>
         <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="Theme.CasHelper.AppWidgetContainerParent" parent="@android:style/Theme.DeviceDefault">
+        <!-- Radius of the outer bound of widgets to make the rounded corners -->
+        <item name="appWidgetRadius">16dp</item>
+        <!--
+        Radius of the inner view's bound of widgets to make the rounded corners.
+        It needs to be 8dp or less than the value of appWidgetRadius
+        -->
+        <item name="appWidgetInnerRadius">8dp</item>
+    </style>
+
+    <style name="Theme.CasHelper.AppWidgetContainer" parent="Theme.CasHelper.AppWidgetContainerParent">
+        <!-- Apply padding to avoid the content of the widget colliding with the rounded corners -->
+        <item name="appWidgetPadding">16dp</item>
     </style>
 </resources>
