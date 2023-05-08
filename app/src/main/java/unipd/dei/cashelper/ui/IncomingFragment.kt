@@ -4,6 +4,7 @@ import android.app.DatePickerDialog
 import android.content.Context
 import android.content.res.Configuration
 import android.graphics.Color
+import android.nfc.Tag
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -31,7 +32,10 @@ import unipd.dei.cashelper.adapters.HomeListAdapter
 import unipd.dei.cashelper.helpers.DBHelper
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 import kotlin.properties.Delegates
+import android.util.Log
+
 
 
 class IncomingFragment : Fragment() {
@@ -66,8 +70,8 @@ class IncomingFragment : Fragment() {
         year = IncomingFragmentArgs.fromBundle(requireArguments()).year
 
         //qui mi serve per passare all'adapter gli elementi
-        var itemInfo = mutableListOf<DBHelper.ItemInfo>()
-        itemInfo = db.getItem(month, year)
+        var allItemIncoming = db.getItemsByType("Entrata", month, year)
+        var allCategories = db.getCategoryName()
 
 
 
@@ -83,14 +87,30 @@ class IncomingFragment : Fragment() {
         return view
     }
 
-    private fun getOnlyIncoming(allItem: MutableList<DBHelper.ItemInfo>): MutableList<DBHelper.ItemInfo>{
-        var onlyIncoming = mutableListOf<DBHelper.ItemInfo>()
-        for (item in allItem) {
-            if(item.type == "Entrata")
-                onlyIncoming.add(item)
-        }
-        return onlyIncoming
+    //metodo che data una categoria e la lista di elementi totale mi restituisce un array di elementi per quella categoria
+    private fun getCategoryWithIncomings(category: String, allItem: MutableList<DBHelper.ItemInfo>): ArrayList<DBHelper.ItemInfo> {
+        var incomingsByCategory = ArrayList<DBHelper.ItemInfo>()
+        for (item in allItem)
+            if (item.category == category)
+                incomingsByCategory.add(item)
+        return incomingsByCategory
     }
+
+    private fun getIncomingByCategory(categories: ArrayList<String>, allItem: MutableList<DBHelper.ItemInfo>): MutableMap<String, ArrayList<DBHelper.ItemInfo>> {
+        var incomingByCategory = mutableMapOf<String, ArrayList<DBHelper.ItemInfo>>()
+        for (element in categories)
+            incomingByCategory.put(element, getCategoryWithIncomings(element, allItem))
+        return incomingByCategory
+    }
+
+
+    //TEST
+    var allItemIncoming = db.getItemsByType("Entrata", month, year)
+    var allCategories = db.getCategoryName()
+    public var testMutableList = getIncomingByCategory(allCategories, allItemIncoming)
+
+
+
 
 
 
