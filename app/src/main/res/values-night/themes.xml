@@ -54,8 +54,13 @@
     </style>
 
     <style name="MenuStyle_update" parent="Widget.AppCompat.ActionButton.Overflow">
-        <item name="android:src">@drawable/basket_dark</item>
+        <item name="android:icon">@drawable/basket_dark</item>
     </style>
+
+    <style name="MenuStyle_empty" parent="Widget.AppCompat.ActionButton.Overflow">
+    <item name="android:icon">@drawable/backroll_dark</item>
+    </style>
+
 
     <style name="MenuStyle" parent="Widget.AppCompat.ActionButton.Overflow">
         <item name="android:src">@drawable/menu_home_dark</item>

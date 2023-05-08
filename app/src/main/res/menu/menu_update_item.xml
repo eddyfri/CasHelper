@@ -4,6 +4,6 @@
     android:id="@+id/menu_update_item">
     <item android:id="@+id/remove_item"
         android:title="RemoveItem"
-        app:showAsAction="always"
-        android:icon="@drawable/basket_light" />
+        app:showAsAction="ifRoom"
+        style = "@style/MenuStyle_update" />
 </menu>
