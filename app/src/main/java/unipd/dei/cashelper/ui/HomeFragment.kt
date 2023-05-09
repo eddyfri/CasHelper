@@ -1,11 +1,9 @@
 package unipd.dei.cashelper.ui
 
-import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.res.Configuration
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import android.widget.TextView
 import androidx.core.content.ContextCompat
@@ -55,6 +53,7 @@ class HomeFragment: Fragment(), MenuProvider, HomeListAdapter.OnItemDeletedListe
     private lateinit var constraintLayoutEmptyList: ConstraintLayout
     private lateinit var emptyIcon: ImageView
     private lateinit var emptyText: TextView
+    private lateinit var emptyChartText: TextView
 
     private lateinit var db: DBHelper
 
@@ -107,6 +106,7 @@ class HomeFragment: Fragment(), MenuProvider, HomeListAdapter.OnItemDeletedListe
         constraintLayoutEmptyList = view.findViewById(R.id.constraint_empty_list)
         emptyIcon = view.findViewById(R.id.empty_icon)
         emptyText = view.findViewById(R.id.empty_text)
+        emptyChartText = view.findViewById(R.id.empty_chart_text)
 
         recyclerView = view.findViewById(R.id.recycler_view)
         recyclerView.adapter = HomeListAdapter(itemInfo, this)
@@ -130,8 +130,13 @@ class HomeFragment: Fragment(), MenuProvider, HomeListAdapter.OnItemDeletedListe
         constraintLayoutEmptyList.isVisible = itemInfo.isEmpty()
         emptyIcon.isVisible = itemInfo.isEmpty()
         emptyText.isVisible = itemInfo.isEmpty()
+        emptyChartText.isVisible = itemInfo.isEmpty()
 
         createPieChart(view, itemInfo)
+        if(itemInfo.isEmpty())
+            pieChart.visibility = View.GONE
+        else
+            pieChart.visibility = View.VISIBLE
         if(month == getCurrentMonth() && year == getCurrentYear())
             fabNext.hide()
 
@@ -176,7 +181,6 @@ class HomeFragment: Fragment(), MenuProvider, HomeListAdapter.OnItemDeletedListe
                     override fun onAnimationEnd(animation: Animation?) {}
                     override fun onAnimationStart(animation: Animation?) {}
                     override fun onAnimationRepeat(animation: Animation?) {
-
                         updateAll(month, year)
                     }
                 })
@@ -413,6 +417,12 @@ class HomeFragment: Fragment(), MenuProvider, HomeListAdapter.OnItemDeletedListe
         constraintLayoutEmptyList.isVisible = itemInfo.isEmpty()
         emptyIcon.isVisible = itemInfo.isEmpty()
         emptyText.isVisible = itemInfo.isEmpty()
+        emptyChartText.isVisible = itemInfo.isEmpty()
+        pieChart.legend.isEnabled = itemInfo.isNotEmpty()
+        if(itemInfo.isEmpty())
+            pieChart.visibility = View.GONE
+        else
+            pieChart.visibility = View.VISIBLE
         // aggiorna pieChart
         updatePieChart(itemInfo)
         // aggiorna text view totali
