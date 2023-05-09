@@ -34,6 +34,7 @@ import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.properties.Delegates
 import android.util.Log
+import unipd.dei.cashelper.adapters.IncomingListAdapter
 import unipd.dei.cashelper.adapters.OutflowListAdapter
 
 
@@ -185,11 +186,6 @@ class OutflowFragment : Fragment() {
 
     }
 
-    private fun updateAll(month: String, year: Int) {
-        if (!(month == getCurrentMonth() && year == getCurrentYear()))
-            fabNext.show()
-        else fabNext.hide()
-    }
 
     private fun getCurrentMonth() : String {
         return when (SimpleDateFormat("MM", Locale.ENGLISH).format(Date())) {
@@ -249,6 +245,25 @@ class OutflowFragment : Fragment() {
     private fun isDarkModeOn(context: Context): Boolean {
         val currentNightMode = context.resources.configuration.uiMode and  Configuration.UI_MODE_NIGHT_MASK
         return currentNightMode == Configuration.UI_MODE_NIGHT_YES
+    }
+
+    private fun updateAll(month: String, year: Int) {
+        var allItemOutflow: MutableList<DBHelper.ItemInfo>
+        var allCategories = db.getCategoryName()
+
+        //aggiorna la visibilità del bottone nextFab
+        if (!(month == getCurrentMonth() && year == getCurrentYear()))
+            fabNext.show()
+        else fabNext.hide()
+
+        //aggiorna gli item in base al mese che è stato cambiato
+        allItemOutflow = db.getItemsByType("Uscita", month, year)
+        var itemByCategory = getOutflowByCategory(allCategories, allItemOutflow)
+
+        //qui aggiornerò il pieChart quando ci sarà
+
+        //aggiornamento recyclerView
+        recyclerView.adapter = OutflowListAdapter(itemByCategory)
     }
 
 

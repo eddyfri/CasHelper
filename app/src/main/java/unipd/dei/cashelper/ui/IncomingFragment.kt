@@ -185,11 +185,7 @@ class IncomingFragment : Fragment() {
 
     }
 
-    private fun updateAll(month: String, year: Int) {
-        if (!(month == getCurrentMonth() && year == getCurrentYear()))
-            fabNext.show()
-        else fabNext.hide()
-    }
+
 
     private fun getCurrentMonth() : String {
         return when (SimpleDateFormat("MM", Locale.ENGLISH).format(Date())) {
@@ -249,6 +245,25 @@ class IncomingFragment : Fragment() {
     private fun isDarkModeOn(context: Context): Boolean {
         val currentNightMode = context.resources.configuration.uiMode and  Configuration.UI_MODE_NIGHT_MASK
         return currentNightMode == Configuration.UI_MODE_NIGHT_YES
+    }
+
+    private fun updateAll(month: String, year: Int) {
+        var allItemIncoming: MutableList<DBHelper.ItemInfo>
+        var allCategories = db.getCategoryName()
+
+        //aggiorna la visibilità del bottone nextFab
+        if (!(month == getCurrentMonth() && year == getCurrentYear()))
+            fabNext.show()
+        else fabNext.hide()
+
+        //aggiorna gli item in base al mese che è stato cambiato
+        allItemIncoming = db.getItemsByType("Entrata", month, year)
+         var itemByCategory = getIncomingByCategory(allCategories, allItemIncoming)
+
+        //qui aggiornerò il pieChart quando ci sarà
+
+        //aggiornamento recyclerView
+        recyclerView.adapter = IncomingListAdapter(itemByCategory)
     }
 
 
