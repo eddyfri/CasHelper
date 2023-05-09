@@ -26,6 +26,19 @@
     <color name="Exits">#EF0B1B</color>
     <color name="Entries">#30950E</color>
 
+    //legenda colori per categorie
+    <color name="Salario">#0000FF</color>   //blue
+    <color name="Alimentari">#808000</color>    //olive
+    <color name="Trasporti">#800000</color>    //maroon
+    <color name="Shopping">#FF00FF</color>  //fuchsia
+    <color name="Viaggi">#FF0000</color>    //red
+    <color name="Bollette">#FF8C00</color>  //darkorange
+    <color name="Lavoro">#008000</color>    //silver
+    <color name="Sport">#00FF00</color>    //lime
+    <color name="Auto">#FFFF00</color>  //yellow
+    <color name="Regali">#D2691E</color>    //chocolate
+    <color name="Altro">#00FFFF</color>     //aqua
+
     <color name="Disable">#CFCCCC</color>
     <color name="confirm">#A5F0A3</color>
     <color name="light_blue_50">#FFE1F5FE</color>
