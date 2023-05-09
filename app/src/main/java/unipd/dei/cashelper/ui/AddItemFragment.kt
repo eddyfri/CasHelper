@@ -270,6 +270,7 @@ class AddItemFragment : Fragment(), MenuProvider {
     private fun hideKeyboard(view: View) {
         val hide = view.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         hide.hideSoftInputFromWindow(view.windowToken, 0)
+        view.clearFocus()
     }
 
     //inflate the correct menu for this fragment

@@ -2,9 +2,4 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/menu_empty">
-    <item
-        android:id="@+id/backRoll"
-        app:showAsAction="ifRoom"
-        android:title="BackRoll"
-        />
 </menu>
