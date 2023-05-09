@@ -1,9 +1,11 @@
 package unipd.dei.cashelper.ui
 
+import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.res.Configuration
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.widget.TextView
 import androidx.core.content.ContextCompat
@@ -33,6 +35,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AlphaAnimation
 import android.view.animation.Animation
+import android.widget.ImageView
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.isVisible
 import com.google.android.material.transition.MaterialFadeThrough
 import unipd.dei.cashelper.MainActivity
 
@@ -47,6 +52,9 @@ class HomeFragment: Fragment(), MenuProvider, HomeListAdapter.OnItemDeletedListe
     private lateinit var totExitsTextView: TextView
     private lateinit var totalTextView: TextView
     private lateinit var addButton: ExtendedFloatingActionButton
+    private lateinit var constraintLayoutEmptyList: ConstraintLayout
+    private lateinit var emptyIcon: ImageView
+    private lateinit var emptyText: TextView
 
     private lateinit var db: DBHelper
 
@@ -65,6 +73,14 @@ class HomeFragment: Fragment(), MenuProvider, HomeListAdapter.OnItemDeletedListe
         // transizioni ingresso e uscita schermata
         // exitTransition = MaterialElevationScale(/* growing = */ false)
         // reenterTransition = MaterialElevationScale(/* growing = */ true)
+        if(savedInstanceState != null) {
+            month = savedInstanceState.getString("month").toString()
+            year = savedInstanceState.getInt("year")
+        }
+        else {
+            month = getCurrentMonth()
+            year = getCurrentYear()
+        }
         exitTransition = MaterialFadeThrough()
         reenterTransition = MaterialFadeThrough()
     }
@@ -77,9 +93,6 @@ class HomeFragment: Fragment(), MenuProvider, HomeListAdapter.OnItemDeletedListe
 
         db = DBHelper(context as Context)
 
-        month = getCurrentMonth()
-        year = getCurrentYear()
-
         val itemInfo: MutableList<DBHelper.ItemInfo>
         itemInfo = db.getItem(month, year)
 
@@ -91,6 +104,10 @@ class HomeFragment: Fragment(), MenuProvider, HomeListAdapter.OnItemDeletedListe
         totExitsTextView = view.findViewById<TextView>(R.id.exits_label_home)
         totalTextView = view.findViewById<TextView>(R.id.total_label_home)
         addButton = view.findViewById<ExtendedFloatingActionButton>(R.id.add_item)
+        constraintLayoutEmptyList = view.findViewById(R.id.constraint_empty_list)
+        emptyIcon = view.findViewById(R.id.empty_icon)
+        emptyText = view.findViewById(R.id.empty_text)
+
         recyclerView = view.findViewById(R.id.recycler_view)
         recyclerView.adapter = HomeListAdapter(itemInfo, this)
         recyclerView.layoutManager = LinearLayoutManager(this.context, LinearLayoutManager.VERTICAL, false)
@@ -110,8 +127,13 @@ class HomeFragment: Fragment(), MenuProvider, HomeListAdapter.OnItemDeletedListe
         totIncomingTextView.text = getIncoming(itemInfo).toString() + " €"
         totExitsTextView.text = getExits(itemInfo).toString() + " €"
         totalTextView.text = getTotal(itemInfo).toString() + " €"
+        constraintLayoutEmptyList.isVisible = itemInfo.isEmpty()
+        emptyIcon.isVisible = itemInfo.isEmpty()
+        emptyText.isVisible = itemInfo.isEmpty()
+
         createPieChart(view, itemInfo)
-        fabNext.hide()
+        if(month == getCurrentMonth() && year == getCurrentYear())
+            fabNext.hide()
 
         fabBack.setOnClickListener {
             // cambia mese anno
@@ -176,6 +198,13 @@ class HomeFragment: Fragment(), MenuProvider, HomeListAdapter.OnItemDeletedListe
             val action = HomeFragmentDirections.actionHomeFragmentToAddFragment()
             view.findNavController().navigate(action)
         }
+    }
+
+    override fun onSaveInstanceState(savedInstanceState: Bundle)
+    {
+        super.onSaveInstanceState(savedInstanceState)
+        savedInstanceState.putString("month", month)
+        savedInstanceState.putInt("year", year)
     }
 
     override fun onItemDeleted() {
@@ -381,6 +410,9 @@ class HomeFragment: Fragment(), MenuProvider, HomeListAdapter.OnItemDeletedListe
         else fabNext.hide()
         // aggiorna dati
         itemInfo = db.getItem(month, year)
+        constraintLayoutEmptyList.isVisible = itemInfo.isEmpty()
+        emptyIcon.isVisible = itemInfo.isEmpty()
+        emptyText.isVisible = itemInfo.isEmpty()
         // aggiorna pieChart
         updatePieChart(itemInfo)
         // aggiorna text view totali

@@ -37,4 +37,7 @@
     <string name="appwidget_text">EXAMPLE</string>
     <string name="add_widget">Add widget</string>
     <string name="app_widget_description">This is an app widget description</string>
+    <string name="stringTransaction">Inserire una transazione</string>
+    <string name="empty_img">Empty img</string>
+    <string name="empty_chart_string">Aggiungi una transazione per il grafico</string>
 </resources>

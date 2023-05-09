@@ -182,6 +182,7 @@
             />
     </androidx.constraintlayout.widget.ConstraintLayout>
     <LinearLayout
+        android:id="@+id/linear_layout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:background="@drawable/container_home"
@@ -190,7 +191,35 @@
         app:layout_constraintTop_toBottomOf="@id/guideline2"
         app:layout_constraintBottom_toTopOf="@id/guidelineEnd"
         app:layout_constraintStart_toStartOf="parent"
+        android:orientation="horizontal"
         >
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraint_empty_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            >
+            <ImageView
+                android:id="@+id/empty_icon"
+                android:layout_width="100dp"
+                android:layout_height="125dp"
+                android:src="@drawable/empty"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:contentDescription="@string/empty_img"
+                />
+            <TextView
+                android:id="@+id/empty_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/stringTransaction"
+                android:theme="@style/TextStyle"
+                app:layout_constraintTop_toBottomOf="@id/empty_icon"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginTop="5dp"
+                />
+        </androidx.constraintlayout.widget.ConstraintLayout>
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view"
             android:layout_width="match_parent"

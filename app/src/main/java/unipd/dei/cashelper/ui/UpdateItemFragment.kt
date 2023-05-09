@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.findNavController
 import unipd.dei.cashelper.MainActivity
+import com.google.android.material.transition.MaterialFadeThrough
 import unipd.dei.cashelper.R
 import unipd.dei.cashelper.helpers.DBHelper
 import java.util.*
@@ -45,6 +46,8 @@ class UpdateItemFragment: Fragment(), MenuProvider {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        enterTransition = MaterialFadeThrough()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -63,7 +66,7 @@ class UpdateItemFragment: Fragment(), MenuProvider {
         idItem = UpdateItemFragmentArgs.fromBundle(requireArguments()).idItem
         constraintLayout = view.findViewById<ConstraintLayout>(R.id.constraint_update_item)
 
-        db = DBHelper(this.requireContext() as Context)
+        db = DBHelper(this.requireContext())
         var itemInfo = db.getItemById(idItem)
         update = view.findViewById(R.id.update_button)
         disable = view.findViewById(R.id.disable_buttonFAKE_update)
