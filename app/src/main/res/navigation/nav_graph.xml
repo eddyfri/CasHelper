@@ -9,6 +9,15 @@
         android:name="unipd.dei.cashelper.ui.HomeFragment"
         android:label= "Home"
         tools:layout="@layout/fragment_home">
+        <argument
+            android:name="month"
+            app:argType="string"
+            android:defaultValue=" "
+            />
+        <argument
+            android:name="year"
+            app:argType="integer"
+            android:defaultValue="-1"/>
         <action
             android:id="@+id/action_homeFragment_to_addFragment"
             app:destination="@id/addFragment"

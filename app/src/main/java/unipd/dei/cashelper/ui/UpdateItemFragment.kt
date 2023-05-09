@@ -211,7 +211,7 @@ class UpdateItemFragment: Fragment(), MenuProvider {
 
         //when clicked return to the HomeFragment
         delete.setOnClickListener{
-            val action = UpdateItemFragmentDirections.actionUpdateFragmentToHomeFragment()
+            val action = UpdateItemFragmentDirections.actionUpdateFragmentToHomeFragment(dateConverter(month - 1), year)
             view.findNavController().navigate(action)
         }
 
@@ -223,7 +223,7 @@ class UpdateItemFragment: Fragment(), MenuProvider {
             onClickListener(idItem, switch_choose, selected_category, price, day, monthString, year, desc.trim())
 
             //back to HomeFragment
-            val action = UpdateItemFragmentDirections.actionUpdateFragmentToHomeFragment()
+            val action = UpdateItemFragmentDirections.actionUpdateFragmentToHomeFragment(dateConverter(month - 1), year)
             view.findNavController().navigate(action)
         }
     }
@@ -301,7 +301,7 @@ class UpdateItemFragment: Fragment(), MenuProvider {
                         Toast.makeText(requireContext(), "Elemento eliminato", Toast.LENGTH_SHORT)
                             .show()
                         val action =
-                            UpdateItemFragmentDirections.actionUpdateFragmentToHomeFragment()
+                            UpdateItemFragmentDirections.actionUpdateFragmentToHomeFragment(dateConverter(month - 1), year)
                         view?.findNavController()?.navigate(action)
                     }
                     .setNegativeButton("Annulla") { dialog, _ ->
@@ -310,7 +310,7 @@ class UpdateItemFragment: Fragment(), MenuProvider {
                     .show()
             }
             android.R.id.home -> {
-                val action = UpdateItemFragmentDirections.actionUpdateFragmentToHomeFragment()
+                val action = UpdateItemFragmentDirections.actionUpdateFragmentToHomeFragment(dateConverter(month - 1), year)
                 view?.findNavController()?.navigate(action)
             }
         }

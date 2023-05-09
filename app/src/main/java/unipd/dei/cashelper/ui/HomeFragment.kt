@@ -76,6 +76,10 @@ class HomeFragment: Fragment(), MenuProvider, HomeListAdapter.OnItemDeletedListe
             month = savedInstanceState.getString("month").toString()
             year = savedInstanceState.getInt("year")
         }
+        else if(HomeFragmentArgs.fromBundle(requireArguments()).month != " " && HomeFragmentArgs.fromBundle(requireArguments()).year != -1) {
+            month = HomeFragmentArgs.fromBundle(requireArguments()).month
+            year = HomeFragmentArgs.fromBundle(requireArguments()).year
+        }
         else {
             month = getCurrentMonth()
             year = getCurrentYear()
