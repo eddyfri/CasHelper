@@ -4,6 +4,7 @@ import android.app.DatePickerDialog
 import android.content.Context
 import android.content.res.Configuration
 import android.graphics.Color
+import android.nfc.Tag
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -27,11 +28,13 @@ import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import unipd.dei.cashelper.R
-import unipd.dei.cashelper.adapters.HomeListAdapter
 import unipd.dei.cashelper.helpers.DBHelper
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 import kotlin.properties.Delegates
+import android.util.Log
+import unipd.dei.cashelper.adapters.OutflowListAdapter
 
 
 class OutflowFragment : Fragment() {
@@ -58,7 +61,7 @@ class OutflowFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
-        val view = inflater.inflate(R.layout.fragment_incoming, container,false)
+        val view = inflater.inflate(R.layout.fragment_outflow, container,false)
 
         db = DBHelper(context as Context)
 
@@ -66,9 +69,9 @@ class OutflowFragment : Fragment() {
         year = IncomingFragmentArgs.fromBundle(requireArguments()).year
 
         //qui mi serve per passare all'adapter gli elementi
-        var itemInfo = mutableListOf<DBHelper.ItemInfo>()
-        itemInfo = db.getItem(month, year)
-
+        var allItemOutflows = db.getItemsByType("Uscita", month, year)
+        var allCategories = db.getCategoryName()
+        var itemByCategory = getOutflowByCategory(allCategories, allItemOutflows)
 
 
         fabBack = view.findViewById<ExtendedFloatingActionButton>(R.id.back_month)
@@ -76,22 +79,42 @@ class OutflowFragment : Fragment() {
         monthTextView = view.findViewById<TextView>(R.id.month_text)
         yearTextView = view.findViewById<TextView>(R.id.year_text)
         recyclerView = view.findViewById(R.id.recycler_view)
-        //creare un nuovo adapter e passargli itemInfo come parametro
+        recyclerView.adapter = OutflowListAdapter(itemByCategory)
         recyclerView.layoutManager = LinearLayoutManager(this.context, LinearLayoutManager.VERTICAL, false)
 
 
         return view
     }
 
-    //metodo per farsi restituire una lista di sole uscite
-    private fun getOnlyOutflow(allItem: MutableList<DBHelper.ItemInfo>): MutableList<DBHelper.ItemInfo>{
-        var onlyOutflow = mutableListOf<DBHelper.ItemInfo>()
-        for (item in allItem) {
-            if(item.type == "Entrata")
-                onlyOutflow.add(item)
-        }
-        return onlyOutflow
+    //metodo che data una categoria e la lista di elementi totale mi restituisce un array di elementi per quella categoria
+    private fun getCategoryWithOutflows(category: String, allItem: MutableList<DBHelper.ItemInfo>): ArrayList<DBHelper.ItemInfo> {
+        var outflowsByCategory = ArrayList<DBHelper.ItemInfo>()
+        for (item in allItem)
+            if (item.category == category)
+                outflowsByCategory.add(item)
+        return outflowsByCategory
     }
+
+    //metodo che restituisce un associazione "nome categoria"->"array di item di quella categoria"
+    //se l'associazione contiene un arraylisst vuoto allora elimina l'associazione
+    private fun getOutflowByCategory(categories: ArrayList<String>, allItem: MutableList<DBHelper.ItemInfo>): MutableMap<String, ArrayList<DBHelper.ItemInfo>> {
+        var outflowByCategory = mutableMapOf<String, ArrayList<DBHelper.ItemInfo>>()
+        for (element in categories)
+            outflowByCategory.put(element, getCategoryWithOutflows(element, allItem))
+        for (element in categories) {
+            if (outflowByCategory.containsKey(element)) {
+                val testList = outflowByCategory[element]
+                if (testList != null)
+                    if (testList.isEmpty())
+                        outflowByCategory.remove(element)
+            }
+        }
+        return outflowByCategory
+    }
+
+
+
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -100,6 +123,29 @@ class OutflowFragment : Fragment() {
         monthTextView.text = month
         yearTextView.text = year.toString()
 
+        fabBack.setOnClickListener {
+            // cambia mese anno
+            if(month == "Gennaio")
+                year--
+            month = backMonth(month)
+            monthTextView.text = month
+            yearTextView.text = year.toString()
+            updateAll(month, year)
+        }
+        fabNext.setOnClickListener {
+            // non posso andare più avanti del mese corrente, no mesi futuri
+            if(month != getCurrentMonth() || year != getCurrentYear()) {
+                // cambia mese anno
+                if(month == "Dicembre")
+                    year++
+                month = nextMonth(month)
+                monthTextView.text = month
+                yearTextView.text = year.toString()
+                updateAll(month, year)
+            }
+            else
+                fabNext.hide()
+        }
 
         //se entro nel fragment nel mese corrente nascondo il bottone per spostarsi al mese successivo
         if((month == getCurrentMonth()) && (year == getCurrentYear()))

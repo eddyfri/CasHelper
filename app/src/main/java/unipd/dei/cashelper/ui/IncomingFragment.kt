@@ -28,7 +28,6 @@ import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import unipd.dei.cashelper.R
-import unipd.dei.cashelper.adapters.HomeListAdapter
 import unipd.dei.cashelper.helpers.DBHelper
 import java.text.SimpleDateFormat
 import java.util.*
