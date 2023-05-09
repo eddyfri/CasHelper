@@ -196,7 +196,7 @@ class AddItemFragment : Fragment(), MenuProvider {
         }
 
         delete.setOnClickListener {
-            val action = AddItemFragmentDirections.actionAddFragmentToHomeFragment(dateConverter(month - 1), year)
+            val action = AddItemFragmentDirections.actionAddFragmentToHomeFragment(monthString, year)
             view?.findNavController()?.navigate(action)
         }
 
@@ -242,7 +242,7 @@ class AddItemFragment : Fragment(), MenuProvider {
             )
 
             //back to HomeFragment
-            val action = AddItemFragmentDirections.actionAddFragmentToHomeFragment(dateConverter(month - 1), year)
+            val action = AddItemFragmentDirections.actionAddFragmentToHomeFragment(monthString, year)
             view.findNavController().navigate(action)
         }
     }
@@ -314,7 +314,7 @@ class AddItemFragment : Fragment(), MenuProvider {
     //action for every menuItem selected
     override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
         if (menuItem.itemId == android.R.id.home) {
-            val action = AddItemFragmentDirections.actionAddFragmentToHomeFragment(dateConverter(month - 1), year)
+            val action = AddItemFragmentDirections.actionAddFragmentToHomeFragment(monthString, year)
             view?.findNavController()?.navigate(action)
         }
         return true
