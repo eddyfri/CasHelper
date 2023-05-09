@@ -23,9 +23,11 @@ class IncomingListAdapter(private val itemByCategory: MutableMap<String, ArrayLi
     //DA COMPLETARE TUTTA, DA IMPLEMENTARE UN METODO PER FARE RICEVERE GIà UNA LISTA DELLE CATEGORIE CON ENTRATE E LA SOMMA PER QUELLA CATEGORIA NELL'INCOMING FRAGMENT
     class CategoryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val categoryItem: TextView = itemView.findViewById(R.id.category_item)
+        private val totalItem: TextView = itemView.findViewById(R.id.total_item)
 
-        fun bind(categoryName: String){
+        fun bind(categoryName: String, total: Double){
             categoryItem.text = categoryName
+            totalItem.text = total.toString() + "€"
         }
     }
 
@@ -47,11 +49,28 @@ class IncomingListAdapter(private val itemByCategory: MutableMap<String, ArrayLi
 
     override fun onBindViewHolder(holder: CategoryViewHolder, position: Int) {
         val categoryName = catchKeys()
-        holder.bind(categoryName[position])
+        val totalByCategory = getTotalCategory()
+        holder.bind(categoryName[position], totalByCategory[position])
     }
 
     //metodo per estrarre l'array di chiavi
     private fun catchKeys(): ArrayList<String>{
         return ArrayList<String>(itemByCategory.keys)
+    }
+
+    //metodo per calcolarsi il totale di una categoria
+    private fun getTotalCategory(): ArrayList<Double>{
+        var totalSize = itemByCategory.size
+        var totalCategory = ArrayList<Double>(totalSize)
+        var total = 0.0
+        for (itemList in itemByCategory.values) {
+            for (element in itemList) {
+                total = total + element.price
+            }
+            totalCategory.add(total)
+            total = 0.0
+        }
+
+        return  totalCategory
     }
 }

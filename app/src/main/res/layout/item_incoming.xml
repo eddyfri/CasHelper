@@ -30,6 +30,16 @@
             android:textStyle="bold"
             tools:ignore="RtlSymmetry" />
 
+        <TextView
+            android:id="@+id/total_item"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toEndOf="@id/category_item"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:text="--"
+            android:textSize="15sp" />
+
 
 
 
