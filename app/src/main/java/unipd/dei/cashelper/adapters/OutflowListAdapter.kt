@@ -16,7 +16,7 @@ import unipd.dei.cashelper.ui.HomeFragment
 import unipd.dei.cashelper.ui.HomeFragmentDirections
 import java.text.FieldPosition
 
-class IncomingListAdapter(private val itemByCategory: MutableMap<String, ArrayList<DBHelper.ItemInfo>>) : RecyclerView.Adapter<IncomingListAdapter.CategoryViewHolder>() {
+class OutflowListAdapter(private val itemByCategory: MutableMap<String, ArrayList<DBHelper.ItemInfo>>) : RecyclerView.Adapter<OutflowListAdapter.CategoryViewHolder>() {
     private lateinit var db :DBHelper
 
 

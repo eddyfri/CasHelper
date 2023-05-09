@@ -28,14 +28,13 @@ import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import unipd.dei.cashelper.R
-import unipd.dei.cashelper.adapters.HomeListAdapter
 import unipd.dei.cashelper.helpers.DBHelper
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.properties.Delegates
 import android.util.Log
-
+import unipd.dei.cashelper.adapters.IncomingListAdapter
 
 
 class IncomingFragment : Fragment() {
@@ -72,7 +71,7 @@ class IncomingFragment : Fragment() {
         //qui mi serve per passare all'adapter gli elementi
         var allItemIncoming = db.getItemsByType("Entrata", month, year)
         var allCategories = db.getCategoryName()
-
+        var itemByCategory = getIncomingByCategory(allCategories, allItemIncoming)
 
 
         fabBack = view.findViewById<ExtendedFloatingActionButton>(R.id.back_month)
@@ -80,7 +79,7 @@ class IncomingFragment : Fragment() {
         monthTextView = view.findViewById<TextView>(R.id.month_text)
         yearTextView = view.findViewById<TextView>(R.id.year_text)
         recyclerView = view.findViewById(R.id.recycler_view)
-        //creare un nuovo adapter e passargli itemInfo come parametro
+        recyclerView.adapter = IncomingListAdapter(itemByCategory)
         recyclerView.layoutManager = LinearLayoutManager(this.context, LinearLayoutManager.VERTICAL, false)
 
 
@@ -96,19 +95,22 @@ class IncomingFragment : Fragment() {
         return incomingsByCategory
     }
 
+    //metodo che restituisce un associazione "nome categoria"->"array di item di quella categoria"
+    //se l'associazione contiene un arraylisst vuoto allora elimina l'associazione
     private fun getIncomingByCategory(categories: ArrayList<String>, allItem: MutableList<DBHelper.ItemInfo>): MutableMap<String, ArrayList<DBHelper.ItemInfo>> {
         var incomingByCategory = mutableMapOf<String, ArrayList<DBHelper.ItemInfo>>()
         for (element in categories)
             incomingByCategory.put(element, getCategoryWithIncomings(element, allItem))
+        for (element in categories) {
+            if (incomingByCategory.containsKey(element)) {
+                val testList = incomingByCategory[element]
+                if (testList != null)
+                    if (testList.isEmpty())
+                        incomingByCategory.remove(element)
+            }
+        }
         return incomingByCategory
     }
-
-
-    //TEST
-    var allItemIncoming = db.getItemsByType("Entrata", month, year)
-    var allCategories = db.getCategoryName()
-    public var testMutableList = getIncomingByCategory(allCategories, allItemIncoming)
-
 
 
 
@@ -183,11 +185,7 @@ class IncomingFragment : Fragment() {
 
     }
 
-    private fun updateAll(month: String, year: Int) {
-        if (!(month == getCurrentMonth() && year == getCurrentYear()))
-            fabNext.show()
-        else fabNext.hide()
-    }
+
 
     private fun getCurrentMonth() : String {
         return when (SimpleDateFormat("MM", Locale.ENGLISH).format(Date())) {
@@ -247,6 +245,25 @@ class IncomingFragment : Fragment() {
     private fun isDarkModeOn(context: Context): Boolean {
         val currentNightMode = context.resources.configuration.uiMode and  Configuration.UI_MODE_NIGHT_MASK
         return currentNightMode == Configuration.UI_MODE_NIGHT_YES
+    }
+
+    private fun updateAll(month: String, year: Int) {
+        var allItemIncoming: MutableList<DBHelper.ItemInfo>
+        var allCategories = db.getCategoryName()
+
+        //aggiorna la visibilità del bottone nextFab
+        if (!(month == getCurrentMonth() && year == getCurrentYear()))
+            fabNext.show()
+        else fabNext.hide()
+
+        //aggiorna gli item in base al mese che è stato cambiato
+        allItemIncoming = db.getItemsByType("Entrata", month, year)
+         var itemByCategory = getIncomingByCategory(allCategories, allItemIncoming)
+
+        //qui aggiornerò il pieChart quando ci sarà
+
+        //aggiornamento recyclerView
+        recyclerView.adapter = IncomingListAdapter(itemByCategory)
     }
 
 
