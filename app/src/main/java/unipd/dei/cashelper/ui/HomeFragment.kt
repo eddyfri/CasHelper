@@ -1,21 +1,16 @@
 package unipd.dei.cashelper.ui
 
-import android.content.ContentValues.TAG
 import android.content.Context
-import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import android.widget.TextView
-import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.findNavController
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.github.mikephil.charting.charts.PieChart
@@ -36,6 +31,9 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AlphaAnimation
+import android.view.animation.Animation
+import com.google.android.material.transition.MaterialFadeThrough
 
 
 class HomeFragment: Fragment(), MenuProvider, HomeListAdapter.OnItemDeletedListener {
@@ -64,6 +62,10 @@ class HomeFragment: Fragment(), MenuProvider, HomeListAdapter.OnItemDeletedListe
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         // transizioni ingresso e uscita schermata
+        // exitTransition = MaterialElevationScale(/* growing = */ false)
+        // reenterTransition = MaterialElevationScale(/* growing = */ true)
+        exitTransition = MaterialFadeThrough()
+        reenterTransition = MaterialFadeThrough()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -74,7 +76,7 @@ class HomeFragment: Fragment(), MenuProvider, HomeListAdapter.OnItemDeletedListe
         month = getCurrentMonth()
         year = getCurrentYear()
 
-        var itemInfo = mutableListOf<DBHelper.ItemInfo>()
+        val itemInfo: MutableList<DBHelper.ItemInfo>
         itemInfo = db.getItem(month, year)
 
         fabBack = view.findViewById<ExtendedFloatingActionButton>(R.id.back_month)
@@ -91,13 +93,12 @@ class HomeFragment: Fragment(), MenuProvider, HomeListAdapter.OnItemDeletedListe
 
         return view
     }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         activity?.addMenuProvider(this, viewLifecycleOwner, Lifecycle.State.RESUMED)
 
-        var itemInfo = mutableListOf<DBHelper.ItemInfo>()
+        val itemInfo: MutableList<DBHelper.ItemInfo>
         itemInfo = db.getItem(month, year)
 
         monthTextView.text = month
@@ -113,9 +114,26 @@ class HomeFragment: Fragment(), MenuProvider, HomeListAdapter.OnItemDeletedListe
             if(month == "Gennaio")
                 year--
             month = backMonth(month)
-            monthTextView.text = month
-            yearTextView.text = year.toString()
-            updateAll(month, year)
+            val anim = AlphaAnimation(1.0f, 0.0f)
+            anim.duration = 200
+            anim.repeatCount = 1
+            anim.repeatMode = Animation.REVERSE
+            anim.setAnimationListener(object : Animation.AnimationListener {
+                override fun onAnimationEnd(animation: Animation?) {}
+                override fun onAnimationStart(animation: Animation?) {}
+                override fun onAnimationRepeat(animation: Animation?) {
+                    updateAll(month, year)
+                }
+            })
+            monthTextView.startAnimation(anim)
+            yearTextView.startAnimation(anim)
+            totIncomingTextView.startAnimation(anim)
+            totExitsTextView.startAnimation(anim)
+            totalTextView.startAnimation(anim)
+            fabBack.startAnimation(anim)
+            fabNext.startAnimation(anim)
+            recyclerView.startAnimation(anim)
+            pieChart.startAnimation(anim)
         }
         fabNext.setOnClickListener {
             // non posso andare più avanti del mese corrente, no mesi futuri
@@ -124,9 +142,27 @@ class HomeFragment: Fragment(), MenuProvider, HomeListAdapter.OnItemDeletedListe
                 if(month == "Dicembre")
                     year++
                 month = nextMonth(month)
-                monthTextView.text = month
-                yearTextView.text = year.toString()
-                updateAll(month, year)
+                val anim = AlphaAnimation(1.0f, 0.0f)
+                anim.duration = 200
+                anim.repeatCount = 1
+                anim.repeatMode = Animation.REVERSE
+                anim.setAnimationListener(object : Animation.AnimationListener {
+                    override fun onAnimationEnd(animation: Animation?) {}
+                    override fun onAnimationStart(animation: Animation?) {}
+                    override fun onAnimationRepeat(animation: Animation?) {
+
+                        updateAll(month, year)
+                    }
+                })
+                monthTextView.startAnimation(anim)
+                yearTextView.startAnimation(anim)
+                totIncomingTextView.startAnimation(anim)
+                totExitsTextView.startAnimation(anim)
+                totalTextView.startAnimation(anim)
+                fabBack.startAnimation(anim)
+                fabNext.startAnimation(anim)
+                recyclerView.startAnimation(anim)
+                pieChart.startAnimation(anim)
             }
             else
                 fabNext.hide()
@@ -332,7 +368,9 @@ class HomeFragment: Fragment(), MenuProvider, HomeListAdapter.OnItemDeletedListe
     }
 
     private fun updateAll(month: String, year: Int) {
-        var itemInfo = mutableListOf<DBHelper.ItemInfo>()
+        val itemInfo: MutableList<DBHelper.ItemInfo>
+        monthTextView.text = month
+        yearTextView.text = year.toString()
 
         if(!(month == getCurrentMonth() && year == getCurrentYear()))
             fabNext.show()
