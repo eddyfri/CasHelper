@@ -14,9 +14,9 @@ import unipd.dei.cashelper.R
 import unipd.dei.cashelper.helpers.DBHelper
 import unipd.dei.cashelper.ui.HomeFragment
 import unipd.dei.cashelper.ui.HomeFragmentDirections
+import java.text.FieldPosition
 
-class IncomingListAdapter(private val categoryList: MutableMap<String, ArrayList<DBHelper.ItemInfo>>) : RecyclerView.Adapter<IncomingListAdapter.CategoryViewHolder>() {
-    private var selectedCategory =""
+class IncomingListAdapter(private val itemByCategory: MutableMap<String, ArrayList<DBHelper.ItemInfo>>) : RecyclerView.Adapter<IncomingListAdapter.CategoryViewHolder>() {
     private lateinit var db :DBHelper
 
 
@@ -24,21 +24,34 @@ class IncomingListAdapter(private val categoryList: MutableMap<String, ArrayList
     class CategoryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val categoryItem: TextView = itemView.findViewById(R.id.category_item)
 
-        fun bind(){
-
+        fun bind(categoryName: String){
+            categoryItem.text = categoryName
         }
     }
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoryViewHolder {
-        TODO("Not yet implemented")
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_incoming, parent, false)
+
+
+        if (!::db.isInitialized){
+            db = DBHelper(parent.context)
+        }
+
+        return CategoryViewHolder(view)
     }
 
     override fun getItemCount(): Int {
-        return categoryList.size
+        return itemByCategory.size
     }
 
     override fun onBindViewHolder(holder: CategoryViewHolder, position: Int) {
-        TODO("Not yet implemented")
+        val categoryName = catchKeys()
+        holder.bind(categoryName[position])
+    }
+
+    //metodo per estrarre l'array di chiavi
+    private fun catchKeys(): ArrayList<String>{
+        return ArrayList<String>(itemByCategory.keys)
     }
 }
