@@ -34,6 +34,7 @@ import android.view.ViewGroup
 import android.view.animation.AlphaAnimation
 import android.view.animation.Animation
 import com.google.android.material.transition.MaterialFadeThrough
+import unipd.dei.cashelper.MainActivity
 
 
 class HomeFragment: Fragment(), MenuProvider, HomeListAdapter.OnItemDeletedListener {
@@ -70,6 +71,9 @@ class HomeFragment: Fragment(), MenuProvider, HomeListAdapter.OnItemDeletedListe
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_home, container, false)
+
+        //disable the backroll arrow --> done because the arrow stay in the home fragment after return on it
+        (activity as MainActivity).supportActionBar?.setDisplayHomeAsUpEnabled(false)
 
         db = DBHelper(context as Context)
 

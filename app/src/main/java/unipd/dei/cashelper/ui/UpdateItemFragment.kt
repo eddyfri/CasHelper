@@ -14,6 +14,7 @@ import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.findNavController
+import unipd.dei.cashelper.MainActivity
 import unipd.dei.cashelper.R
 import unipd.dei.cashelper.helpers.DBHelper
 import java.util.*
@@ -50,6 +51,14 @@ class UpdateItemFragment: Fragment(), MenuProvider {
         val view = inflater.inflate(R.layout.fragment_update_item, container, false)
 
         activity?.addMenuProvider(this, viewLifecycleOwner, Lifecycle.State.RESUMED)
+        //enable backroll arrow
+        (activity as MainActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        //set icon backroll
+        if ((activity as MainActivity).isDarkModeOn(requireContext()))
+            (activity as MainActivity)?.supportActionBar?.setHomeAsUpIndicator(R.drawable.backroll_dark)
+        else
+            (activity as MainActivity)?.supportActionBar?.setHomeAsUpIndicator(R.drawable.backroll_light)
 
         idItem = UpdateItemFragmentArgs.fromBundle(requireArguments()).idItem
         constraintLayout = view.findViewById<ConstraintLayout>(R.id.constraint_update_item)
@@ -280,20 +289,27 @@ class UpdateItemFragment: Fragment(), MenuProvider {
 
     //action for every menuItem selected
     override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-        if(menuItem.itemId == R.id.remove_item){
-            val builder = AlertDialog.Builder(view?.context)
-            builder.setMessage("Sei sicuro di voler eliminare questo elemento?")
-                .setPositiveButton("Elimina") { _, _ ->
-                    db.removeItem(idItem)
-                    Toast.makeText(requireContext(),"Elemento eliminato", Toast.LENGTH_SHORT).show()
-                    val action = UpdateItemFragmentDirections.actionUpdateFragmentToHomeFragment()
-                    view?.findNavController()?.navigate(action)
-                }
-                .setNegativeButton("Annulla") { dialog, _ ->
-                    dialog.cancel()
-                }
-                .show()
-
+        when (menuItem.itemId) {
+            R.id.remove_item -> {
+                val builder = AlertDialog.Builder(view?.context)
+                builder.setMessage("Sei sicuro di voler eliminare questo elemento?")
+                    .setPositiveButton("Elimina") { _, _ ->
+                        db.removeItem(idItem)
+                        Toast.makeText(requireContext(), "Elemento eliminato", Toast.LENGTH_SHORT)
+                            .show()
+                        val action =
+                            UpdateItemFragmentDirections.actionUpdateFragmentToHomeFragment()
+                        view?.findNavController()?.navigate(action)
+                    }
+                    .setNegativeButton("Annulla") { dialog, _ ->
+                        dialog.cancel()
+                    }
+                    .show()
+            }
+            android.R.id.home -> {
+                val action = UpdateItemFragmentDirections.actionUpdateFragmentToHomeFragment()
+                view?.findNavController()?.navigate(action)
+            }
         }
         return true
     }
