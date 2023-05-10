@@ -6,6 +6,7 @@ import android.content.Context
 import android.util.Log
 import android.view.*
 import android.widget.TextView
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.view.menu.MenuView.ItemView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
@@ -32,39 +33,53 @@ class OutflowListAdapter(private val itemByCategory: MutableMap<String, ArrayLis
         fun bind(categoryName: String, total: Double){
             categoryItem.text = categoryName
             totalItem.text = total.toString() + "€"
+
+
+
             when (categoryName) {
                 "Salario" -> {
-                    circle.setBackgroundColor(ContextCompat.getColor(itemView.context, R.color.Salario))
+                    circle.backgroundTintList =
+                        AppCompatResources.getColorStateList(itemView.context, R.color.cat1)
                 }
                 "Alimentari" -> {
-                    circle.setBackgroundColor(ContextCompat.getColor(itemView.context, R.color.Alimentari))
+                    circle.backgroundTintList =
+                        AppCompatResources.getColorStateList(itemView.context, R.color.cat2)
                 }
                 "Trasporti" -> {
-                    circle.setBackgroundColor(ContextCompat.getColor(itemView.context, R.color.Trasporti))
+                    circle.backgroundTintList =
+                        AppCompatResources.getColorStateList(itemView.context, R.color.cat3)
                 }
                 "Shopping" -> {
-                    circle.setBackgroundColor(ContextCompat.getColor(itemView.context, R.color.Shopping))
+                    circle.backgroundTintList =
+                        AppCompatResources.getColorStateList(itemView.context, R.color.cat4)
                 }
                 "Viaggi" -> {
-                    circle.setBackgroundColor(ContextCompat.getColor(itemView.context, R.color.Viaggi))
+                    circle.backgroundTintList =
+                        AppCompatResources.getColorStateList(itemView.context, R.color.cat5)
                 }
                 "Bollette" -> {
-                    circle.setBackgroundColor(ContextCompat.getColor(itemView.context, R.color.Bollette))
+                    circle.backgroundTintList =
+                        AppCompatResources.getColorStateList(itemView.context, R.color.cat6)
                 }
                 "Lavoro" -> {
-                    circle.setBackgroundColor(ContextCompat.getColor(itemView.context, R.color.Lavoro))
+                    circle.backgroundTintList =
+                        AppCompatResources.getColorStateList(itemView.context, R.color.cat7)
                 }
                 "Sport" -> {
-                    circle.setBackgroundColor(ContextCompat.getColor(itemView.context, R.color.Sport))
+                    circle.backgroundTintList =
+                        AppCompatResources.getColorStateList(itemView.context, R.color.cat8)
                 }
                 "Auto" -> {
-                    circle.setBackgroundColor(ContextCompat.getColor(itemView.context, R.color.Auto))
+                    circle.backgroundTintList =
+                        AppCompatResources.getColorStateList(itemView.context, R.color.cat9)
                 }
                 "Regali" -> {
-                    circle.setBackgroundColor(ContextCompat.getColor(itemView.context, R.color.Regali))
+                    circle.backgroundTintList =
+                        AppCompatResources.getColorStateList(itemView.context, R.color.cat10)
                 }
                 "Altro" -> {
-                    circle.setBackgroundColor(ContextCompat.getColor(itemView.context, R.color.Altro))
+                    circle.backgroundTintList =
+                        AppCompatResources.getColorStateList(itemView.context, R.color.cat11)
                 }
             }
         }

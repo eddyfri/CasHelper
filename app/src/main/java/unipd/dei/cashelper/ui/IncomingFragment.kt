@@ -89,7 +89,7 @@ class IncomingFragment : Fragment(), MenuProvider {
         monthTextView = view.findViewById<TextView>(R.id.month_text)
         yearTextView = view.findViewById<TextView>(R.id.year_text)
         recyclerView = view.findViewById(R.id.recycler_view)
-        recyclerView.adapter = IncomingListAdapter(itemByCategory)
+        recyclerView.adapter = IncomingListAdapter(itemByCategory, allCategories)
         recyclerView.layoutManager = LinearLayoutManager(this.context, LinearLayoutManager.VERTICAL, false)
 
 
@@ -274,7 +274,7 @@ class IncomingFragment : Fragment(), MenuProvider {
         //qui aggiornerò il pieChart quando ci sarà
 
         //aggiornamento recyclerView
-        recyclerView.adapter = IncomingListAdapter(itemByCategory)
+        recyclerView.adapter = IncomingListAdapter(itemByCategory, allCategories)
     }
     override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
         menuInflater.inflate(R.menu.menu_empty, menu)

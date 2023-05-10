@@ -6,6 +6,7 @@ import android.content.Context
 import android.util.Log
 import android.view.*
 import android.widget.TextView
+import androidx.appcompat.content.res.AppCompatResources.getColorStateList
 import androidx.appcompat.view.menu.MenuView.ItemView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
@@ -20,51 +21,54 @@ import java.text.FieldPosition
 import kotlin.contracts.contract
 
 
-class IncomingListAdapter(private val itemByCategory: MutableMap<String, ArrayList<DBHelper.ItemInfo>>) : RecyclerView.Adapter<IncomingListAdapter.CategoryViewHolder>() {
+
+class IncomingListAdapter(private val itemByCategory: MutableMap<String, ArrayList<DBHelper.ItemInfo>>, private val categoryArray: ArrayList<String>) : RecyclerView.Adapter<IncomingListAdapter.CategoryViewHolder>() {
     private lateinit var db :DBHelper
 
 
     //DA COMPLETARE TUTTA, DA IMPLEMENTARE UN METODO PER FARE RICEVERE GIà UNA LISTA DELLE CATEGORIE CON ENTRATE E LA SOMMA PER QUELLA CATEGORIA NELL'INCOMING FRAGMENT
-    class CategoryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class CategoryViewHolder(itemView: View, private val categoryArray: ArrayList<String>) : RecyclerView.ViewHolder(itemView) {
         private val categoryItem: TextView = itemView.findViewById(R.id.category_item)
         private val totalItem: TextView = itemView.findViewById(R.id.total_item)
-        private val constraint = itemView.findViewById<ConstraintLayout>(R.id.constraint_incoming)
+        private val circle = itemView.findViewById<View>(R.id.cateogry_color)
+        private val colorArray = R.array.color_array
         fun bind(categoryName: String, total: Double){
             categoryItem.text = categoryName
             totalItem.text = total.toString() + "€"
+            //for (element in categoryArray)
             when (categoryName) {
                 "Salario" -> {
-                    constraint.setBackgroundColor(ContextCompat.getColor(itemView.context, R.color.Salario))
+                    circle.backgroundTintList = getColorStateList(itemView.context, R.color.cat1)
                 }
                 "Alimentari" -> {
-                    constraint.setBackgroundColor(ContextCompat.getColor(itemView.context, R.color.Alimentari))
+                    circle.backgroundTintList = getColorStateList(itemView.context, R.color.cat2)
                 }
                 "Trasporti" -> {
-                    constraint.setBackgroundColor(ContextCompat.getColor(itemView.context, R.color.Trasporti))
+                    circle.backgroundTintList = getColorStateList(itemView.context, R.color.cat3)
                 }
                 "Shopping" -> {
-                    constraint.setBackgroundColor(ContextCompat.getColor(itemView.context, R.color.Shopping))
+                    circle.backgroundTintList = getColorStateList(itemView.context, R.color.cat4)
                 }
                 "Viaggi" -> {
-                    constraint.setBackgroundColor(ContextCompat.getColor(itemView.context, R.color.Viaggi))
+                    circle.backgroundTintList = getColorStateList(itemView.context, R.color.cat5)
                 }
                 "Bollette" -> {
-                    constraint.setBackgroundColor(ContextCompat.getColor(itemView.context, R.color.Bollette))
+                    circle.backgroundTintList = getColorStateList(itemView.context, R.color.cat6)
                 }
                 "Lavoro" -> {
-                    constraint.setBackgroundColor(ContextCompat.getColor(itemView.context, R.color.Lavoro))
+                    circle.backgroundTintList = getColorStateList(itemView.context, R.color.cat7)
                 }
                 "Sport" -> {
-                    constraint.setBackgroundColor(ContextCompat.getColor(itemView.context, R.color.Sport))
+                    circle.backgroundTintList = getColorStateList(itemView.context, R.color.cat8)
                 }
                 "Auto" -> {
-                    constraint.setBackgroundColor(ContextCompat.getColor(itemView.context, R.color.Auto))
+                    circle.backgroundTintList = getColorStateList(itemView.context, R.color.cat9)
                 }
                 "Regali" -> {
-                    constraint.setBackgroundColor(ContextCompat.getColor(itemView.context, R.color.Regali))
+                    circle.backgroundTintList = getColorStateList(itemView.context, R.color.cat10)
                 }
                 "Altro" -> {
-                    constraint.setBackgroundColor(ContextCompat.getColor(itemView.context, R.color.Altro))
+                    circle.backgroundTintList = getColorStateList(itemView.context, R.color.cat11)
                 }
             }
         }
@@ -79,7 +83,7 @@ class IncomingListAdapter(private val itemByCategory: MutableMap<String, ArrayLi
             db = DBHelper(parent.context)
         }
 
-        return CategoryViewHolder(view)
+        return CategoryViewHolder(view, categoryArray)
     }
 
     override fun getItemCount(): Int {

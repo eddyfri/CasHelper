@@ -26,18 +26,37 @@
     <color name="Exits">#EF0B1B</color>
     <color name="Entries">#30950E</color>
 
+    <array name="color_array">
+        <item>@color/cat1</item>
+        <item>@color/cat2</item>
+        <item>@color/cat3</item>
+        <item>@color/cat4</item>
+        <item>@color/cat5</item>
+        <item>@color/cat6</item>
+        <item>@color/cat7</item>
+        <item>@color/cat8</item>
+        <item>@color/cat9</item>
+        <item>@color/cat10</item>
+        <item>@color/cat11</item>
+        <item>@color/cat12</item>
+        <item>@color/cat13</item>
+
+    </array>
+
     //legenda colori per categorie
-    <color name="Salario">#0000FF</color>   //blue
-    <color name="Alimentari">#808000</color>    //olive
-    <color name="Trasporti">#800000</color>    //maroon
-    <color name="Shopping">#FF00FF</color>  //fuchsia
-    <color name="Viaggi">#FF0000</color>    //red
-    <color name="Bollette">#FF8C00</color>  //darkorange
-    <color name="Lavoro">#008000</color>    //silver
-    <color name="Sport">#00FF00</color>    //lime
-    <color name="Auto">#FFFF00</color>  //yellow
-    <color name="Regali">#D2691E</color>    //chocolate
-    <color name="Altro">#00FFFF</color>     //aqua
+    <color name="cat1">#0000FF</color>   //blue
+    <color name="cat2">#808000</color>    //olive
+    <color name="cat3">#FA8072</color>    //salmon
+    <color name="cat4">#FF00FF</color>  //fuchsia
+    <color name="cat5">#FF0000</color>    //red
+    <color name="cat6">#FF8C00</color>  //darkorange
+    <color name="cat7">#008000</color>    //silver
+    <color name="cat8">#00FF00</color>    //lime
+    <color name="cat9">#FFFF00</color>  //yellow
+    <color name="cat10">#D2691E</color>    //chocolate
+    <color name="cat11">#00FFFF</color>     //aqua
+    <color name="cat12">#FFB6C1</color>     //pink
+    <color name="cat13">#C71585</color>     //Medium violet red
 
     <color name="Disable">#CFCCCC</color>
     <color name="confirm">#A5F0A3</color>
