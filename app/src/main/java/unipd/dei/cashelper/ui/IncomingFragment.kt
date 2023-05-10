@@ -1,6 +1,7 @@
 package unipd.dei.cashelper.ui
 
 import android.app.DatePickerDialog
+import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.res.Configuration
 import android.graphics.Color
@@ -8,11 +9,7 @@ import android.nfc.Tag
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.ContextThemeWrapper
-import android.view.LayoutInflater
-import android.view.View
 import android.view.View.OnFocusChangeListener
-import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
@@ -34,10 +31,14 @@ import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.properties.Delegates
 import android.util.Log
+import android.view.*
+import androidx.core.view.MenuProvider
+import androidx.lifecycle.Lifecycle
+import unipd.dei.cashelper.MainActivity
 import unipd.dei.cashelper.adapters.IncomingListAdapter
 
 
-class IncomingFragment : Fragment() {
+class IncomingFragment : Fragment(), MenuProvider {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var fabBack: ExtendedFloatingActionButton
@@ -60,6 +61,15 @@ class IncomingFragment : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+
+        //enable backroll arrow
+        (activity as MainActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        //set icon backroll
+        if ((activity as MainActivity).isDarkModeOn(requireContext()))
+            (activity as MainActivity)?.supportActionBar?.setHomeAsUpIndicator(R.drawable.backroll_dark)
+        else
+            (activity as MainActivity)?.supportActionBar?.setHomeAsUpIndicator(R.drawable.backroll_light)
 
         val view = inflater.inflate(R.layout.fragment_incoming, container,false)
 
@@ -96,7 +106,7 @@ class IncomingFragment : Fragment() {
     }
 
     //metodo che restituisce un associazione "nome categoria"->"array di item di quella categoria"
-    //se l'associazione contiene un arraylisst vuoto allora elimina l'associazione
+    //se l'associazione contiene un arraylist vuoto allora elimina l'associazione
     private fun getIncomingByCategory(categories: ArrayList<String>, allItem: MutableList<DBHelper.ItemInfo>): MutableMap<String, ArrayList<DBHelper.ItemInfo>> {
         var incomingByCategory = mutableMapOf<String, ArrayList<DBHelper.ItemInfo>>()
         for (element in categories)
@@ -118,7 +128,8 @@ class IncomingFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        //add MenuProvider
+        activity?.addMenuProvider(this, viewLifecycleOwner, Lifecycle.State.RESUMED)
         //imposto le textview di mese e anno nel mese e anno che mi vengono passati dalla schermata home
         monthTextView.text = month
         yearTextView.text = year.toString()
@@ -265,6 +276,17 @@ class IncomingFragment : Fragment() {
         //aggiornamento recyclerView
         recyclerView.adapter = IncomingListAdapter(itemByCategory)
     }
+    override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+        menuInflater.inflate(R.menu.menu_empty, menu)
+    }
 
+    //action for every menuItem selected
+    override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+        if (menuItem.itemId == android.R.id.home) {
+            val action = IncomingFragmentDirections.actionIncomingFragmentToHomeFragment()
+            view?.findNavController()?.navigate(action)
+        }
+        return true
+    }
 
 }

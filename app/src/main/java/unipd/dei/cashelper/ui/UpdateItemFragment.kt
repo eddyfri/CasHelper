@@ -53,7 +53,9 @@ class UpdateItemFragment: Fragment(), MenuProvider {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_update_item, container, false)
 
+        //set the menu'current fragment
         activity?.addMenuProvider(this, viewLifecycleOwner, Lifecycle.State.RESUMED)
+
         //enable backroll arrow
         (activity as MainActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
