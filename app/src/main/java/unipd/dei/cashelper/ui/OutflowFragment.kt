@@ -83,14 +83,14 @@ class OutflowFragment : Fragment(), MenuProvider {
         var allItemOutflows = db.getItemsByType("Uscita", month, year)
         var allCategories = db.getCategoryName()
         var itemByCategory = getOutflowByCategory(allCategories, allItemOutflows)
-
+        var colorByCategory = setColorCategory(allCategories)
 
         fabBack = view.findViewById<ExtendedFloatingActionButton>(R.id.back_month)
         fabNext = view.findViewById<ExtendedFloatingActionButton>(R.id.next_month)
         monthTextView = view.findViewById<TextView>(R.id.month_text)
         yearTextView = view.findViewById<TextView>(R.id.year_text)
         recyclerView = view.findViewById(R.id.recycler_view)
-        recyclerView.adapter = OutflowListAdapter(itemByCategory)
+        recyclerView.adapter = OutflowListAdapter(itemByCategory, colorByCategory)
         recyclerView.layoutManager = LinearLayoutManager(this.context, LinearLayoutManager.VERTICAL, false)
 
 
@@ -123,6 +123,16 @@ class OutflowFragment : Fragment(), MenuProvider {
         return outflowByCategory
     }
 
+    private fun setColorCategory(categories: ArrayList<String>): MutableMap<String, Int> {
+        var colorMap = mutableMapOf<String, Int>()
+        var colorArray = context?.resources?.getIntArray(R.array.color_array)
+            ?: throw java.lang.IllegalStateException()
+
+        for (i in categories.indices)
+            colorMap[categories[i]] = colorArray[i]
+
+        return colorMap
+    }
 
 
 
@@ -263,6 +273,7 @@ class OutflowFragment : Fragment(), MenuProvider {
     private fun updateAll(month: String, year: Int) {
         var allItemOutflow: MutableList<DBHelper.ItemInfo>
         var allCategories = db.getCategoryName()
+        var colorMap = setColorCategory(allCategories)
 
         //aggiorna la visibilità del bottone nextFab
         if (!(month == getCurrentMonth() && year == getCurrentYear()))
@@ -276,7 +287,7 @@ class OutflowFragment : Fragment(), MenuProvider {
         //qui aggiornerò il pieChart quando ci sarà
 
         //aggiornamento recyclerView
-        recyclerView.adapter = OutflowListAdapter(itemByCategory)
+        recyclerView.adapter = OutflowListAdapter(itemByCategory, colorMap)
     }
     override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
         menuInflater.inflate(R.menu.menu_empty, menu)

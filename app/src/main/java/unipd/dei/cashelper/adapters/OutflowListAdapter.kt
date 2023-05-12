@@ -3,6 +3,7 @@ package unipd.dei.cashelper.adapters
 import android.app.AlertDialog
 import android.content.ContentValues.TAG
 import android.content.Context
+import android.content.res.ColorStateList
 import android.util.Log
 import android.view.*
 import android.widget.TextView
@@ -20,68 +21,18 @@ import unipd.dei.cashelper.ui.HomeFragment
 import unipd.dei.cashelper.ui.HomeFragmentDirections
 import java.text.FieldPosition
 
-class OutflowListAdapter(private val itemByCategory: MutableMap<String, ArrayList<DBHelper.ItemInfo>>) : RecyclerView.Adapter<OutflowListAdapter.CategoryViewHolder>() {
+class OutflowListAdapter(private val itemByCategory: MutableMap<String, ArrayList<DBHelper.ItemInfo>>, private val categoryColor: MutableMap<String, Int>) : RecyclerView.Adapter<OutflowListAdapter.CategoryViewHolder>() {
     private lateinit var db :DBHelper
 
 
-    //DA COMPLETARE TUTTA, DA IMPLEMENTARE UN METODO PER FARE RICEVERE GIà UNA LISTA DELLE CATEGORIE CON ENTRATE E LA SOMMA PER QUELLA CATEGORIA NELL'INCOMING FRAGMENT
     class CategoryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val categoryItem: TextView = itemView.findViewById(R.id.category_item)
         private val totalItem: TextView = itemView.findViewById(R.id.total_item)
-
         private val circle = itemView.findViewById<View>(R.id.category_color)
-        fun bind(categoryName: String, total: Double){
+        fun bind(categoryName: String, total: Double, colorName: Int){
             categoryItem.text = categoryName
             totalItem.text = total.toString() + "€"
-
-
-
-            when (categoryName) {
-                "Salario" -> {
-                    circle.backgroundTintList =
-                        AppCompatResources.getColorStateList(itemView.context, R.color.cat1)
-                }
-                "Alimentari" -> {
-                    circle.backgroundTintList =
-                        AppCompatResources.getColorStateList(itemView.context, R.color.cat2)
-                }
-                "Trasporti" -> {
-                    circle.backgroundTintList =
-                        AppCompatResources.getColorStateList(itemView.context, R.color.cat3)
-                }
-                "Shopping" -> {
-                    circle.backgroundTintList =
-                        AppCompatResources.getColorStateList(itemView.context, R.color.cat4)
-                }
-                "Viaggi" -> {
-                    circle.backgroundTintList =
-                        AppCompatResources.getColorStateList(itemView.context, R.color.cat5)
-                }
-                "Bollette" -> {
-                    circle.backgroundTintList =
-                        AppCompatResources.getColorStateList(itemView.context, R.color.cat6)
-                }
-                "Lavoro" -> {
-                    circle.backgroundTintList =
-                        AppCompatResources.getColorStateList(itemView.context, R.color.cat7)
-                }
-                "Sport" -> {
-                    circle.backgroundTintList =
-                        AppCompatResources.getColorStateList(itemView.context, R.color.cat8)
-                }
-                "Auto" -> {
-                    circle.backgroundTintList =
-                        AppCompatResources.getColorStateList(itemView.context, R.color.cat9)
-                }
-                "Regali" -> {
-                    circle.backgroundTintList =
-                        AppCompatResources.getColorStateList(itemView.context, R.color.cat10)
-                }
-                "Altro" -> {
-                    circle.backgroundTintList =
-                        AppCompatResources.getColorStateList(itemView.context, R.color.cat11)
-                }
-            }
+            circle.backgroundTintList = ColorStateList.valueOf(colorName)
         }
     }
 
@@ -104,7 +55,8 @@ class OutflowListAdapter(private val itemByCategory: MutableMap<String, ArrayLis
     override fun onBindViewHolder(holder: CategoryViewHolder, position: Int) {
         val categoryName = catchKeys()
         val totalByCategory = getTotalCategory()
-        holder.bind(categoryName[position], totalByCategory[position])
+        val colors = setColor()
+        holder.bind(categoryName[position], totalByCategory[position], colors[position])
     }
 
     //metodo per estrarre l'array di chiavi
@@ -126,5 +78,16 @@ class OutflowListAdapter(private val itemByCategory: MutableMap<String, ArrayLis
         }
 
         return  totalCategory
+    }
+
+    //metodo per assegnare un colore alla categoria
+    private fun setColor(): ArrayList<Int> {
+        var colorsByCategory = ArrayList<Int>()
+        for (item in itemByCategory.keys) {
+            val color = categoryColor[item]
+            if (color != null)
+                colorsByCategory.add(color)
+        }
+        return colorsByCategory
     }
 }
