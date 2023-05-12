@@ -30,7 +30,6 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.properties.Delegates
-import android.util.Log
 import android.view.*
 import androidx.core.view.MenuProvider
 import androidx.lifecycle.Lifecycle
@@ -53,6 +52,8 @@ class IncomingFragment : Fragment(), MenuProvider {
     private lateinit var entries: MutableList<PieEntry>
     private lateinit var set: PieDataSet
     private lateinit var data: PieData
+
+
 
     private lateinit var month : String
     private var year by Delegates.notNull<Int>()
@@ -82,14 +83,14 @@ class IncomingFragment : Fragment(), MenuProvider {
         var allItemIncoming = db.getItemsByType("Entrata", month, year)
         var allCategories = db.getCategoryName()
         var itemByCategory = getIncomingByCategory(allCategories, allItemIncoming)
-
+        var colorByCategory = setColorCategory(allCategories)
 
         fabBack = view.findViewById<ExtendedFloatingActionButton>(R.id.back_month)
         fabNext = view.findViewById<ExtendedFloatingActionButton>(R.id.next_month)
         monthTextView = view.findViewById<TextView>(R.id.month_text)
         yearTextView = view.findViewById<TextView>(R.id.year_text)
         recyclerView = view.findViewById(R.id.recycler_view)
-        recyclerView.adapter = IncomingListAdapter(itemByCategory, allCategories)
+        recyclerView.adapter = IncomingListAdapter(itemByCategory, colorByCategory)
         recyclerView.layoutManager = LinearLayoutManager(this.context, LinearLayoutManager.VERTICAL, false)
 
 
@@ -120,6 +121,19 @@ class IncomingFragment : Fragment(), MenuProvider {
             }
         }
         return incomingByCategory
+    }
+
+    //metodo per assegnare ad ogni categoria un colore, in modo tale che il colore sia sempre lo stesso per una categoria
+    //indipendentemente dall'ordine con cui sono salvati gli item
+    private fun setColorCategory(categories: ArrayList<String>): MutableMap<String, Int> {
+        var colorMap = mutableMapOf<String, Int>()
+        var colorArray = context?.resources?.getIntArray(R.array.color_array)
+            ?: throw java.lang.IllegalStateException()
+
+        for (i in categories.indices)
+            colorMap[categories[i]] = colorArray[i]
+
+        return colorMap
     }
 
 
@@ -258,9 +272,14 @@ class IncomingFragment : Fragment(), MenuProvider {
         return currentNightMode == Configuration.UI_MODE_NIGHT_YES
     }
 
+
+
+
+
     private fun updateAll(month: String, year: Int) {
         var allItemIncoming: MutableList<DBHelper.ItemInfo>
         var allCategories = db.getCategoryName()
+        var colorMap = setColorCategory(allCategories)
 
         //aggiorna la visibilità del bottone nextFab
         if (!(month == getCurrentMonth() && year == getCurrentYear()))
@@ -274,7 +293,7 @@ class IncomingFragment : Fragment(), MenuProvider {
         //qui aggiornerò il pieChart quando ci sarà
 
         //aggiornamento recyclerView
-        recyclerView.adapter = IncomingListAdapter(itemByCategory, allCategories)
+        recyclerView.adapter = IncomingListAdapter(itemByCategory, colorMap)
     }
     override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
         menuInflater.inflate(R.menu.menu_empty, menu)

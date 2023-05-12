@@ -3,13 +3,17 @@ package unipd.dei.cashelper.adapters
 import android.app.AlertDialog
 import android.content.ContentValues.TAG
 import android.content.Context
+import android.content.res.ColorStateList
+import android.graphics.Color
 import android.util.Log
 import android.view.*
 import android.widget.TextView
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.content.res.AppCompatResources.getColorStateList
 import androidx.appcompat.view.menu.MenuView.ItemView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.toColor
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
@@ -22,20 +26,20 @@ import kotlin.contracts.contract
 
 
 
-class IncomingListAdapter(private val itemByCategory: MutableMap<String, ArrayList<DBHelper.ItemInfo>>, private val categoryArray: ArrayList<String>) : RecyclerView.Adapter<IncomingListAdapter.CategoryViewHolder>() {
+class IncomingListAdapter(private val itemByCategory: MutableMap<String, ArrayList<DBHelper.ItemInfo>>, private val categoryColor: MutableMap<String, Int>) : RecyclerView.Adapter<IncomingListAdapter.CategoryViewHolder>() {
     private lateinit var db :DBHelper
 
 
-    //DA COMPLETARE TUTTA, DA IMPLEMENTARE UN METODO PER FARE RICEVERE GIà UNA LISTA DELLE CATEGORIE CON ENTRATE E LA SOMMA PER QUELLA CATEGORIA NELL'INCOMING FRAGMENT
-    class CategoryViewHolder(itemView: View, private val categoryArray: ArrayList<String>) : RecyclerView.ViewHolder(itemView) {
+    class CategoryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val categoryItem: TextView = itemView.findViewById(R.id.category_item)
         private val totalItem: TextView = itemView.findViewById(R.id.total_item)
-        private val circle = itemView.findViewById<View>(R.id.cateogry_color)
-        private val colorArray = R.array.color_array
-        fun bind(categoryName: String, total: Double){
+        private val circle = itemView.findViewById<View>(R.id.category_color)
+        fun bind(categoryName: String, total: Double, colorName: Int){
             categoryItem.text = categoryName
             totalItem.text = total.toString() + "€"
-            //for (element in categoryArray)
+            circle.backgroundTintList = ColorStateList.valueOf(colorName)
+            //circle.backgroundTintList = getColorStateList(itemView.context, colorName)
+/*
             when (categoryName) {
                 "Salario" -> {
                     circle.backgroundTintList = getColorStateList(itemView.context, R.color.cat1)
@@ -70,7 +74,7 @@ class IncomingListAdapter(private val itemByCategory: MutableMap<String, ArrayLi
                 "Altro" -> {
                     circle.backgroundTintList = getColorStateList(itemView.context, R.color.cat11)
                 }
-            }
+            }*/
         }
     }
 
@@ -83,7 +87,7 @@ class IncomingListAdapter(private val itemByCategory: MutableMap<String, ArrayLi
             db = DBHelper(parent.context)
         }
 
-        return CategoryViewHolder(view, categoryArray)
+        return CategoryViewHolder(view)
     }
 
     override fun getItemCount(): Int {
@@ -93,7 +97,8 @@ class IncomingListAdapter(private val itemByCategory: MutableMap<String, ArrayLi
     override fun onBindViewHolder(holder: CategoryViewHolder, position: Int) {
         val categoryName = catchKeys()
         val totalByCategory = getTotalCategory()
-        holder.bind(categoryName[position], totalByCategory[position])
+        val colors = setColor()
+        holder.bind(categoryName[position], totalByCategory[position], colors[position])
     }
 
     //metodo per estrarre l'array di chiavi
@@ -113,7 +118,18 @@ class IncomingListAdapter(private val itemByCategory: MutableMap<String, ArrayLi
             totalCategory.add(total)
             total = 0.0
         }
-
         return  totalCategory
     }
+
+    //metodo per assegnare un colore alla categoria
+    private fun setColor(): ArrayList<Int> {
+        var colorsByCategory = ArrayList<Int>()
+        for (item in itemByCategory.keys) {
+            val color = categoryColor[item]
+            if (color != null)
+                colorsByCategory.add(color)
+        }
+        return colorsByCategory
+    }
+
 }

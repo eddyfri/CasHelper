@@ -40,15 +40,14 @@
         <item>@color/cat11</item>
         <item>@color/cat12</item>
         <item>@color/cat13</item>
-
     </array>
 
     //legenda colori per categorie
-    <color name="cat1">#0000FF</color>   //blue
+    <color name="cat1">#FF01579B</color>   //blue
     <color name="cat2">#808000</color>    //olive
     <color name="cat3">#FA8072</color>    //salmon
-    <color name="cat4">#FF00FF</color>  //fuchsia
-    <color name="cat5">#FF0000</color>    //red
+    <color name="cat4">#FF039BE5</color>  //lightblue
+    <color name="cat5">#FFFF0000</color>    //red
     <color name="cat6">#FF8C00</color>  //darkorange
     <color name="cat7">#008000</color>    //silver
     <color name="cat8">#00FF00</color>    //lime

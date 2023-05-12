@@ -29,7 +29,7 @@ class OutflowListAdapter(private val itemByCategory: MutableMap<String, ArrayLis
         private val categoryItem: TextView = itemView.findViewById(R.id.category_item)
         private val totalItem: TextView = itemView.findViewById(R.id.total_item)
 
-        private val circle = itemView.findViewById<View>(R.id.cateogry_color)
+        private val circle = itemView.findViewById<View>(R.id.category_color)
         fun bind(categoryName: String, total: Double){
             categoryItem.text = categoryName
             totalItem.text = total.toString() + "€"
