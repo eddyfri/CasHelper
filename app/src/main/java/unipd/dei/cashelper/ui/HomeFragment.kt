@@ -341,7 +341,7 @@ class HomeFragment: Fragment(), MenuProvider, HomeListAdapter.OnItemDeletedListe
             holeColor = ContextCompat.getColor(this.requireContext(), R.color.pink_salomon)
         }
         else {
-            holeColor = ContextCompat.getColor(this.requireContext(), R.color.violet)
+            holeColor = ContextCompat.getColor(this.requireContext(), R.color.indaco)
         }
         pieChart.setHoleColor(holeColor)
 

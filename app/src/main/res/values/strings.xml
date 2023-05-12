@@ -40,4 +40,8 @@
     <string name="stringTransaction">Inserire una transazione</string>
     <string name="empty_img">Empty img</string>
     <string name="empty_chart_string">Aggiungi una transazione per il grafico</string>
+
+    <string name="new_category">Nuova categoria:</string>
+    <string name="category_name">Nome categoria</string>
+    <string name="add_category">Aggiungi categoria</string>
 </resources>

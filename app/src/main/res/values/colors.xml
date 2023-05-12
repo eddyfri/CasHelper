@@ -8,7 +8,7 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="violet">#B1B2FF</color>
-    <color name="cobalt">#AAC4FF</color>
+    <color name="cobalt">#AAC2FA</color>
     <color name="lilla">#D2DAFF</color>
     <color name="indaco">#E3E8FF</color>
 
@@ -59,7 +59,7 @@
     <color name="cat13">#C71585</color>     //Medium violet red
 
     <color name="Disable">#CFCCCC</color>
-    <color name="confirm">#A5F0A3</color>
+    <color name="confirm">#69EA65</color>
     <color name="light_blue_50">#FFE1F5FE</color>
     <color name="light_blue_200">#FF81D4FA</color>
     <color name="light_blue_600">#FF039BE5</color>

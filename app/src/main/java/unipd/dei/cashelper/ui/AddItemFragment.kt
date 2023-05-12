@@ -2,6 +2,7 @@ package unipd.dei.cashelper.ui
 
 
 
+import android.app.Activity
 import android.app.DatePickerDialog
 import android.content.ContentValues.TAG
 import android.content.Context
@@ -10,6 +11,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.*
+import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
@@ -18,6 +20,8 @@ import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.findNavController
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.transition.MaterialFadeThrough
 import unipd.dei.cashelper.MainActivity
 import unipd.dei.cashelper.R
@@ -39,6 +43,7 @@ class AddItemFragment : Fragment(), MenuProvider {
     private lateinit var constraintLayout: ConstraintLayout
     private lateinit var delete: Button
     private lateinit var disable: Button
+    private lateinit var add_category : Button
 
     //variables for picking
     private lateinit var switch_choose: String
@@ -48,6 +53,10 @@ class AddItemFragment : Fragment(), MenuProvider {
     private var month by Delegates.notNull<Int>()
     private var year by Delegates.notNull<Int>()
     private lateinit var monthString: String
+
+    //popup
+    private var popup: PopupWindow? = null
+    private var popupActive: Boolean = false  //At start the popup is not open
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -115,6 +124,13 @@ class AddItemFragment : Fragment(), MenuProvider {
         //Set date's text
         date.text = "$day/${month + 1}/$year"
 
+
+        //popup
+        add_category = view.findViewById<Button>(R.id.add_category)
+        add_category.setOnClickListener {
+            createPopup()
+        }
+
         return view
 
     }
@@ -130,6 +146,17 @@ class AddItemFragment : Fragment(), MenuProvider {
         constraintLayout.setOnClickListener {
             hideKeyboard(view)
         }
+
+        //popup visibility save instance
+        if (savedInstanceState != null) {
+            popupActive= savedInstanceState.getBoolean("popup_visibility")
+
+            //If there was the popup when the activity was active, create it.
+            if (popupActive) {
+                createPopup()
+            }
+        }
+
 
 
         //variables for checking that the category and value fields are not empty
@@ -319,6 +346,172 @@ class AddItemFragment : Fragment(), MenuProvider {
             view?.findNavController()?.navigate(action)
         }
         return true
+    }
+
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putBoolean("popup_visibility", popupActive)
+    }
+
+    //Save the state of the popup when the activity is stopped
+    override fun onStop() {
+        super.onStop()
+        val restore = popupActive
+        popup?.dismiss()  //close popup
+        popupActive = restore //save the state of the popup
+    }
+
+
+    //Set the background view with the semitransparent effect behind the popup
+    private fun PopupWindow.dimBehind() {
+        val container = contentView.rootView
+        val context = contentView.context
+        val wm = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+        val p = container.layoutParams as WindowManager.LayoutParams
+        p.flags = p.flags or WindowManager.LayoutParams.FLAG_DIM_BEHIND
+        p.dimAmount = 0.3f
+        wm.updateViewLayout(container, p)
+    }
+
+    //Create the popup view for add a category
+    private fun createPopup() {
+        val inflater = LayoutInflater.from((view as View).context)
+        val popupView = inflater.inflate(R.layout.popup_add_category, view as ViewGroup, false)
+
+        val width = ((view as View).width*0.85).toInt()
+        //create the popup with specific size
+        popup = PopupWindow(popupView, width, ViewGroup.LayoutParams.WRAP_CONTENT,true)
+
+        //set the animation when the popup appear and disappear
+        popup?.animationStyle = androidx.appcompat.R.style.Animation_AppCompat_DropDownUp
+        //set the elevation of the popup view
+        popup?.elevation = 100F
+        //the popup can listen the touch outside his view
+        popup?.isOutsideTouchable = true
+        popupActive = true
+
+        popup?.setOnDismissListener {
+            popupActive = false
+            popup = null
+        }
+
+        //Set the container of teh popup (the fragment that is in background of him)
+        val popupContainerView = (view as View).findViewById<View>(R.id.Constraint_add_item)
+
+        //if the user click outside the keyboard, it disappear
+        popupView.setOnClickListener{
+            hideKeyboard(popupView)
+        }
+
+        //Quando la PopupWindow viene ricreta in automatico da PlannerFragment.onViewCreated l'activity sottostante non è
+        //ancora stata inizializzata completamente. View.width ritorna allora 0
+        //Il metodo post "rallenta" la creazione dalla PopupWindow a quando questo parametro sarà stato inizializzato correttamente.
+       /* if (width == 0) {
+            popupContainerView.post {
+                val updatedWidth = ((view as View).width*0.85).toInt()
+                popupWindow?.update(0,0, updatedWidth, ViewGroup.LayoutParams.WRAP_CONTENT)
+                popupWindow?.showAtLocation(popupContainerView, Gravity.CENTER, 0, 0)
+                popupWindow?.dimBehind()
+            }
+        } else {*/ //se non funziona correttamente togli i commenti (Test)
+            popup?.showAtLocation(popupContainerView, Gravity.CENTER, 0, 0)
+            popup?.dimBehind()
+       // }
+
+        val addButton = popupView.findViewById<Button>(R.id.add_button)
+        val fake_add_button = popupView.findViewById<Button>(R.id.FAKE_add_button)
+
+        //enable/disable add_button
+        val popupTextView = popupView.findViewById<EditText>(R.id.text_category)
+        popupTextView.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                //nothing
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                val stringPrice: String = value.text.toString()
+                if (popupTextView.text.isNotEmpty()) {
+                    addButton.isEnabled = true
+                    addButton.visibility = View.VISIBLE
+                    fake_add_button.visibility = View.INVISIBLE
+                    fake_add_button.isEnabled = false
+                } else {
+                    addButton.isEnabled = false
+                    addButton.visibility = View.INVISIBLE
+                    fake_add_button.visibility = View.VISIBLE
+                }
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+                //nothing
+            }
+
+        })
+        popupTextView.setOnEditorActionListener { _, actionId, _ ->
+            //If the user click enter the keyboard disappear
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                popupTextView.clearFocus()
+                //Nascondo la tastiera.
+               hideKeyboard(popupView)
+
+                return@setOnEditorActionListener true
+            }
+
+            return@setOnEditorActionListener false
+        }
+
+        //exit_button's on Click close the popup
+        val cancelButton = popupView.findViewById<Button>(R.id.exit_button)
+        cancelButton.setOnClickListener {
+            popup?.dismiss()
+        }
+
+        //enable/disable the add button
+        addButton.isEnabled = popupTextView.text.isNotEmpty()
+
+
+        addButton.setOnClickListener {
+            if (popupTextView.text.isNotEmpty()) {
+                //Hide keyboard
+                hideKeyboard(popupView)
+                //enable button
+                addButton.isEnabled = true
+
+                //check if the category already exist
+                val categories = db.getCategoryName()
+                val new_category = popupTextView.text
+                if (categories.contains(new_category.toString())) {
+                    val contextView = (view as View).findViewById<View>(R.id.Constraint_add_item)
+                    Snackbar.make(contextView, "Categoria già esistente", Snackbar.LENGTH_SHORT)
+                        .setAction("Chiudi") {}
+                        .show()
+                } else {
+                    //add category to database
+                    db.addCategory(new_category.toString())
+
+                    //update the spinner
+                    val categories = db.getCategoryName()
+                    val adapter = ArrayAdapter<String>(
+                        this.requireContext(),
+                        android.R.layout.simple_spinner_item,
+                        categories
+                    )
+                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                    spinner.adapter = adapter
+                    //set the default string as the new category added
+                    spinner.setSelection(categories.size - 1)
+
+
+                }
+            } else
+                //disable button
+                addButton.isEnabled = false
+
+
+                popup?.dismiss()
+
+        }
     }
 
 
