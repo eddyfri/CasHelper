@@ -76,8 +76,18 @@ class UpdateItemFragment: Fragment(), MenuProvider {
         update.visibility = View.INVISIBLE
         spinner = view.findViewById<Spinner>(R.id.category_select_update)
         val categories = db.getCategoryName()
+
+        //set alphabetic order of category list
+        categories.sortWith(String.CASE_INSENSITIVE_ORDER)
+
+
+        //set category "Altro" as last category of the spinner
+        categories.remove("Altro")
+        categories.add("Altro")
+
         //add first element the default string
         categories.add(0, getString(R.string.category_spinner))
+        
         val adapter = ArrayAdapter<String>(
             this.requireContext(),
             android.R.layout.simple_spinner_item,

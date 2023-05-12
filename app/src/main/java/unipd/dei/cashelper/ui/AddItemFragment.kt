@@ -89,8 +89,18 @@ class AddItemFragment : Fragment(), MenuProvider {
         add.visibility = View.INVISIBLE
         spinner = view.findViewById<Spinner>(R.id.category_select)
         val categories = db.getCategoryName()
+
+        //set alphabetic order of category list
+        categories.sortWith(String.CASE_INSENSITIVE_ORDER)
+
+
+        //set category "Altro" as last category of the spinner
+        categories.remove("Altro")
+        categories.add("Altro")
+
         //add first element the default string
         categories.add(0, getString(R.string.category_spinner))
+
         val adapter = ArrayAdapter<String>(
             this.requireContext(),
             android.R.layout.simple_spinner_item,
@@ -404,20 +414,8 @@ class AddItemFragment : Fragment(), MenuProvider {
             hideKeyboard(popupView)
         }
 
-        //Quando la PopupWindow viene ricreta in automatico da PlannerFragment.onViewCreated l'activity sottostante non è
-        //ancora stata inizializzata completamente. View.width ritorna allora 0
-        //Il metodo post "rallenta" la creazione dalla PopupWindow a quando questo parametro sarà stato inizializzato correttamente.
-       /* if (width == 0) {
-            popupContainerView.post {
-                val updatedWidth = ((view as View).width*0.85).toInt()
-                popupWindow?.update(0,0, updatedWidth, ViewGroup.LayoutParams.WRAP_CONTENT)
-                popupWindow?.showAtLocation(popupContainerView, Gravity.CENTER, 0, 0)
-                popupWindow?.dimBehind()
-            }
-        } else {*/ //se non funziona correttamente togli i commenti (Test)
-            popup?.showAtLocation(popupContainerView, Gravity.CENTER, 0, 0)
-            popup?.dimBehind()
-       // }
+        popup?.showAtLocation(popupContainerView, Gravity.CENTER, 0, 0)
+        popup?.dimBehind()
 
         val addButton = popupView.findViewById<Button>(R.id.add_button)
         val fake_add_button = popupView.findViewById<Button>(R.id.FAKE_add_button)
@@ -488,7 +486,7 @@ class AddItemFragment : Fragment(), MenuProvider {
                         .show()
                 } else {
                     //add category to database
-                    db.addCategory(new_category.toString())
+                    db.addCategory(new_category.toString().trim())
 
                     //update the spinner
                     val categories = db.getCategoryName()
@@ -497,11 +495,19 @@ class AddItemFragment : Fragment(), MenuProvider {
                         android.R.layout.simple_spinner_item,
                         categories
                     )
+                    //set alphabetic order of category list
+                    categories.sortWith(String.CASE_INSENSITIVE_ORDER)
+
+                    //set category "Altro" as last category of the spinner
+                    categories.remove("Altro")
+                    categories.add("Altro")
                     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
                     spinner.adapter = adapter
                     //set the default string as the new category added
-                    spinner.setSelection(categories.size - 1)
+                    val posNew = categories.indexOf(new_category.toString())
+                    spinner.setSelection(posNew)
 
+                    Toast.makeText(requireContext(), "Categoria aggiunta", Toast.LENGTH_SHORT).show()
 
                 }
             } else
