@@ -38,43 +38,6 @@ class IncomingListAdapter(private val itemByCategory: MutableMap<String, ArrayLi
             categoryItem.text = categoryName
             totalItem.text = total.toString() + "€"
             circle.backgroundTintList = ColorStateList.valueOf(colorName)
-            //circle.backgroundTintList = getColorStateList(itemView.context, colorName)
-/*
-            when (categoryName) {
-                "Salario" -> {
-                    circle.backgroundTintList = getColorStateList(itemView.context, R.color.cat1)
-                }
-                "Alimentari" -> {
-                    circle.backgroundTintList = getColorStateList(itemView.context, R.color.cat2)
-                }
-                "Trasporti" -> {
-                    circle.backgroundTintList = getColorStateList(itemView.context, R.color.cat3)
-                }
-                "Shopping" -> {
-                    circle.backgroundTintList = getColorStateList(itemView.context, R.color.cat4)
-                }
-                "Viaggi" -> {
-                    circle.backgroundTintList = getColorStateList(itemView.context, R.color.cat5)
-                }
-                "Bollette" -> {
-                    circle.backgroundTintList = getColorStateList(itemView.context, R.color.cat6)
-                }
-                "Lavoro" -> {
-                    circle.backgroundTintList = getColorStateList(itemView.context, R.color.cat7)
-                }
-                "Sport" -> {
-                    circle.backgroundTintList = getColorStateList(itemView.context, R.color.cat8)
-                }
-                "Auto" -> {
-                    circle.backgroundTintList = getColorStateList(itemView.context, R.color.cat9)
-                }
-                "Regali" -> {
-                    circle.backgroundTintList = getColorStateList(itemView.context, R.color.cat10)
-                }
-                "Altro" -> {
-                    circle.backgroundTintList = getColorStateList(itemView.context, R.color.cat11)
-                }
-            }*/
         }
     }
 
