@@ -159,19 +159,6 @@
         app:layout_constraintStart_toStartOf="@id/midline_add"
         app:layout_constraintEnd_toEndOf="@id/guidelineDescriptionDX"
         />
-    <Button
-        android:id="@+id/disable_buttonFAKE"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/container_add_button"
-        android:layout_marginBottom="20pt"
-        android:text="@string/confirm_button"
-        android:enabled="false"
-        style="@style/disable_button"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="@id/midline_add"
-        app:layout_constraintEnd_toEndOf="@id/guidelineDescriptionDX"
-        />
 
     <Button
         android:id="@+id/delete_button"

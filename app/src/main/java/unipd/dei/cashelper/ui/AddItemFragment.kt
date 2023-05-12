@@ -6,6 +6,7 @@ import android.app.Activity
 import android.app.DatePickerDialog
 import android.content.ContentValues.TAG
 import android.content.Context
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -15,6 +16,7 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.content.res.AppCompatResources.getColorStateList
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
@@ -42,7 +44,6 @@ class AddItemFragment : Fragment(), MenuProvider {
     private lateinit var spinner: Spinner
     private lateinit var constraintLayout: ConstraintLayout
     private lateinit var delete: Button
-    private lateinit var disable: Button
     private lateinit var add_category : Button
 
     //variables for picking
@@ -85,8 +86,8 @@ class AddItemFragment : Fragment(), MenuProvider {
 
         db = DBHelper(this.requireContext() as Context)
         add = view.findViewById(R.id.confirm_button)
-        disable = view.findViewById(R.id.disable_buttonFAKE)
-        add.visibility = View.INVISIBLE
+        add.isEnabled = false
+        add.backgroundTintList = getColorStateList(requireContext(), R.color.Disable)
         spinner = view.findViewById<Spinner>(R.id.category_select)
         val categories = db.getCategoryName()
 
@@ -194,13 +195,10 @@ class AddItemFragment : Fragment(), MenuProvider {
                 categoryCheck = selected_category != getString(R.string.category_spinner)
                 if (valueCheck && categoryCheck) {
                     add.isEnabled = true
-                    add.visibility = View.VISIBLE
-                    disable.visibility = View.INVISIBLE
-                    disable.isEnabled = false
+                    add.backgroundTintList = getColorStateList(requireContext(), R.color.confirm)
                 } else {
                     add.isEnabled = false
-                    add.visibility = View.INVISIBLE
-                    disable.visibility = View.VISIBLE
+                    add.backgroundTintList = getColorStateList(requireContext(), R.color.Disable)
                 }
             }
 
@@ -249,13 +247,10 @@ class AddItemFragment : Fragment(), MenuProvider {
                 valueCheck = stringPrice.isNotEmpty()
                 if (valueCheck && categoryCheck) {
                     add.isEnabled = true
-                    add.visibility = View.VISIBLE
-                    disable.visibility = View.INVISIBLE
-                    disable.isEnabled = false
+                    add.backgroundTintList = getColorStateList(requireContext(), R.color.confirm)
                 } else {
                     add.isEnabled = false
-                    add.visibility = View.INVISIBLE
-                    disable.visibility = View.VISIBLE
+                    add.backgroundTintList = getColorStateList(requireContext(), R.color.Disable)
                 }
             }
 
@@ -418,7 +413,9 @@ class AddItemFragment : Fragment(), MenuProvider {
         popup?.dimBehind()
 
         val addButton = popupView.findViewById<Button>(R.id.add_button)
-        val fake_add_button = popupView.findViewById<Button>(R.id.FAKE_add_button)
+        addButton.isEnabled = false
+        addButton.backgroundTintList = getColorStateList(requireContext(), R.color.Disable)
+
 
         //enable/disable add_button
         val popupTextView = popupView.findViewById<EditText>(R.id.text_category)
@@ -428,16 +425,12 @@ class AddItemFragment : Fragment(), MenuProvider {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                val stringPrice: String = value.text.toString()
                 if (popupTextView.text.isNotEmpty()) {
                     addButton.isEnabled = true
-                    addButton.visibility = View.VISIBLE
-                    fake_add_button.visibility = View.INVISIBLE
-                    fake_add_button.isEnabled = false
+                    addButton.backgroundTintList = getColorStateList(requireContext(), R.color.confirm)
                 } else {
                     addButton.isEnabled = false
-                    addButton.visibility = View.INVISIBLE
-                    fake_add_button.visibility = View.VISIBLE
+                    addButton.backgroundTintList = getColorStateList(requireContext(), R.color.Disable)
                 }
             }
 
@@ -465,8 +458,6 @@ class AddItemFragment : Fragment(), MenuProvider {
             popup?.dismiss()
         }
 
-        //enable/disable the add button
-        addButton.isEnabled = popupTextView.text.isNotEmpty()
 
 
         addButton.setOnClickListener {

@@ -9,6 +9,7 @@ import android.text.TextWatcher
 import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
+import androidx.appcompat.content.res.AppCompatResources.getColorStateList
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
@@ -32,7 +33,6 @@ class UpdateItemFragment: Fragment(), MenuProvider {
     private lateinit var spinner : Spinner
     private lateinit var constraintLayout : ConstraintLayout
     private var idItem by Delegates.notNull<Int>()
-    private lateinit var disable : Button
     private lateinit var delete : Button
 
     //variables for picking
@@ -71,9 +71,9 @@ class UpdateItemFragment: Fragment(), MenuProvider {
         db = DBHelper(this.requireContext())
         var itemInfo = db.getItemById(idItem)
         update = view.findViewById(R.id.update_button)
-        disable = view.findViewById(R.id.disable_buttonFAKE_update)
+        update.isEnabled = false
+        update.backgroundTintList = getColorStateList(requireContext(), R.color.Disable)
         delete = view.findViewById((R.id.delete_button))
-        update.visibility = View.INVISIBLE
         spinner = view.findViewById<Spinner>(R.id.category_select_update)
         val categories = db.getCategoryName()
 
@@ -87,7 +87,7 @@ class UpdateItemFragment: Fragment(), MenuProvider {
 
         //add first element the default string
         categories.add(0, getString(R.string.category_spinner))
-        
+
         val adapter = ArrayAdapter<String>(
             this.requireContext(),
             android.R.layout.simple_spinner_item,
@@ -157,13 +157,10 @@ class UpdateItemFragment: Fragment(), MenuProvider {
                 categoryCheck = selected_category != getString(R.string.category_spinner)
                 if(valueCheck && categoryCheck) {
                     update.isEnabled = true
-                    update.visibility = View.VISIBLE
-                    disable.visibility = View.INVISIBLE
-                    disable.isEnabled = false
+                    update.backgroundTintList = getColorStateList(requireContext(), R.color.confirm)
                 } else {
                     update.isEnabled = false
-                    update.visibility = View.INVISIBLE
-                    disable.visibility = View.VISIBLE
+                    update.backgroundTintList = getColorStateList(requireContext(), R.color.Disable)
                 }
             }
 
@@ -205,13 +202,10 @@ class UpdateItemFragment: Fragment(), MenuProvider {
                 valueCheck = stringPrice.isNotEmpty()
                 if(valueCheck && categoryCheck) {
                     update.isEnabled = true
-                    update.visibility = View.VISIBLE
-                    disable.visibility = View.INVISIBLE
-                    disable.isEnabled = false
+                    update.backgroundTintList = getColorStateList(requireContext(), R.color.confirm)
                 } else {
                     update.isEnabled = false
-                    update.visibility = View.INVISIBLE
-                    disable.visibility = View.VISIBLE
+                    update.backgroundTintList = getColorStateList(requireContext(), R.color.Disable)
                 }
             }
 

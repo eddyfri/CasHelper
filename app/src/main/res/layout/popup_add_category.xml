@@ -53,18 +53,6 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
-        <Button
-            android:id="@+id/FAKE_add_button"
-            style = "@style/disable_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="5dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/textField"
-            android:text="@string/add_category"
-            android:textAlignment="center"/>
 
         <Button
             android:id="@+id/add_button"
