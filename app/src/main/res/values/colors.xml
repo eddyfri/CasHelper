@@ -40,22 +40,56 @@
         <item>@color/cat11</item>
         <item>@color/cat12</item>
         <item>@color/cat13</item>
+        <item>@color/cat14</item>
+        <item>@color/cat15</item>
+        <item>@color/cat16</item>
+        <item>@color/cat17</item>
+        <item>@color/cat18</item>
+        <item>@color/cat19</item>
+        <item>@color/cat20</item>
+        <item>@color/cat21</item>
+        <item>@color/cat22</item>
+        <item>@color/cat23</item>
+        <item>@color/cat24</item>
+        <item>@color/cat25</item>
+        <item>@color/cat26</item>
+        <item>@color/cat27</item>
+        <item>@color/cat28</item>
+        <item>@color/cat29</item>
+        <item>@color/cat30</item>
     </array>
 
     //legenda colori per categorie
-    <color name="cat1">#FF01579B</color>   //blue
-    <color name="cat2">#808000</color>    //olive
-    <color name="cat3">#FA8072</color>    //salmon
-    <color name="cat4">#FF039BE5</color>  //lightblue
-    <color name="cat5">#FFFF0000</color>    //red
-    <color name="cat6">#FF8C00</color>  //darkorange
-    <color name="cat7">#008000</color>    //silver
-    <color name="cat8">#00FF00</color>    //lime
-    <color name="cat9">#FFFF00</color>  //yellow
-    <color name="cat10">#D2691E</color>    //chocolate
-    <color name="cat11">#00FFFF</color>     //aqua
-    <color name="cat12">#FFB6C1</color>     //pink
-    <color name="cat13">#C71585</color>     //Medium violet red
+    <color name="cat1">#FF01579B</color>
+    <color name="cat2">#808000</color>
+    <color name="cat3">#FA8072</color>
+    <color name="cat4">#FF039BE5</color>
+    <color name="cat5">#FFFF0000</color>
+    <color name="cat6">#FF8C00</color>
+    <color name="cat7">#008000</color>
+    <color name="cat8">#00FF00</color>
+    <color name="cat9">#FFFF00</color>
+    <color name="cat10">#D2691E</color>
+    <color name="cat11">#00FFFF</color>
+    <color name="cat12">#FFB6C1</color>
+    <color name="cat13">#C71585</color>
+    <color name="cat14">#FF4500</color> <!--Arancione scuro-->
+    <color name="cat15">#9400D3</color> <!--Viola scuro-->
+    <color name="cat16">#00FFFF</color> <!--Ciano-->
+    <color name="cat17">#FFD700</color> <!--Oro-->
+    <color name="cat18">#FF69B4</color> <!--Rosa-->
+    <color name="cat19">#008000</color> <!--Verde-->
+    <color name="cat20">#FF1493</color> <!--Rosa intenso-->
+    <color name="cat21">#00FF7F</color> <!--Verde brillante-->
+    <color name="cat22">#1E90FF</color> <!--Blu-->
+    <color name="cat23">#FF6347</color> <!--Rosso-->
+    <color name="cat24">#9400D3</color> <!--Viola scuro-->
+    <color name="cat25">#32CD32</color> <!--Verde lime-->
+    <color name="cat26">#FF00FF</color> <!--Magenta-->
+    <color name="cat27">#7B68EE</color> <!--Blu scuro-->
+    <color name="cat28">#FFA500</color> <!--Arancione-->
+    <color name="cat29">#00FA9A</color> <!--Verde intenso-->
+    <color name="cat30">#8B0000</color> <!--Rosso scuro-->
 
     <color name="Disable">#CFCCCC</color>
     <color name="confirm">#69EA65</color>
@@ -63,4 +97,5 @@
     <color name="light_blue_200">#FF81D4FA</color>
     <color name="light_blue_600">#FF039BE5</color>
     <color name="light_blue_900">#FF01579B</color>
+
 </resources>
