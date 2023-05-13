@@ -223,6 +223,7 @@ class AddItemFragment : Fragment(), MenuProvider {
                     //take date
                     this.year = year
                     this.day = day
+                    this.month = month
                     monthString = dateConverter(month)
                 },
                 year,

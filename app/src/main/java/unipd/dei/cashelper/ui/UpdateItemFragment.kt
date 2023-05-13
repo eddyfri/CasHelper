@@ -202,13 +202,15 @@ class UpdateItemFragment: Fragment(), MenuProvider {
         date.setOnClickListener{
             val datePickerDialog = DatePickerDialog(
                 this.requireContext(),
-                DatePickerDialog.OnDateSetListener { _, year, month, day ->
+                DatePickerDialog.OnDateSetListener { _, year, month, day -> //identify the date choose by the user
                     date.text = "$day/${month + 1}/$year"
-                    //take date
+                    //take date chosen
                     this.year = year
                     this.day = day
+                    this.month = month
                     monthString = dateConverter(month)
                 },
+                //set the calendar ui with the chosen date
                 year,
                 month,
                 day
