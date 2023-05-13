@@ -139,7 +139,12 @@ class AddItemFragment : Fragment(), MenuProvider {
         //popup
         add_category = view.findViewById<Button>(R.id.add_category)
         add_category.setOnClickListener {
-            createPopup()
+            //check, if we have already 30 categories (max possible), show a message
+            if((db.getCategoryName()).size == 30){
+                Toast.makeText(requireContext(), "Limite massimo categorie raggiunto", Toast.LENGTH_SHORT).show()
+            }
+            else
+                createPopup()
         }
 
         return view
