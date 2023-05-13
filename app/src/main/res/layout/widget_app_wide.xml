@@ -1,0 +1,57 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/Widget.CasHelper.AppWidget.Container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:theme="@style/Theme.CasHelper.AppWidgetContainer"
+    android:id="@+id/widget_container">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:minHeight="110dp" >
+        <ImageView
+            android:id="@+id/pieChartWidgetWide"
+            android:layout_width="130dp"
+            android:layout_height="match_parent"
+            />
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:minHeight="110dp" >
+            <TextView
+                android:id="@+id/month_year_widget_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/month_year_widget"
+                android:layout_gravity="center"
+                android:gravity="bottom" />
+            <TextView
+                android:id="@+id/incoming_widget_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/incoming_widget_string"
+                android:gravity="left" />
+            <TextView
+                android:id="@+id/outflow_widget_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/outflow_widget_string"
+                android:gravity="left" />
+            <TextView
+                android:id="@+id/total_widget_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/total_widget_string"
+                android:gravity="left" />
+            <Button
+                android:id="@+id/add_item_widget"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/add_from_widget"
+                android:layout_gravity="center" />
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

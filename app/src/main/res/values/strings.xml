@@ -33,10 +33,9 @@
     <string name="update_button">MODIFICA</string>
     <string name="deleteItem">Elimina</string>
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="appwidget_text">EXAMPLE</string>
+    <string name="appwidget_text">CasHelper</string>
     <string name="add_widget">Add widget</string>
-    <string name="app_widget_description">This is an app widget description</string>
+    <string name="app_widget_description">Widget con le informazioni sulle finanze del mese corrente</string>
     <string name="stringTransaction">Inserire una transazione</string>
     <string name="empty_img">Empty img</string>
     <string name="empty_chart_string">Aggiungi una transazione per il grafico</string>
@@ -44,4 +43,9 @@
     <string name="new_category">Nuova categoria:</string>
     <string name="category_name">Nome categoria</string>
     <string name="add_category">Aggiungi categoria</string>
+    <string name="month_year_widget">Month Year</string>
+    <string name="incoming_widget_string">Entrate:</string>
+    <string name="outflow_widget_string">Uscite:</string>
+    <string name="total_widget_string">Totale:</string>
+    <string name="add_from_widget">Aggiungi</string>
 </resources>
