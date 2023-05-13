@@ -41,7 +41,11 @@ class HomeListAdapter(private val itemList: MutableList<DBHelper.ItemInfo>, priv
 
         fun bind(itemInfo: DBHelper.ItemInfo) {
             itemCategory.text = itemInfo.category
-            itemPrice.text = itemInfo.price.toString() + " €"
+            //add "-" if is an exit
+            if(itemInfo.type == "Uscita")
+                itemPrice.text = "-" + itemInfo.price.toString() + " €"
+            else
+                itemPrice.text = itemInfo.price.toString() + " €"
             val date =
                 itemInfo.day.toString() + "/" + getNumberMonth(itemInfo.month) + "/" + itemInfo.year.toString()
             itemDate.text = date
