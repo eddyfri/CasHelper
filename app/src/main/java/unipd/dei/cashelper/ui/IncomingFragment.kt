@@ -33,6 +33,7 @@ import kotlin.properties.Delegates
 import android.view.*
 import androidx.core.view.MenuProvider
 import androidx.lifecycle.Lifecycle
+import com.github.mikephil.charting.components.Legend
 import unipd.dei.cashelper.MainActivity
 import unipd.dei.cashelper.adapters.IncomingListAdapter
 
@@ -83,7 +84,7 @@ class IncomingFragment : Fragment(), MenuProvider {
         var allItemIncoming = db.getItemsByType("Entrata", month, year)
         var allCategories = db.getCategoryName()
         var itemByCategory = getIncomingByCategory(allCategories, allItemIncoming)
-        var colorByCategory = setColorCategory(allCategories)
+        var colorByCategory = setColorCategory(allCategories, itemByCategory)
 
         fabBack = view.findViewById<ExtendedFloatingActionButton>(R.id.back_month)
         fabNext = view.findViewById<ExtendedFloatingActionButton>(R.id.next_month)
@@ -125,18 +126,21 @@ class IncomingFragment : Fragment(), MenuProvider {
 
     //metodo per assegnare ad ogni categoria un colore, in modo tale che il colore sia sempre lo stesso per una categoria
     //indipendentemente dall'ordine con cui sono salvati gli item
-    private fun setColorCategory(categories: ArrayList<String>): MutableMap<String, Int> {
+    private fun setColorCategory(categories: ArrayList<String>, itemByCategory: MutableMap<String, ArrayList<DBHelper.ItemInfo>>): ArrayList<Int> {
         var colorMap = mutableMapOf<String, Int>()
         var colorArray = context?.resources?.getIntArray(R.array.color_array)
             ?: throw java.lang.IllegalStateException()
-
         for (i in categories.indices)
             colorMap[categories[i]] = colorArray[i]
 
-        return colorMap
+        var colorsByCategory = ArrayList<Int>()
+        for (item in itemByCategory.keys) {
+            val color = colorMap[item]
+            if (color != null)
+                colorsByCategory.add(color)
+        }
+        return colorsByCategory
     }
-
-
 
 
 
@@ -144,9 +148,21 @@ class IncomingFragment : Fragment(), MenuProvider {
         super.onViewCreated(view, savedInstanceState)
         //add MenuProvider
         activity?.addMenuProvider(this, viewLifecycleOwner, Lifecycle.State.RESUMED)
+
+        var allItemIncoming = db.getItemsByType("Entrata", month, year)
+        var allCategories = db.getCategoryName()
+        var itemByCategory = getIncomingByCategory(allCategories, allItemIncoming)
+
         //imposto le textview di mese e anno nel mese e anno che mi vengono passati dalla schermata home
         monthTextView.text = month
         yearTextView.text = year.toString()
+
+        createPieChart(view, itemByCategory, allCategories)
+        if (itemByCategory.isEmpty())
+            pieChart.visibility = View.GONE
+        else
+            pieChart.visibility = View.VISIBLE
+
 
         fabBack.setOnClickListener {
             // cambia mese anno
@@ -205,8 +221,94 @@ class IncomingFragment : Fragment(), MenuProvider {
         }
     }
 
-    private fun createPieChart(view: View, itemInfo: MutableList<DBHelper.ItemInfo>) {
+    private fun catchKeys(itemByCategory: MutableMap<String, ArrayList<DBHelper.ItemInfo>>): ArrayList<String>{
+        return ArrayList(itemByCategory.keys)
+    }
+
+    private fun getTotalCategory(category: String, itemByCategory: MutableMap<String, ArrayList<DBHelper.ItemInfo>>): Double{
+        var total = 0.0
+        var itemsOfThisCategory = itemByCategory[category]
+        if (itemsOfThisCategory != null)
+            for (item in itemsOfThisCategory)
+                total = total + item.price
+        return total
+    }
+    private fun createPieChart(view: View, itemByCategory: MutableMap<String, ArrayList<DBHelper.ItemInfo>>, categories: ArrayList<String>) {
         pieChart = view.findViewById(R.id.chart_incoming)
+
+        val categoriesWithIncomings = catchKeys(itemByCategory)
+        val colors = setColorCategory(categories, itemByCategory)
+
+        entries = ArrayList()
+        for (element in categoriesWithIncomings) {
+            var total = getTotalCategory(element, itemByCategory)
+            entries.add(PieEntry(total.toFloat(), element))
+        }
+
+        set = PieDataSet(entries, "")
+        data = PieData(set)
+        pieChart.data = data
+        set.colors = colors
+
+        //legend of the pieChart invisible
+        pieChart.legend.isEnabled = false
+        //not draw labels
+        pieChart.setDrawEntryLabels(false)
+        //enable percent values
+        pieChart.setUsePercentValues(true)
+        //set Entry label's color (temporally dis-activated)
+        pieChart.data.setValueTextColor(Color.rgb(255, 255, 255))
+        //set Entry text
+        pieChart.data.setValueTextSize(0f)
+        //delete description
+        pieChart.description.text = ""
+        //hole
+        pieChart.holeRadius = 30f
+        pieChart.setTransparentCircleAlpha(0)
+
+
+
+        val holeColor : Int
+        if(isDarkModeOn(this.requireContext())) {
+            holeColor = ContextCompat.getColor(this.requireContext(), R.color.pink_salomon)
+        }
+        else {
+            holeColor = ContextCompat.getColor(this.requireContext(), R.color.indaco)
+        }
+        pieChart.setHoleColor(holeColor)
+
+        //Legend
+        pieChart.legend.textSize = 20f
+        pieChart.legend.horizontalAlignment = Legend.LegendHorizontalAlignment.RIGHT
+        pieChart.legend.verticalAlignment = Legend.LegendVerticalAlignment.CENTER
+        pieChart.legend.yOffset = -50f
+        pieChart.legend.xOffset = 30f
+        pieChart.legend.orientation = Legend.LegendOrientation.VERTICAL
+
+        // refresh
+        pieChart.invalidate()
+    }
+
+    private fun updatePieChart(itemByCategory: MutableMap<String, ArrayList<DBHelper.ItemInfo>>, categories: ArrayList<String>){
+        val categoriesWithIncomings = catchKeys(itemByCategory)
+        val colors = setColorCategory(categories, itemByCategory)
+        entries.clear()
+
+        entries = ArrayList()
+        for (element in categoriesWithIncomings) {
+            var total = getTotalCategory(element, itemByCategory)
+            entries.add(PieEntry(total.toFloat(), element))
+        }
+
+        set = PieDataSet(entries, "")
+        data = PieData(set)
+        pieChart.data =  data
+        set.colors = colors
+        pieChart.data.setValueTextSize(0f)
+        data.notifyDataChanged()
+        set.notifyDataSetChanged()
+        pieChart.notifyDataSetChanged()
+        pieChart.invalidate()
 
     }
 
@@ -277,20 +379,23 @@ class IncomingFragment : Fragment(), MenuProvider {
 
 
     private fun updateAll(month: String, year: Int) {
-        var allItemIncoming: MutableList<DBHelper.ItemInfo>
+        //aggiorna gli item in base al mese che è stato cambiato
+        var allItemIncoming = db.getItemsByType("Entrata", month, year)
         var allCategories = db.getCategoryName()
-        var colorMap = setColorCategory(allCategories)
+        var itemByCategory = getIncomingByCategory(allCategories, allItemIncoming)
+        var colorMap = setColorCategory(allCategories, itemByCategory)
 
         //aggiorna la visibilità del bottone nextFab
         if (!(month == getCurrentMonth() && year == getCurrentYear()))
             fabNext.show()
         else fabNext.hide()
 
-        //aggiorna gli item in base al mese che è stato cambiato
-        allItemIncoming = db.getItemsByType("Entrata", month, year)
-         var itemByCategory = getIncomingByCategory(allCategories, allItemIncoming)
+        if (itemByCategory.isEmpty())
+            pieChart.visibility = View.GONE
+        else
+            pieChart.visibility = View.VISIBLE
 
-        //qui aggiornerò il pieChart quando ci sarà
+        updatePieChart(itemByCategory, allCategories)
 
         //aggiornamento recyclerView
         recyclerView.adapter = IncomingListAdapter(itemByCategory, colorMap)

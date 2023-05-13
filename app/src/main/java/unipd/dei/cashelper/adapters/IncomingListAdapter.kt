@@ -26,7 +26,7 @@ import kotlin.contracts.contract
 
 
 
-class IncomingListAdapter(private val itemByCategory: MutableMap<String, ArrayList<DBHelper.ItemInfo>>, private val categoryColor: MutableMap<String, Int>) : RecyclerView.Adapter<IncomingListAdapter.CategoryViewHolder>() {
+class IncomingListAdapter(private val itemByCategory: MutableMap<String, ArrayList<DBHelper.ItemInfo>>, private val categoryColor: ArrayList<Int>) : RecyclerView.Adapter<IncomingListAdapter.CategoryViewHolder>() {
     private lateinit var db :DBHelper
 
 
@@ -60,8 +60,7 @@ class IncomingListAdapter(private val itemByCategory: MutableMap<String, ArrayLi
     override fun onBindViewHolder(holder: CategoryViewHolder, position: Int) {
         val categoryName = catchKeys()
         val totalByCategory = getTotalCategory()
-        val colors = setColor()
-        holder.bind(categoryName[position], totalByCategory[position], colors[position])
+        holder.bind(categoryName[position], totalByCategory[position], categoryColor[position])
     }
 
     //metodo per estrarre l'array di chiavi
@@ -84,15 +83,5 @@ class IncomingListAdapter(private val itemByCategory: MutableMap<String, ArrayLi
         return  totalCategory
     }
 
-    //metodo per assegnare un colore alla categoria
-    private fun setColor(): ArrayList<Int> {
-        var colorsByCategory = ArrayList<Int>()
-        for (item in itemByCategory.keys) {
-            val color = categoryColor[item]
-            if (color != null)
-                colorsByCategory.add(color)
-        }
-        return colorsByCategory
-    }
 
 }

@@ -72,6 +72,7 @@
         app:layout_constraintBottom_toTopOf="@id/guideline_incoming0"/>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraint_pie_chart"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="@drawable/container_home"
@@ -88,7 +89,9 @@
             android:id="@+id/chart_incoming"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_centerHorizontal="true"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintVertical_bias="0.5"
             />
     </androidx.constraintlayout.widget.ConstraintLayout>
 

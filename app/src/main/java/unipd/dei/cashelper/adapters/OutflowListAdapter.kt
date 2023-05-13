@@ -21,7 +21,7 @@ import unipd.dei.cashelper.ui.HomeFragment
 import unipd.dei.cashelper.ui.HomeFragmentDirections
 import java.text.FieldPosition
 
-class OutflowListAdapter(private val itemByCategory: MutableMap<String, ArrayList<DBHelper.ItemInfo>>, private val categoryColor: MutableMap<String, Int>) : RecyclerView.Adapter<OutflowListAdapter.CategoryViewHolder>() {
+class OutflowListAdapter(private val itemByCategory: MutableMap<String, ArrayList<DBHelper.ItemInfo>>, private val categoryColor: ArrayList<Int>) : RecyclerView.Adapter<OutflowListAdapter.CategoryViewHolder>() {
     private lateinit var db :DBHelper
 
 
@@ -55,7 +55,7 @@ class OutflowListAdapter(private val itemByCategory: MutableMap<String, ArrayLis
     override fun onBindViewHolder(holder: CategoryViewHolder, position: Int) {
         val categoryName = catchKeys()
         val totalByCategory = getTotalCategory()
-        val colors = setColor()
+        val colors = categoryColor
         holder.bind(categoryName[position], totalByCategory[position], colors[position])
     }
 
@@ -80,14 +80,4 @@ class OutflowListAdapter(private val itemByCategory: MutableMap<String, ArrayLis
         return  totalCategory
     }
 
-    //metodo per assegnare un colore alla categoria
-    private fun setColor(): ArrayList<Int> {
-        var colorsByCategory = ArrayList<Int>()
-        for (item in itemByCategory.keys) {
-            val color = categoryColor[item]
-            if (color != null)
-                colorsByCategory.add(color)
-        }
-        return colorsByCategory
-    }
 }
