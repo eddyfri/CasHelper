@@ -406,7 +406,7 @@ class AddItemFragment : Fragment(), MenuProvider {
             popup = null
         }
 
-        //Set the container of teh popup (the fragment that is in background of him)
+        //Set the container of the popup (the fragment that is in background of him)
         val popupContainerView = (view as View).findViewById<View>(R.id.Constraint_add_item)
 
         //if the user click outside the keyboard, it disappear
@@ -515,7 +515,4 @@ class AddItemFragment : Fragment(), MenuProvider {
 
         }
     }
-
-
-
 }
