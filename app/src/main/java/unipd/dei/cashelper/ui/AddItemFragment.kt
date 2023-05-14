@@ -17,6 +17,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources.getColorStateList
+import androidx.appcompat.widget.SwitchCompat
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
@@ -39,7 +40,7 @@ class AddItemFragment : Fragment(), MenuProvider {
     private lateinit var date: Button
     private lateinit var add: Button
     private lateinit var selected_category: String
-    private lateinit var switch: Switch
+    private lateinit var switch: SwitchCompat
     private lateinit var description: EditText
     private lateinit var spinner: Spinner
     private lateinit var constraintLayout: ConstraintLayout

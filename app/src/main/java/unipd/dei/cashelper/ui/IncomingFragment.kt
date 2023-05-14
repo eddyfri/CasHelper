@@ -257,9 +257,9 @@ class IncomingFragment : Fragment(), MenuProvider {
         //enable percent values
         pieChart.setUsePercentValues(true)
         //set Entry label's color (temporally dis-activated)
-        pieChart.data.setValueTextColor(Color.rgb(255, 255, 255))
+        pieChart.data.setValueTextColor(Color.rgb(0, 0, 0))
         //set Entry text
-        pieChart.data.setValueTextSize(0f)
+        pieChart.data.setValueTextSize(20f)
         //delete description
         pieChart.description.text = ""
         //hole
@@ -304,7 +304,7 @@ class IncomingFragment : Fragment(), MenuProvider {
         data = PieData(set)
         pieChart.data =  data
         set.colors = colors
-        pieChart.data.setValueTextSize(0f)
+        pieChart.data.setValueTextSize(20f)
         data.notifyDataChanged()
         set.notifyDataSetChanged()
         pieChart.notifyDataSetChanged()
