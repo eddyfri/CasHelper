@@ -82,7 +82,7 @@ class ListWidgetService : RemoteViewsService() {
         private fun getCurrentYear(): Int {
             return SimpleDateFormat("YYYY", Locale.ENGLISH).format(Date()).toInt()
         }
-        
+
         private fun getNumberMonth(month: String): String {
             return when(month) {
                 "Gennaio" -> "01"

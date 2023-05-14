@@ -10,7 +10,6 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
 import android.net.Uri
-import android.os.Bundle
 import android.util.Log
 import android.util.SizeF
 import android.widget.RemoteViews
@@ -27,7 +26,7 @@ import java.util.*
 /**
  * Implementation of App Widget functionality.
  */
-class WidgetApp : AppWidgetProvider() {
+class WidgetApp : AppWidgetProvider(), DBHelper.DatabaseObserver {
     private lateinit var db: DBHelper
     private lateinit var pieChart: PieChart
     private lateinit var entries: MutableList<PieEntry>
@@ -59,6 +58,7 @@ class WidgetApp : AppWidgetProvider() {
 
         // Crea il PieChart e imposta i dati e la configurazione
         db = DBHelper(context as Context)
+        db.addObserver(this)
 
         val itemInfo: MutableList<DBHelper.ItemInfo>
         itemInfo = db.getItem(getCurrentMonth(), getCurrentYear())
@@ -224,8 +224,10 @@ class WidgetApp : AppWidgetProvider() {
     }
 
     private fun getTotal(itemInfo: MutableList<DBHelper.ItemInfo>): Double = getIncoming(itemInfo) - getExits(itemInfo)
-
-
+    override fun changeWidget() {
+        Log.d(TAG, "AGGIORNAMENTO WIDGET")
+        // aggiornare widget
+    }
 
 
 }

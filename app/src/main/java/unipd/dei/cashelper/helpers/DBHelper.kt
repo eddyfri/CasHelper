@@ -1,13 +1,19 @@
 package unipd.dei.cashelper.helpers
 
 import android.content.ContentValues
+import android.content.ContentValues.TAG
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import android.util.Log
+import unipd.dei.cashelper.WidgetApp
+import java.util.zip.DataFormatException
 import kotlin.collections.ArrayList
 
 
 class DBHelper(context: Context): SQLiteOpenHelper(context, DB_NAME, null, DB_VERSION) {
+
+
 
     override fun onCreate(db: SQLiteDatabase) {
         val categoryTable = "CREATE TABLE Categoria(\n" +
@@ -63,6 +69,24 @@ class DBHelper(context: Context): SQLiteOpenHelper(context, DB_NAME, null, DB_VE
         db.setForeignKeyConstraintsEnabled(true)
     }
 
+    fun addObserver(observer: DatabaseObserver) {
+        Log.d(TAG, "aggiunto osservatore")
+        observers.add(observer)
+        Log.d(TAG, "observers: $observers")
+    }
+
+    fun removeObserver(observer: DatabaseObserver) {
+        observers.remove(observer)
+    }
+
+    fun notifyWidgetChange() {
+        Log.d(TAG, "sono in notifyWidgetChange, observers: $observers")
+        observers.forEach {
+            Log.d(TAG, "notifico osservatore")
+            it.changeWidget()
+        }
+    }
+
     fun addCategory(name: String): Boolean {
         val cv = ContentValues()
         if(getCategoryName().contains(name))
@@ -81,7 +105,6 @@ class DBHelper(context: Context): SQLiteOpenHelper(context, DB_NAME, null, DB_VE
         return names
     }
 
-    // DA CONTROLLARE !!!!!!!!
     fun addDate(day: Int, month: String, year: Int): Boolean {
         val values = ContentValues().apply {
             put("Giorno", day)
@@ -106,6 +129,9 @@ class DBHelper(context: Context): SQLiteOpenHelper(context, DB_NAME, null, DB_VE
             put("Mese", month)
             put("Anno", year)
         }
+        Log.d(TAG, "aggiunta item")
+        // da cambiare: fare solo per mese e anno attuale
+        notifyWidgetChange()
         return writableDatabase.insert("Item", null, values) != -1L
     }
 
@@ -135,12 +161,14 @@ class DBHelper(context: Context): SQLiteOpenHelper(context, DB_NAME, null, DB_VE
             if(year != -1)
                 put("Anno", year)
         }
+        notifyWidgetChange()
         return writableDatabase.update("Item", values, "Id=?", arrayOf("$originalId")) > 0
     }
 
 
     // DA TESTARE !!!
     fun removeItem(originalId: Int): Boolean {
+        notifyWidgetChange()
         return writableDatabase.delete("Item", "Id=?", arrayOf("$originalId")) > 0
     }
 
@@ -226,6 +254,7 @@ class DBHelper(context: Context): SQLiteOpenHelper(context, DB_NAME, null, DB_VE
     {
         private const val DB_NAME = "database.db"
         private const val DB_VERSION = 1
+        private val observers = mutableListOf<DatabaseObserver>()
     }
 
     data class DateInfo(var changes: String) {
@@ -243,5 +272,9 @@ class DBHelper(context: Context): SQLiteOpenHelper(context, DB_NAME, null, DB_VE
         var year: Int = -1
         var type: String = ""
         var description: String = ""
+    }
+
+    interface DatabaseObserver {
+        fun changeWidget()
     }
 }
