@@ -54,6 +54,10 @@ class IncomingFragment : Fragment(), MenuProvider {
     private lateinit var set: PieDataSet
     private lateinit var data: PieData
 
+    //popup
+    private var popup: PopupWindow? = null
+    private var popupActive: Boolean = false  //At start the popup is not open
+
 
 
     private lateinit var month : String
@@ -93,7 +97,7 @@ class IncomingFragment : Fragment(), MenuProvider {
         monthTextView = view.findViewById<TextView>(R.id.month_text)
         yearTextView = view.findViewById<TextView>(R.id.year_text)
         recyclerView = view.findViewById(R.id.recycler_view)
-        recyclerView.adapter = IncomingListAdapter(itemByCategory, colorByCategory, rateArray)
+        recyclerView.adapter = IncomingListAdapter(itemByCategory, colorByCategory, rateArray, this)
         recyclerView.layoutManager = LinearLayoutManager(this.context, LinearLayoutManager.VERTICAL, false)
 
 
@@ -421,8 +425,49 @@ class IncomingFragment : Fragment(), MenuProvider {
         updatePieChart(itemByCategory, allCategories)
 
         //aggiornamento recyclerView
-        recyclerView.adapter = IncomingListAdapter(itemByCategory, colorMap, rateArray)
+        recyclerView.adapter = IncomingListAdapter(itemByCategory, colorMap, rateArray, this)
     }
+    fun createPopUp(selectedCategory: String){
+        //dichiare l'inflater
+        val inflater = LayoutInflater.from((view as View).context)
+        //inserire nella view il popup
+        val popupView = inflater.inflate(R.layout.popup_category_detail, view as ViewGroup, false)
+
+        //imposta la grandezza del popup all 85% della schermata su cui viene creato
+        val width = ((view as View).width*0.85).toInt()
+        //create the popup with specific size
+        popup = PopupWindow(popupView, width, ViewGroup.LayoutParams.WRAP_CONTENT,true)
+
+        //set the animation when the popup appear and disappear
+        popup?.animationStyle = androidx.appcompat.R.style.Animation_AppCompat_DropDownUp
+        //set the elevation of the popup view
+        popup?.elevation = 100F
+        //the popup can listen the touch outside his view
+        popup?.isOutsideTouchable = true
+        popupActive = true
+
+        popup?.setOnDismissListener {
+            popupActive = false
+            popup = null
+        }
+
+        //Set the container of the popup (the fragment that is in background of him)
+        val popupContainerView = (view as View).findViewById<View>(R.id.constraint_incoming)
+
+        popup?.showAtLocation(popupContainerView, Gravity.CENTER, 0, 0)
+        popup?.dimBehind()
+    }
+
+    private fun PopupWindow.dimBehind() {
+        val container = contentView.rootView
+        val context = contentView.context
+        val wm = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+        val p = container.layoutParams as WindowManager.LayoutParams
+        p.flags = p.flags or WindowManager.LayoutParams.FLAG_DIM_BEHIND
+        p.dimAmount = 0.3f
+        wm.updateViewLayout(container, p)
+    }
+
     override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
         menuInflater.inflate(R.menu.menu_empty, menu)
     }

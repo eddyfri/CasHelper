@@ -1,33 +1,19 @@
 package unipd.dei.cashelper.adapters
 
-import android.app.AlertDialog
-import android.content.ContentValues.TAG
-import android.content.Context
 import android.content.res.ColorStateList
-import android.graphics.Color
-import android.util.Log
 import android.view.*
 import android.widget.TextView
-import androidx.appcompat.content.res.AppCompatResources
-import androidx.appcompat.content.res.AppCompatResources.getColorStateList
-import androidx.appcompat.view.menu.MenuView.ItemView
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.content.ContextCompat
-import androidx.core.graphics.toColor
-import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.snackbar.Snackbar
 import unipd.dei.cashelper.R
 import unipd.dei.cashelper.helpers.DBHelper
-import unipd.dei.cashelper.ui.HomeFragment
-import unipd.dei.cashelper.ui.HomeFragmentDirections
-import java.text.FieldPosition
-import kotlin.contracts.contract
+import unipd.dei.cashelper.ui.IncomingFragment
 import java.text.DecimalFormat
 
 
-class IncomingListAdapter(private val itemByCategory: MutableMap<String, ArrayList<DBHelper.ItemInfo>>, private val categoryColor: ArrayList<Int>, private val rateArray: ArrayList<Double>) : RecyclerView.Adapter<IncomingListAdapter.CategoryViewHolder>() {
+class IncomingListAdapter(private val itemByCategory: MutableMap<String, ArrayList<DBHelper.ItemInfo>>, private val categoryColor: ArrayList<Int>, private val rateArray: ArrayList<Double>, private val incomingFragment: IncomingFragment) : RecyclerView.Adapter<IncomingListAdapter.CategoryViewHolder>() {
     private lateinit var db :DBHelper
+
+
 
 
     class CategoryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -45,7 +31,7 @@ class IncomingListAdapter(private val itemByCategory: MutableMap<String, ArrayLi
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoryViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_incoming, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_incoming_outflow, parent, false)
 
 
         if (!::db.isInitialized){
@@ -64,8 +50,17 @@ class IncomingListAdapter(private val itemByCategory: MutableMap<String, ArrayLi
         val totalByCategory = getTotalCategory()
         val decimalFormat = DecimalFormat("#.#")
         val rateFormatted = decimalFormat.format(rateArray[position])
-        holder.bind(categoryName[position], totalByCategory[position], categoryColor[position], rateFormatted.toDouble())
+        val selectedItem = categoryName[position]
+
+        holder.bind(selectedItem, totalByCategory[position], categoryColor[position], rateFormatted.toDouble())
+
+        holder.itemView.setOnClickListener{
+            incomingFragment.createPopUp(selectedItem)
+        }
     }
+
+
+
 
     //metodo per estrarre l'array di chiavi
     private fun catchKeys(): ArrayList<String>{
