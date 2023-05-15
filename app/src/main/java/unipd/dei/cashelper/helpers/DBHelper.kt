@@ -1,5 +1,6 @@
 package unipd.dei.cashelper.helpers
 
+import android.appwidget.AppWidgetManager
 import android.content.ContentValues
 import android.content.ContentValues.TAG
 import android.content.Context
@@ -13,7 +14,7 @@ import kotlin.collections.ArrayList
 
 class DBHelper(context: Context): SQLiteOpenHelper(context, DB_NAME, null, DB_VERSION) {
 
-
+    private val appContext = context
 
     override fun onCreate(db: SQLiteDatabase) {
         val categoryTable = "CREATE TABLE Categoria(\n" +
@@ -69,21 +70,21 @@ class DBHelper(context: Context): SQLiteOpenHelper(context, DB_NAME, null, DB_VE
         db.setForeignKeyConstraintsEnabled(true)
     }
 
-    fun addObserver(observer: DatabaseObserver) {
+    fun addObserver(observer: DatabaseObserver, appWidgetManager: AppWidgetManager, appWidgetId: Int) {
         Log.d(TAG, "aggiunto osservatore")
-        observers.add(observer)
+        observers[observer] = Pair(appWidgetManager, appWidgetId)
         Log.d(TAG, "observers: $observers")
     }
 
-    fun removeObserver(observer: DatabaseObserver) {
+    private fun removeObserver(observer: DatabaseObserver) {
         observers.remove(observer)
     }
 
-    fun notifyWidgetChange() {
+    private fun notifyWidgetChange() {
         Log.d(TAG, "sono in notifyWidgetChange, observers: $observers")
-        observers.forEach {
+        observers.forEach { (observer, pair) ->
             Log.d(TAG, "notifico osservatore")
-            it.changeWidget()
+            observer.changeWidget(appContext, pair.first, pair.second)
         }
     }
 
@@ -131,8 +132,9 @@ class DBHelper(context: Context): SQLiteOpenHelper(context, DB_NAME, null, DB_VE
         }
         Log.d(TAG, "aggiunta item")
         // da cambiare: fare solo per mese e anno attuale
+        val check = writableDatabase.insert("Item", null, values) != -1L
         notifyWidgetChange()
-        return writableDatabase.insert("Item", null, values) != -1L
+        return check
     }
 
     // NON SICURO, CONTROLLARE !!!!
@@ -161,15 +163,17 @@ class DBHelper(context: Context): SQLiteOpenHelper(context, DB_NAME, null, DB_VE
             if(year != -1)
                 put("Anno", year)
         }
+        val check = writableDatabase.update("Item", values, "Id=?", arrayOf("$originalId")) > 0
         notifyWidgetChange()
-        return writableDatabase.update("Item", values, "Id=?", arrayOf("$originalId")) > 0
+        return check
     }
 
 
     // DA TESTARE !!!
     fun removeItem(originalId: Int): Boolean {
+        val check = writableDatabase.delete("Item", "Id=?", arrayOf("$originalId")) > 0
         notifyWidgetChange()
-        return writableDatabase.delete("Item", "Id=?", arrayOf("$originalId")) > 0
+        return check
     }
 
     fun getItem(month: String, year: Int): ArrayList<ItemInfo> {
@@ -254,7 +258,7 @@ class DBHelper(context: Context): SQLiteOpenHelper(context, DB_NAME, null, DB_VE
     {
         private const val DB_NAME = "database.db"
         private const val DB_VERSION = 1
-        private val observers = mutableListOf<DatabaseObserver>()
+        private val observers: MutableMap<DatabaseObserver, Pair<AppWidgetManager, Int>> = mutableMapOf()
     }
 
     data class DateInfo(var changes: String) {
@@ -275,6 +279,6 @@ class DBHelper(context: Context): SQLiteOpenHelper(context, DB_NAME, null, DB_VE
     }
 
     interface DatabaseObserver {
-        fun changeWidget()
+        fun changeWidget(context: Context, appWidgetManager: AppWidgetManager, appWidgetId: Int)
     }
 }

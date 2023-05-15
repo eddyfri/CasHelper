@@ -27,7 +27,7 @@ class ListWidgetService : RemoteViewsService() {
         }
 
         override fun onDataSetChanged() {
-            // quando cambiano elementi in itemList bisogna cambiare elementi lista
+            // dataset changed
         }
 
         override fun onDestroy() {
