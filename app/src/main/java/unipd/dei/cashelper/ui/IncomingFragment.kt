@@ -281,7 +281,7 @@ class IncomingFragment : Fragment(), MenuProvider {
         //set Entry label's color (temporally dis-activated)
         pieChart.data.setValueTextColor(Color.rgb(0, 0, 0))
         //set Entry text
-        pieChart.data.setValueTextSize(20f)
+        pieChart.data.setValueTextSize(0f)
         //delete description
         pieChart.description.text = ""
         //hole
@@ -326,7 +326,7 @@ class IncomingFragment : Fragment(), MenuProvider {
         data = PieData(set)
         pieChart.data =  data
         set.colors = colors
-        pieChart.data.setValueTextSize(20f)
+        pieChart.data.setValueTextSize(0f)
         data.notifyDataChanged()
         set.notifyDataSetChanged()
         pieChart.notifyDataSetChanged()
