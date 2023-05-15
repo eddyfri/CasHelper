@@ -19,18 +19,21 @@ import unipd.dei.cashelper.R
 import unipd.dei.cashelper.helpers.DBHelper
 import unipd.dei.cashelper.ui.HomeFragment
 import unipd.dei.cashelper.ui.HomeFragmentDirections
+import java.text.DecimalFormat
 import java.text.FieldPosition
 
-class OutflowListAdapter(private val itemByCategory: MutableMap<String, ArrayList<DBHelper.ItemInfo>>, private val categoryColor: ArrayList<Int>) : RecyclerView.Adapter<OutflowListAdapter.CategoryViewHolder>() {
+class OutflowListAdapter(private val itemByCategory: MutableMap<String, ArrayList<DBHelper.ItemInfo>>, private val categoryColor: ArrayList<Int>, private val rateArray: ArrayList<Double>) : RecyclerView.Adapter<OutflowListAdapter.CategoryViewHolder>() {
     private lateinit var db :DBHelper
 
 
     class CategoryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val categoryItem: TextView = itemView.findViewById(R.id.category_item)
+        private val rateItem: TextView = itemView.findViewById(R.id.rate_item)
         private val totalItem: TextView = itemView.findViewById(R.id.total_item)
         private val circle = itemView.findViewById<View>(R.id.category_color)
-        fun bind(categoryName: String, total: Double, colorName: Int){
+        fun bind(categoryName: String, total: Double, colorName: Int, rate: Double){
             categoryItem.text = categoryName
+            rateItem.text = rate.toString() + "%"
             totalItem.text = total.toString() + "€"
             circle.backgroundTintList = ColorStateList.valueOf(colorName)
         }
@@ -55,8 +58,9 @@ class OutflowListAdapter(private val itemByCategory: MutableMap<String, ArrayLis
     override fun onBindViewHolder(holder: CategoryViewHolder, position: Int) {
         val categoryName = catchKeys()
         val totalByCategory = getTotalCategory()
-        val colors = categoryColor
-        holder.bind(categoryName[position], totalByCategory[position], colors[position])
+        val decimalFormat = DecimalFormat("#.#")
+        val rateFormatted = decimalFormat.format(rateArray[position])
+        holder.bind(categoryName[position], totalByCategory[position], categoryColor[position], rateFormatted.toDouble())
     }
 
     //metodo per estrarre l'array di chiavi
