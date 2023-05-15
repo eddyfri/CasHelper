@@ -6,6 +6,9 @@
             <corners android:radius="10dp"/>
             <size android:height="30dp"
                 android:width="100dp"/>
+            <stroke
+                android:color="@color/Disable"
+                android:width="2dp"/>
         </shape>
     </item>
 </layer-list>

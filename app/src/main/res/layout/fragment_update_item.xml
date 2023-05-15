@@ -61,6 +61,20 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.7"/>
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_update_ValueSX"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.3"
+        />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_update_ValueDX"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.7"
+        />
 
     <TextView
         android:layout_width="wrap_content"
@@ -102,17 +116,20 @@
         android:inputType="numberDecimal"
         android:maxLength="12"
         app:layout_constraintBottom_toTopOf="@+id/guideline3_update_item"
-        app:layout_constraintStart_toStartOf="@+id/guidelineDescriptionSX_update"
+        app:layout_constraintStart_toStartOf="@+id/guideline_update_ValueSX"
+        app:layout_constraintEnd_toStartOf="@id/euro"
         app:layout_constraintTop_toBottomOf="@id/guideline2_update_item"
         />
 
     <ImageView
+        android:id="@+id/euro"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/baseline_euro"
         app:layout_constraintStart_toEndOf="@id/value_update_item"
         app:layout_constraintBottom_toTopOf="@+id/guideline3_update_item"
         app:layout_constraintTop_toBottomOf="@id/guideline2_update_item"
+        app:layout_constraintEnd_toEndOf="@id/guideline_update_ValueDX"
         />
 
     <com.google.android.material.textfield.TextInputLayout
@@ -188,10 +205,10 @@
         app:showText="true"
         android:thumb="@drawable/switch_thumb"
         app:track="@drawable/switch_track"
-        android:scaleX="1.5"
-        android:scaleY="1.5"
+        android:scaleX="1.2"
+        android:scaleY="1.2"
         />
-    
+
 
 
 

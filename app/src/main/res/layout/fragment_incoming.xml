@@ -30,7 +30,8 @@
         app:layout_constraintRight_toLeftOf="@id/midline_incoming"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/guideline_incoming0"
-        android:layout_margin="2pt"/>
+        android:layout_margin="2pt"
+        style = "@style/DateStyle"/>
 
     <TextView
         android:id="@+id/year_text"
@@ -40,7 +41,9 @@
         app:layout_constraintLeft_toRightOf="@id/midline_incoming"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/guideline_incoming0"
-        android:layout_margin="2pt"/>
+        android:layout_margin="2pt"
+        style = "@style/DateStyle"/>
+
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/back_month"
         android:layout_width="wrap_content"
