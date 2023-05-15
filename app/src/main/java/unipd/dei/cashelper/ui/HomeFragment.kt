@@ -39,6 +39,7 @@ import androidx.core.view.isVisible
 import com.github.mikephil.charting.animation.Easing
 import com.google.android.material.transition.MaterialFadeThrough
 import unipd.dei.cashelper.MainActivity
+import java.text.DecimalFormat
 
 
 class HomeFragment: Fragment(), MenuProvider, HomeListAdapter.OnItemDeletedListener {
@@ -131,7 +132,13 @@ class HomeFragment: Fragment(), MenuProvider, HomeListAdapter.OnItemDeletedListe
         yearTextView.text = year.toString()
         totIncomingTextView.text = getIncoming(itemInfo).toString() + " €"
         totExitsTextView.text = getExits(itemInfo).toString() + " €"
-        totalTextView.text = getTotal(itemInfo).toString() + " €"
+        //set the total pattern like "#.##"
+        var total = getTotal(itemInfo)
+        val decimalFormat = DecimalFormat("#.##")
+        var totalString = decimalFormat.format(total)
+        //replace "." instead of ","
+        totalString = totalString.replace(",",".", true)
+        totalTextView.text = totalString + " €"
         constraintLayoutEmptyList.isVisible = itemInfo.isEmpty()
         emptyIcon.isVisible = itemInfo.isEmpty()
         emptyText.isVisible = itemInfo.isEmpty()
@@ -391,7 +398,12 @@ class HomeFragment: Fragment(), MenuProvider, HomeListAdapter.OnItemDeletedListe
     private fun updateTotalTextViews(itemInfo: MutableList<DBHelper.ItemInfo>) {
         totIncomingTextView.text = getIncoming(itemInfo).toString() + " €"
         totExitsTextView.text = getExits(itemInfo).toString() + " €"
-        totalTextView.text = getTotal(itemInfo).toString() + " €"
+        var total = getTotal(itemInfo)
+        val decimalFormat = DecimalFormat("#.##")
+        var totalString = decimalFormat.format(total)
+        //replace "." instead of ","
+        totalString = totalString.replace(",",".", true)
+        totalTextView.text = totalString + " €"
     }
 
     //inflate the correct menu for this fragment
