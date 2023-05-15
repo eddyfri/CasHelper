@@ -33,6 +33,7 @@ import kotlin.properties.Delegates
 import android.view.*
 import androidx.core.view.MenuProvider
 import androidx.lifecycle.Lifecycle
+import com.github.mikephil.charting.animation.Easing
 import com.github.mikephil.charting.components.Legend
 import unipd.dei.cashelper.MainActivity
 import unipd.dei.cashelper.adapters.IncomingListAdapter
@@ -310,6 +311,8 @@ class IncomingFragment : Fragment(), MenuProvider {
         pieChart.legend.yOffset = -50f
         pieChart.legend.xOffset = 30f
         pieChart.legend.orientation = Legend.LegendOrientation.VERTICAL
+        //animation
+        pieChart.animateY(1500, Easing.EaseInOutCirc)
 
         // refresh
         pieChart.invalidate()
@@ -334,6 +337,8 @@ class IncomingFragment : Fragment(), MenuProvider {
         data.notifyDataChanged()
         set.notifyDataSetChanged()
         pieChart.notifyDataSetChanged()
+        //animation
+        pieChart.animateY(1500, Easing.EaseInOutCirc)
         pieChart.invalidate()
 
     }

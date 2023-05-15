@@ -17,9 +17,9 @@ class OutflowListAdapter(private val itemByCategory: MutableMap<String, ArrayLis
         private val rateItem: TextView = itemView.findViewById(R.id.rate_item)
         private val totalItem: TextView = itemView.findViewById(R.id.total_item)
         private val circle = itemView.findViewById<View>(R.id.category_color)
-        fun bind(categoryName: String, total: Double, colorName: Int, rate: Double){
+        fun bind(categoryName: String, total: Double, colorName: Int, rate: String){
             categoryItem.text = categoryName
-            rateItem.text = rate.toString() + "%"
+            rateItem.text = rate + "%"
             totalItem.text = total.toString() + "€"
             circle.backgroundTintList = ColorStateList.valueOf(colorName)
         }
@@ -45,8 +45,10 @@ class OutflowListAdapter(private val itemByCategory: MutableMap<String, ArrayLis
         val categoryName = catchKeys()
         val totalByCategory = getTotalCategory()
         val decimalFormat = DecimalFormat("#.#")
-        val rateFormatted = decimalFormat.format(rateArray[position])
-        holder.bind(categoryName[position], totalByCategory[position], categoryColor[position], rateFormatted.toDouble())
+        var rateFormatted = decimalFormat.format(rateArray[position])
+        //replace "." instead of ","
+        rateFormatted = rateFormatted.replace(",",".", true)
+        holder.bind(categoryName[position], totalByCategory[position], categoryColor[position], rateFormatted)
     }
 
     //metodo per estrarre l'array di chiavi

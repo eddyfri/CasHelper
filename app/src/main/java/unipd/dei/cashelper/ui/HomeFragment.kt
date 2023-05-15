@@ -36,6 +36,7 @@ import android.view.animation.Animation
 import android.widget.ImageView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
+import com.github.mikephil.charting.animation.Easing
 import com.google.android.material.transition.MaterialFadeThrough
 import unipd.dei.cashelper.MainActivity
 
@@ -356,6 +357,9 @@ class HomeFragment: Fragment(), MenuProvider, HomeListAdapter.OnItemDeletedListe
         pieChart.legend.xOffset = 30f
         pieChart.legend.orientation = Legend.LegendOrientation.VERTICAL
 
+        //animation
+        pieChart.animateY(1500, Easing.EaseInOutCirc)
+
         // refresh
         pieChart.invalidate()
     }
@@ -379,6 +383,8 @@ class HomeFragment: Fragment(), MenuProvider, HomeListAdapter.OnItemDeletedListe
         data.notifyDataChanged()
         set.notifyDataSetChanged()
         pieChart.notifyDataSetChanged()
+        //animation
+        pieChart.animateY(1500, Easing.EaseInOutCirc)
         pieChart.invalidate()
     }
 
