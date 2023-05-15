@@ -85,17 +85,39 @@ class IncomingFragment : Fragment(), MenuProvider {
         var allCategories = db.getCategoryName()
         var itemByCategory = getIncomingByCategory(allCategories, allItemIncoming)
         var colorByCategory = setColorCategory(allCategories, itemByCategory)
+        val totalAmount = getTotalAmount(allItemIncoming)
+        val rateArray = getRateByCategory(itemByCategory, totalAmount)
 
         fabBack = view.findViewById<ExtendedFloatingActionButton>(R.id.back_month)
         fabNext = view.findViewById<ExtendedFloatingActionButton>(R.id.next_month)
         monthTextView = view.findViewById<TextView>(R.id.month_text)
         yearTextView = view.findViewById<TextView>(R.id.year_text)
         recyclerView = view.findViewById(R.id.recycler_view)
-        recyclerView.adapter = IncomingListAdapter(itemByCategory, colorByCategory)
+        recyclerView.adapter = IncomingListAdapter(itemByCategory, colorByCategory, rateArray)
         recyclerView.layoutManager = LinearLayoutManager(this.context, LinearLayoutManager.VERTICAL, false)
 
 
         return view
+    }
+
+    //get an array of rate for all the categories that have at least one incoming
+    private fun getRateByCategory(itemByCategory: MutableMap<String, ArrayList<DBHelper.ItemInfo>>, totalAmount: Double): ArrayList<Double>{
+        var rateArray = ArrayList<Double>(itemByCategory.size)
+        for (item in itemByCategory) {
+            val totalThisCategory = getTotalCategory(item.key, itemByCategory)
+            val rate = (totalThisCategory*100)/totalAmount
+            rateArray.add(rate)
+        }
+
+        return rateArray
+    }
+
+    //get total amount of all incomings for this month and year
+    private fun getTotalAmount(allItem: MutableList<DBHelper.ItemInfo>): Double{
+        var total = 0.0
+        for (item in allItem)
+            total += item.price
+        return total
     }
 
     //metodo che data una categoria e la lista di elementi totale mi restituisce un array di elementi per quella categoria
@@ -259,7 +281,7 @@ class IncomingFragment : Fragment(), MenuProvider {
         //set Entry label's color (temporally dis-activated)
         pieChart.data.setValueTextColor(Color.rgb(0, 0, 0))
         //set Entry text
-        pieChart.data.setValueTextSize(20f)
+        pieChart.data.setValueTextSize(0f)
         //delete description
         pieChart.description.text = ""
         //hole
@@ -304,7 +326,7 @@ class IncomingFragment : Fragment(), MenuProvider {
         data = PieData(set)
         pieChart.data =  data
         set.colors = colors
-        pieChart.data.setValueTextSize(20f)
+        pieChart.data.setValueTextSize(0f)
         data.notifyDataChanged()
         set.notifyDataSetChanged()
         pieChart.notifyDataSetChanged()
@@ -384,7 +406,8 @@ class IncomingFragment : Fragment(), MenuProvider {
         var allCategories = db.getCategoryName()
         var itemByCategory = getIncomingByCategory(allCategories, allItemIncoming)
         var colorMap = setColorCategory(allCategories, itemByCategory)
-
+        val totalAmount = getTotalAmount(allItemIncoming)
+        val rateArray = getRateByCategory(itemByCategory, totalAmount)
         //aggiorna la visibilità del bottone nextFab
         if (!(month == getCurrentMonth() && year == getCurrentYear()))
             fabNext.show()
@@ -398,7 +421,7 @@ class IncomingFragment : Fragment(), MenuProvider {
         updatePieChart(itemByCategory, allCategories)
 
         //aggiornamento recyclerView
-        recyclerView.adapter = IncomingListAdapter(itemByCategory, colorMap)
+        recyclerView.adapter = IncomingListAdapter(itemByCategory, colorMap, rateArray)
     }
     override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
         menuInflater.inflate(R.menu.menu_empty, menu)

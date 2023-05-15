@@ -23,18 +23,20 @@ import unipd.dei.cashelper.ui.HomeFragment
 import unipd.dei.cashelper.ui.HomeFragmentDirections
 import java.text.FieldPosition
 import kotlin.contracts.contract
+import java.text.DecimalFormat
 
 
-
-class IncomingListAdapter(private val itemByCategory: MutableMap<String, ArrayList<DBHelper.ItemInfo>>, private val categoryColor: ArrayList<Int>) : RecyclerView.Adapter<IncomingListAdapter.CategoryViewHolder>() {
+class IncomingListAdapter(private val itemByCategory: MutableMap<String, ArrayList<DBHelper.ItemInfo>>, private val categoryColor: ArrayList<Int>, private val rateArray: ArrayList<Double>) : RecyclerView.Adapter<IncomingListAdapter.CategoryViewHolder>() {
     private lateinit var db :DBHelper
 
 
     class CategoryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val categoryItem: TextView = itemView.findViewById(R.id.category_item)
-        private val totalItem: TextView = itemView.findViewById(R.id.total_item)
         private val circle = itemView.findViewById<View>(R.id.category_color)
-        fun bind(categoryName: String, total: Double, colorName: Int){
+        private val categoryItem: TextView = itemView.findViewById(R.id.category_item)
+        private val rateItem: TextView = itemView.findViewById(R.id.rate_item)
+        private val totalItem: TextView = itemView.findViewById(R.id.total_item)
+        fun bind(categoryName: String, total: Double, colorName: Int, rate: Double){
+            rateItem.text = rate.toString() + "%"
             categoryItem.text = categoryName
             totalItem.text = total.toString() + "€"
             circle.backgroundTintList = ColorStateList.valueOf(colorName)
@@ -60,12 +62,14 @@ class IncomingListAdapter(private val itemByCategory: MutableMap<String, ArrayLi
     override fun onBindViewHolder(holder: CategoryViewHolder, position: Int) {
         val categoryName = catchKeys()
         val totalByCategory = getTotalCategory()
-        holder.bind(categoryName[position], totalByCategory[position], categoryColor[position])
+        val decimalFormat = DecimalFormat("#.#")
+        val rateFormatted = decimalFormat.format(rateArray[position])
+        holder.bind(categoryName[position], totalByCategory[position], categoryColor[position], rateFormatted.toDouble())
     }
 
     //metodo per estrarre l'array di chiavi
     private fun catchKeys(): ArrayList<String>{
-        return ArrayList<String>(itemByCategory.keys)
+        return ArrayList(itemByCategory.keys)
     }
 
     //metodo per calcolarsi il totale di una categoria

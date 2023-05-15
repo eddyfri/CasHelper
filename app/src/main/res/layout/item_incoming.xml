@@ -13,11 +13,25 @@
         android:id="@+id/constraint_incoming"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="15dp"
+        android:layout_marginHorizontal="5dp"
         android:paddingVertical="10dp"
         android:layout_marginTop="10dp"
         android:background="@drawable/container_item"
         android:tag="-1">
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_rate_sx"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.55"/>
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_rate_dx"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.65"/>
 
         <View
             android:id="@+id/category_color"
@@ -36,6 +50,7 @@
             android:layout_height="wrap_content"
             app:layout_constraintStart_toEndOf="@id/category_color"
             app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
             android:paddingStart="10dp"
             android:text="--"
             android:textSize="15sp"
@@ -43,12 +58,25 @@
             tools:ignore="RtlSymmetry" />
 
         <TextView
+            android:id="@+id/rate_item"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="@id/guideline_rate_sx"
+            app:layout_constraintEnd_toEndOf="@id/guideline_rate_dx"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:text="--"
+            android:textSize="15sp"
+            />
+
+        <TextView
             android:id="@+id/total_item"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingEnd="10dp"
+            android:paddingEnd="5dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
             android:text="--"
             android:textSize="15sp" />
 

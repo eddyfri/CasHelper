@@ -10,7 +10,7 @@
         <item name="colorSecondaryVariant">@color/lilla</item>
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
-        <item name="android:statusBarColor">?attr/colorSecondary</item>
+        <item name="android:statusBarColor">?attr/colorPrimary</item>
         <!-- Customize your theme here. -->
         <item name="colorBackgroundFloating">?attr/colorPrimary</item>
         <item name="backgroundColor">?attr/colorPrimaryVariant</item>
