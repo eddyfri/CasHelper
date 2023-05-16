@@ -64,6 +64,7 @@ class DBHelper(context: Context): SQLiteOpenHelper(context, DB_NAME, null, DB_VE
 
         val savedObservers = getObserversFromSharedPreferences()
         observers.putAll(savedObservers)
+        Log.d(TAG, "sono in onCreate di DBHelper: observers: $observers")
     }
 
     // non previsti aggiornamenti

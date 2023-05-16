@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import unipd.dei.cashelper.R
 import unipd.dei.cashelper.helpers.DBHelper
 import unipd.dei.cashelper.ui.HomeFragmentDirections
+import java.text.DecimalFormat
 
 class HomeListAdapter(private val itemList: MutableList<DBHelper.ItemInfo>, private var listener: OnItemDeletedListener): RecyclerView.Adapter<HomeListAdapter.ItemViewHolder>() {
     private var selectedItemId: Int = -1
@@ -42,10 +43,22 @@ class HomeListAdapter(private val itemList: MutableList<DBHelper.ItemInfo>, priv
         fun bind(itemInfo: DBHelper.ItemInfo) {
             itemCategory.text = itemInfo.category
             //add "-" if is an exit
-            if(itemInfo.type == "Uscita")
-                itemPrice.text = "-" + itemInfo.price.toString() + " €"
-            else
-                itemPrice.text = itemInfo.price.toString() + " €"
+            if(itemInfo.type == "Uscita") {
+                var price = itemInfo.price
+                val decimalFormat = DecimalFormat("#.##")
+                var priceString = decimalFormat.format(price)
+                //replace "." instead of ","
+                priceString = priceString.replace(",",".", true)
+                itemPrice.text = "-$priceString €"
+            }
+            else {
+                var price = itemInfo.price
+                val decimalFormat = DecimalFormat("#.##")
+                var priceString = decimalFormat.format(price)
+                //replace "." instead of ","
+                priceString = priceString.replace(",", ".", true)
+                itemPrice.text = "$priceString €"
+            }
             val date =
                 itemInfo.day.toString() + "/" + getNumberMonth(itemInfo.month) + "/" + itemInfo.year.toString()
             itemDate.text = date

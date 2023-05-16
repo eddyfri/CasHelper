@@ -131,12 +131,23 @@ class HomeFragment: Fragment(), MenuProvider, HomeListAdapter.OnItemDeletedListe
 
         monthTextView.text = month
         yearTextView.text = year.toString()
-        totIncomingTextView.text = getIncoming(itemInfo).toString() + " €"
-        totExitsTextView.text = getExits(itemInfo).toString() + " €"
-        //set the total pattern like "#.##"
-        var total = getTotal(itemInfo)
+
+        var total = getIncoming(itemInfo)
         val decimalFormat = DecimalFormat("#.##")
         var totalString = decimalFormat.format(total)
+        //replace "." instead of ","
+        totalString = totalString.replace(",",".", true)
+        totIncomingTextView.text = totalString + " €"
+
+        total = getExits(itemInfo)
+        totalString = decimalFormat.format(total)
+        //replace "." instead of ","
+        totalString = totalString.replace(",",".", true)
+        totExitsTextView.text = totalString + " €"
+
+        //set the total pattern like "#.##"
+        total = getTotal(itemInfo)
+        totalString = decimalFormat.format(total)
         //replace "." instead of ","
         totalString = totalString.replace(",",".", true)
         totalTextView.text = totalString + " €"
