@@ -7,9 +7,10 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
-import unipd.dei.cashelper.WidgetApp
-import java.util.zip.DataFormatException
 import kotlin.collections.ArrayList
+import android.content.SharedPreferences
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 
 
 class DBHelper(context: Context): SQLiteOpenHelper(context, DB_NAME, null, DB_VERSION) {
@@ -60,6 +61,9 @@ class DBHelper(context: Context): SQLiteOpenHelper(context, DB_NAME, null, DB_VE
         db.execSQL(dateTable)
         db.execSQL(itemTable)
         db.execSQL(categoryValues)
+
+        val savedObservers = getObserversFromSharedPreferences()
+        observers.putAll(savedObservers)
     }
 
     // non previsti aggiornamenti
@@ -74,10 +78,12 @@ class DBHelper(context: Context): SQLiteOpenHelper(context, DB_NAME, null, DB_VE
         Log.d(TAG, "aggiunto osservatore")
         observers[observer] = Pair(appWidgetManager, appWidgetId)
         Log.d(TAG, "observers: $observers")
+        saveObserversToSharedPreferences()
     }
 
     private fun removeObserver(observer: DatabaseObserver) {
         observers.remove(observer)
+        saveObserversToSharedPreferences()
     }
 
     private fun notifyWidgetChange() {
@@ -258,7 +264,22 @@ class DBHelper(context: Context): SQLiteOpenHelper(context, DB_NAME, null, DB_VE
     {
         private const val DB_NAME = "database.db"
         private const val DB_VERSION = 1
-        private val observers: MutableMap<DatabaseObserver, Pair<AppWidgetManager, Int>> = mutableMapOf()
+        private var observers: MutableMap<DatabaseObserver, Pair<AppWidgetManager, Int>> = mutableMapOf()
+        private const val SHARED_PREFERENCES_NAME = "MyAppPreferences"
+    }
+    private fun getSharedPreferences(): SharedPreferences {
+        return appContext.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
+    }
+    private fun getObserversFromSharedPreferences(): MutableMap<DatabaseObserver, Pair<AppWidgetManager, Int>> {
+        val sharedPreferences = getSharedPreferences()
+        val observersJson = sharedPreferences.getString("observers", null)
+        val typeToken = object : TypeToken<MutableMap<DatabaseObserver, Pair<AppWidgetManager, Int>>>() {}.type
+        return Gson().fromJson(observersJson, typeToken) ?: mutableMapOf()
+    }
+    private fun saveObserversToSharedPreferences() {
+        val sharedPreferences = getSharedPreferences()
+        val observersJson = Gson().toJson(observers)
+        sharedPreferences.edit().putString("observers", observersJson).apply()
     }
 
     data class DateInfo(var changes: String) {
