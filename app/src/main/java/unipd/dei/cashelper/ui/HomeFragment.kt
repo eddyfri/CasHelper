@@ -116,7 +116,8 @@ class HomeFragment: Fragment(), MenuProvider, HomeListAdapter.OnItemDeletedListe
         emptyChartText = view.findViewById(R.id.empty_chart_text)
 
         recyclerView = view.findViewById(R.id.recycler_view)
-        recyclerView.adapter = HomeListAdapter(itemInfo, this)
+        var itemInfoSorted = sortByDate(itemInfo)
+        recyclerView.adapter = HomeListAdapter(itemInfoSorted, this)
         recyclerView.layoutManager = LinearLayoutManager(this.context, LinearLayoutManager.VERTICAL, false)
 
         return view
@@ -462,6 +463,12 @@ class HomeFragment: Fragment(), MenuProvider, HomeListAdapter.OnItemDeletedListe
         // aggiorna text view totali
         updateTotalTextViews(itemInfo)
         // aggiorna recyclerView
-        recyclerView.adapter = HomeListAdapter(itemInfo, this)
+        var itemInfoSorted = sortByDate(itemInfo)
+        recyclerView.adapter = HomeListAdapter(itemInfoSorted, this)
+    }
+    //function that order the itemList by date of the month
+    private fun sortByDate(itemInfo: MutableList<DBHelper.ItemInfo>) : MutableList<DBHelper.ItemInfo>{
+        itemInfo.sortByDescending { it.day } //it is a lambda expression link to itemInfo
+        return itemInfo
     }
 }
