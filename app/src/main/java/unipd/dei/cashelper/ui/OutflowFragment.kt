@@ -36,6 +36,7 @@ import androidx.core.view.MenuProvider
 import androidx.lifecycle.Lifecycle
 import com.github.mikephil.charting.animation.Easing
 import com.github.mikephil.charting.components.Legend
+import com.google.android.material.transition.MaterialFadeThrough
 import unipd.dei.cashelper.MainActivity
 import unipd.dei.cashelper.adapters.IncomingListAdapter
 import unipd.dei.cashelper.adapters.OutflowListAdapter
@@ -61,6 +62,7 @@ class OutflowFragment : Fragment(), MenuProvider {
     private var year by Delegates.notNull<Int>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enterTransition = MaterialFadeThrough()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {

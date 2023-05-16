@@ -86,6 +86,7 @@ class HomeFragment: Fragment(), MenuProvider, HomeListAdapter.OnItemDeletedListe
             month = getCurrentMonth()
             year = getCurrentYear()
         }
+        enterTransition = MaterialFadeThrough()
         exitTransition = MaterialFadeThrough()
         reenterTransition = MaterialFadeThrough()
     }

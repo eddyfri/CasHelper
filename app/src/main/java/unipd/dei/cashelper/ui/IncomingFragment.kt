@@ -1,19 +1,11 @@
 package unipd.dei.cashelper.ui
 
-import android.app.DatePickerDialog
-import android.content.ContentValues.TAG
+
 import android.content.Context
 import android.content.res.Configuration
 import android.graphics.Color
-import android.nfc.Tag
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
-import android.view.View.OnFocusChangeListener
-import android.view.inputmethod.InputMethodManager
 import android.widget.*
-import androidx.appcompat.app.AppCompatActivity
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
@@ -31,10 +23,13 @@ import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.properties.Delegates
 import android.view.*
+import android.view.animation.AlphaAnimation
+import android.view.animation.Animation
 import androidx.core.view.MenuProvider
 import androidx.lifecycle.Lifecycle
 import com.github.mikephil.charting.animation.Easing
 import com.github.mikephil.charting.components.Legend
+import com.google.android.material.transition.MaterialFadeThrough
 import unipd.dei.cashelper.MainActivity
 import unipd.dei.cashelper.adapters.IncomingListAdapter
 
@@ -65,6 +60,9 @@ class IncomingFragment : Fragment(), MenuProvider {
     private var year by Delegates.notNull<Int>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enterTransition = MaterialFadeThrough()
+        exitTransition = MaterialFadeThrough()
+        reenterTransition = MaterialFadeThrough()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -100,7 +98,6 @@ class IncomingFragment : Fragment(), MenuProvider {
         recyclerView = view.findViewById(R.id.recycler_view)
         recyclerView.adapter = IncomingListAdapter(itemByCategory, colorByCategory, rateArray, this)
         recyclerView.layoutManager = LinearLayoutManager(this.context, LinearLayoutManager.VERTICAL, false)
-
 
         return view
     }
@@ -198,7 +195,23 @@ class IncomingFragment : Fragment(), MenuProvider {
             month = backMonth(month)
             monthTextView.text = month
             yearTextView.text = year.toString()
-            updateAll(month, year)
+            val anim = AlphaAnimation(1.0f, 0.0f)
+            anim.duration = 200
+            anim.repeatCount = 1
+            anim.repeatMode = Animation.REVERSE
+            anim.setAnimationListener(object : Animation.AnimationListener {
+                override fun onAnimationEnd(animation: Animation?) {}
+                override fun onAnimationStart(animation: Animation?) {}
+                override fun onAnimationRepeat(animation: Animation?) {
+                    updateAll(month, year)
+                }
+            })
+            monthTextView.startAnimation(anim)
+            yearTextView.startAnimation(anim)
+            fabBack.startAnimation(anim)
+            fabNext.startAnimation(anim)
+            recyclerView.startAnimation(anim)
+            pieChart.startAnimation(anim)
         }
         fabNext.setOnClickListener {
             // non posso andare più avanti del mese corrente, no mesi futuri
@@ -209,7 +222,23 @@ class IncomingFragment : Fragment(), MenuProvider {
                 month = nextMonth(month)
                 monthTextView.text = month
                 yearTextView.text = year.toString()
-                updateAll(month, year)
+                val anim = AlphaAnimation(1.0f, 0.0f)
+                anim.duration = 200
+                anim.repeatCount = 1
+                anim.repeatMode = Animation.REVERSE
+                anim.setAnimationListener(object : Animation.AnimationListener {
+                    override fun onAnimationEnd(animation: Animation?) {}
+                    override fun onAnimationStart(animation: Animation?) {}
+                    override fun onAnimationRepeat(animation: Animation?) {
+                        updateAll(month, year)
+                    }
+                })
+                monthTextView.startAnimation(anim)
+                yearTextView.startAnimation(anim)
+                fabBack.startAnimation(anim)
+                fabNext.startAnimation(anim)
+                recyclerView.startAnimation(anim)
+                pieChart.startAnimation(anim)
             }
             else
                 fabNext.hide()

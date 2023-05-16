@@ -56,6 +56,8 @@ class UpdateItemFragment: Fragment(), MenuProvider {
         super.onCreate(savedInstanceState)
 
         enterTransition = MaterialFadeThrough()
+        exitTransition = MaterialFadeThrough()
+        reenterTransition = MaterialFadeThrough()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
