@@ -56,6 +56,10 @@ class IncomingFragment : Fragment(), MenuProvider {
     private var popup: PopupWindow? = null
     private var popupActive: Boolean = false  //At start the popup is not open
 
+    //restore popup after change UI mode (landscape/portrait)
+    private lateinit var selectedItem : String
+    private lateinit var itemByCategory : MutableMap<String, ArrayList<DBHelper.ItemInfo>>
+
 
 
     private lateinit var month : String
@@ -88,7 +92,7 @@ class IncomingFragment : Fragment(), MenuProvider {
         //qui mi serve per passare all'adapter gli elementi
         var allItemIncoming = db.getItemsByType("Entrata", month, year)
         var allCategories = db.getCategoryName()
-        var itemByCategory = getIncomingByCategory(allCategories, allItemIncoming)
+        itemByCategory = getIncomingByCategory(allCategories, allItemIncoming)
         var colorByCategory = setColorCategory(allCategories, itemByCategory)
         val totalAmount = getTotalAmount(allItemIncoming)
         val rateArray = getRateByCategory(itemByCategory, totalAmount)
@@ -100,6 +104,8 @@ class IncomingFragment : Fragment(), MenuProvider {
         recyclerView = view.findViewById(R.id.recycler_view)
         recyclerView.adapter = IncomingListAdapter(itemByCategory, colorByCategory, rateArray, this)
         recyclerView.layoutManager = LinearLayoutManager(this.context, LinearLayoutManager.VERTICAL, false)
+
+
 
         return view
     }
@@ -277,6 +283,17 @@ class IncomingFragment : Fragment(), MenuProvider {
                 updateAll(month, year)
             }
         }
+        //popup visibility save instance
+        if (savedInstanceState != null) {
+            popupActive= savedInstanceState.getBoolean("popup_visibility")
+            selectedItem = savedInstanceState.getString("popupSelectedItem").toString()
+
+            //If there was the popup when the activity was active, create it.
+            if (popupActive) {
+                createPopUp(selectedItem, itemByCategory)
+            }
+        }
+
     }
 
     private fun catchKeys(itemByCategory: MutableMap<String, ArrayList<DBHelper.ItemInfo>>): ArrayList<String>{
@@ -288,7 +305,7 @@ class IncomingFragment : Fragment(), MenuProvider {
         var itemsOfThisCategory = itemByCategory[category]
         if (itemsOfThisCategory != null)
             for (item in itemsOfThisCategory)
-                total = total + item.price
+                total += item.price
         return total
     }
     private fun createPieChart(view: View, itemByCategory: MutableMap<String, ArrayList<DBHelper.ItemInfo>>, categories: ArrayList<String>) {
@@ -464,6 +481,11 @@ class IncomingFragment : Fragment(), MenuProvider {
         recyclerView.adapter = IncomingListAdapter(itemByCategory, colorMap, rateArray, this)
     }
     fun createPopUp(selectedCategory: String, itemByCategory: MutableMap<String, ArrayList<DBHelper.ItemInfo>>){
+        //save the current category shown
+        this.selectedItem = selectedItem
+        this.itemByCategory = itemByCategory
+
+
         //dichiare l'inflater
         val inflater = LayoutInflater.from((view as View).context)
         //inserire nella view il popup
@@ -498,8 +520,19 @@ class IncomingFragment : Fragment(), MenuProvider {
         //Set the container of the popup (the fragment that is in background of him)
         val popupContainerView = (view as View).findViewById<View>(R.id.constraint_incoming)
 
-        popup?.showAtLocation(popupContainerView, Gravity.CENTER, 0, 0)
-        popup?.dimBehind()
+        //when the popup is created automatic by the IncomingFragment.onViewCreated the activity is not created completely and return width = 0.
+        //So, if the width is 0, this method slow the creation of the popup when width is initialized correctly
+        if (width == 0) {
+            popupContainerView.post {
+                val updatedWidth = ((view as View).width*0.85).toInt()
+                popup?.update(0,0, updatedWidth, ViewGroup.LayoutParams.WRAP_CONTENT)
+                popup?.showAtLocation(popupContainerView, Gravity.CENTER, 0, 0)
+                popup?.dimBehind()
+            }
+        } else {
+            popup?.showAtLocation(popupContainerView, Gravity.CENTER, 0, 0)
+            popup?.dimBehind()
+        }
     }
 
     private fun PopupWindow.dimBehind() {
@@ -534,6 +567,25 @@ class IncomingFragment : Fragment(), MenuProvider {
     private fun sortByDate(itemInfo: ArrayList<DBHelper.ItemInfo>) : ArrayList<DBHelper.ItemInfo>{
         itemInfo.sortByDescending { it.day } //it is a lambda expression link to itemInfo
         return itemInfo
+    }
+
+    //Save the state of the popup when the activity is stopped
+    override fun onStop() {
+        super.onStop()
+        val restore = popupActive
+        popup?.dismiss()  //close popup
+        popupActive = restore //save the state of the popup
+    }
+
+    fun setSelectedItem(selectedItem : String, itemByCategory: MutableMap<String, ArrayList<DBHelper.ItemInfo>>) {
+        this.selectedItem = selectedItem
+        this.itemByCategory = itemByCategory
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putBoolean("popup_visibility", popupActive)
+        outState.putString("popupSelectedItem", selectedItem)
     }
 
 }

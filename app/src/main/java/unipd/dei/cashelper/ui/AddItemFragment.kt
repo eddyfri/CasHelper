@@ -415,9 +415,20 @@ class AddItemFragment : Fragment(), MenuProvider {
         popupView.setOnClickListener{
             hideKeyboard(popupView)
         }
+        //when the popup is created automatic by the AddItemFragment.onViewCreated the activity is not created completely and return width = 0.
+        //So, if the width is 0, this method slow the creation of the popup when width is initialized correctly
+        if (width == 0) {
+            popupContainerView.post {
+                val updatedWidth = ((view as View).width*0.85).toInt()
+                popup?.update(0,0, updatedWidth, ViewGroup.LayoutParams.WRAP_CONTENT)
+                popup?.showAtLocation(popupContainerView, Gravity.CENTER, 0, 0)
+                popup?.dimBehind()
+            }
+        } else {
+            popup?.showAtLocation(popupContainerView, Gravity.CENTER, 0, 0)
+            popup?.dimBehind()
+        }
 
-        popup?.showAtLocation(popupContainerView, Gravity.CENTER, 0, 0)
-        popup?.dimBehind()
 
         val addButton = popupView.findViewById<Button>(R.id.add_button)
         addButton.isEnabled = false
