@@ -468,9 +468,11 @@ class IncomingFragment : Fragment(), MenuProvider {
         val inflater = LayoutInflater.from((view as View).context)
         //inserire nella view il popup
         val popupView = inflater.inflate(R.layout.popup_category_detail, view as ViewGroup, false)
+        val popupTitle : TextView = popupView.findViewById(R.id.title_item)
 
         val arrayOfItem = getItemsList(selectedCategory, itemByCategory)
 
+        popupTitle.text = selectedCategory
         recyclerViewPopup = popupView.findViewById(R.id.recycler_view_popup)
         recyclerViewPopup.adapter = CategoryDetailAdapter(arrayOfItem)
         recyclerViewPopup.layoutManager = LinearLayoutManager(this.context, LinearLayoutManager.VERTICAL, false)
@@ -512,7 +514,8 @@ class IncomingFragment : Fragment(), MenuProvider {
 
     private fun getItemsList(category: String, itemByCategory: MutableMap<String, ArrayList<DBHelper.ItemInfo>>): ArrayList<DBHelper.ItemInfo> {
         var itemsOfThisCategory = itemByCategory[category]
-        return itemsOfThisCategory!!
+
+        return sortByDate(itemsOfThisCategory!!)
     }
 
     override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
@@ -526,6 +529,11 @@ class IncomingFragment : Fragment(), MenuProvider {
             view?.findNavController()?.navigate(action)
         }
         return true
+    }
+
+    private fun sortByDate(itemInfo: ArrayList<DBHelper.ItemInfo>) : ArrayList<DBHelper.ItemInfo>{
+        itemInfo.sortByDescending { it.day } //it is a lambda expression link to itemInfo
+        return itemInfo
     }
 
 }

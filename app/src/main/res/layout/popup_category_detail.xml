@@ -11,18 +11,28 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/container_home"
-        android:padding="10dp">
+        android:padding="5dp">
 
         <TextView
             android:id="@+id/category_detail_title"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:text="Entrate per la categoria selezionata:"
+            android:text="Transazioni registrate per "
             app:drawableStartCompat="@drawable/list_numbered_icon"
-            android:drawablePadding="2dp"
+            style="@style/TextAppearance.Material3.TitleMedium"
+            android:textColor="@color/black" />
+
+        <TextView
+            android:id="@+id/title_item"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toEndOf="@id/category_detail_title"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:text="--"
             style="@style/TextAppearance.Material3.TitleMedium"
             android:textColor="@color/black" />
 
