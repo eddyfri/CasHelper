@@ -1,9 +1,11 @@
 package unipd.dei.cashelper.ui
 
+import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.res.Configuration
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.widget.TextView
 import androidx.core.content.ContextCompat
@@ -34,6 +36,7 @@ import android.view.ViewGroup
 import android.view.animation.AlphaAnimation
 import android.view.animation.Animation
 import android.widget.ImageView
+import androidx.activity.addCallback
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
 import com.github.mikephil.charting.animation.Easing
@@ -119,6 +122,14 @@ class HomeFragment: Fragment(), MenuProvider, HomeListAdapter.OnItemDeletedListe
         var itemInfoSorted = sortByDate(itemInfo)
         recyclerView.adapter = HomeListAdapter(itemInfoSorted, this)
         recyclerView.layoutManager = LinearLayoutManager(this.context, LinearLayoutManager.VERTICAL, false)
+
+
+        //when the user use the back pressed gesture the app is stopped
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            requireActivity().finish()
+        }
+
+
 
         return view
     }
@@ -471,4 +482,5 @@ class HomeFragment: Fragment(), MenuProvider, HomeListAdapter.OnItemDeletedListe
         itemInfo.sortByDescending { it.day } //it is a lambda expression link to itemInfo
         return itemInfo
     }
+
 }
