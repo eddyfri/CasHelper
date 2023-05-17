@@ -31,12 +31,14 @@ import com.github.mikephil.charting.animation.Easing
 import com.github.mikephil.charting.components.Legend
 import com.google.android.material.transition.MaterialFadeThrough
 import unipd.dei.cashelper.MainActivity
+import unipd.dei.cashelper.adapters.CategoryDetailAdapter
 import unipd.dei.cashelper.adapters.IncomingListAdapter
 
 
 class IncomingFragment : Fragment(), MenuProvider {
 
     private lateinit var recyclerView: RecyclerView
+    private lateinit var recyclerViewPopup: RecyclerView
     private lateinit var fabBack: ExtendedFloatingActionButton
     private lateinit var fabNext: ExtendedFloatingActionButton
     private lateinit var monthTextView: TextView
@@ -461,11 +463,17 @@ class IncomingFragment : Fragment(), MenuProvider {
         //aggiornamento recyclerView
         recyclerView.adapter = IncomingListAdapter(itemByCategory, colorMap, rateArray, this)
     }
-    fun createPopUp(selectedCategory: String){
+    fun createPopUp(selectedCategory: String, itemByCategory: MutableMap<String, ArrayList<DBHelper.ItemInfo>>){
         //dichiare l'inflater
         val inflater = LayoutInflater.from((view as View).context)
         //inserire nella view il popup
         val popupView = inflater.inflate(R.layout.popup_category_detail, view as ViewGroup, false)
+
+        val arrayOfItem = getItemsList(selectedCategory, itemByCategory)
+
+        recyclerViewPopup = popupView.findViewById(R.id.recycler_view_popup)
+        recyclerViewPopup.adapter = CategoryDetailAdapter(arrayOfItem)
+        recyclerViewPopup.layoutManager = LinearLayoutManager(this.context, LinearLayoutManager.VERTICAL, false)
 
         //imposta la grandezza del popup all 85% della schermata su cui viene creato
         val width = ((view as View).width*0.85).toInt()
@@ -500,6 +508,11 @@ class IncomingFragment : Fragment(), MenuProvider {
         p.flags = p.flags or WindowManager.LayoutParams.FLAG_DIM_BEHIND
         p.dimAmount = 0.3f
         wm.updateViewLayout(container, p)
+    }
+
+    private fun getItemsList(category: String, itemByCategory: MutableMap<String, ArrayList<DBHelper.ItemInfo>>): ArrayList<DBHelper.ItemInfo> {
+        var itemsOfThisCategory = itemByCategory[category]
+        return itemsOfThisCategory!!
     }
 
     override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {

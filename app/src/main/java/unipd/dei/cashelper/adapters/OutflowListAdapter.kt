@@ -6,22 +6,23 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import unipd.dei.cashelper.R
 import unipd.dei.cashelper.helpers.DBHelper
+import unipd.dei.cashelper.ui.OutflowFragment
 import java.text.DecimalFormat
 
-class OutflowListAdapter(private val itemByCategory: MutableMap<String, ArrayList<DBHelper.ItemInfo>>, private val categoryColor: ArrayList<Int>, private val rateArray: ArrayList<Double>) : RecyclerView.Adapter<OutflowListAdapter.CategoryViewHolder>() {
+class OutflowListAdapter(private val itemByCategory: MutableMap<String, ArrayList<DBHelper.ItemInfo>>, private val categoryColor: ArrayList<Int>, private val rateArray: ArrayList<Double>, private val outflowFragment: OutflowFragment) : RecyclerView.Adapter<OutflowListAdapter.CategoryViewHolder>() {
     private lateinit var db :DBHelper
 
 
     class CategoryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val categoryItem: TextView = itemView.findViewById(R.id.category_item)
+        private val circle = itemView.findViewById<View>(R.id.category_color)
         private val rateItem: TextView = itemView.findViewById(R.id.rate_item)
         private val totalItem: TextView = itemView.findViewById(R.id.total_item)
-        private val circle = itemView.findViewById<View>(R.id.category_color)
         fun bind(categoryName: String, total: Double, colorName: Int, rate: String){
+            circle.backgroundTintList = ColorStateList.valueOf(colorName)
             categoryItem.text = categoryName
             rateItem.text = rate + "%"
             totalItem.text = total.toString() + "€"
-            circle.backgroundTintList = ColorStateList.valueOf(colorName)
         }
     }
 
@@ -48,7 +49,14 @@ class OutflowListAdapter(private val itemByCategory: MutableMap<String, ArrayLis
         var rateFormatted = decimalFormat.format(rateArray[position])
         //replace "." instead of ","
         rateFormatted = rateFormatted.replace(",",".", true)
-        holder.bind(categoryName[position], totalByCategory[position], categoryColor[position], rateFormatted)
+
+        val selectedItem = categoryName[position]
+        holder.bind(selectedItem, totalByCategory[position], categoryColor[position], rateFormatted)
+
+        holder.itemView.setOnClickListener{
+            outflowFragment.createPopUp(selectedItem, itemByCategory)
+        }
+
     }
 
     //metodo per estrarre l'array di chiavi

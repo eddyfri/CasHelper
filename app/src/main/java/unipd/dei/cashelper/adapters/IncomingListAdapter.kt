@@ -22,10 +22,11 @@ class IncomingListAdapter(private val itemByCategory: MutableMap<String, ArrayLi
         private val rateItem: TextView = itemView.findViewById(R.id.rate_item)
         private val totalItem: TextView = itemView.findViewById(R.id.total_item)
         fun bind(categoryName: String, total: Double, colorName: Int, rate: String){
-            rateItem.text = rate + "%"
-            categoryItem.text = categoryName
-            totalItem.text = total.toString() + "€"
             circle.backgroundTintList = ColorStateList.valueOf(colorName)
+            categoryItem.text = categoryName
+            rateItem.text = rate + "%"
+            totalItem.text = total.toString() + "€"
+
         }
     }
 
@@ -57,7 +58,7 @@ class IncomingListAdapter(private val itemByCategory: MutableMap<String, ArrayLi
         holder.bind(selectedItem, totalByCategory[position], categoryColor[position], rateFormatted)
 
         holder.itemView.setOnClickListener{
-            incomingFragment.createPopUp(selectedItem)
+            incomingFragment.createPopUp(selectedItem, itemByCategory)
         }
     }
 

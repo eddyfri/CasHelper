@@ -38,6 +38,7 @@ import com.github.mikephil.charting.animation.Easing
 import com.github.mikephil.charting.components.Legend
 import com.google.android.material.transition.MaterialFadeThrough
 import unipd.dei.cashelper.MainActivity
+import unipd.dei.cashelper.adapters.CategoryDetailAdapter
 import unipd.dei.cashelper.adapters.IncomingListAdapter
 import unipd.dei.cashelper.adapters.OutflowListAdapter
 
@@ -45,6 +46,7 @@ import unipd.dei.cashelper.adapters.OutflowListAdapter
 class OutflowFragment : Fragment(), MenuProvider {
 
     private lateinit var recyclerView: RecyclerView
+    private lateinit var recyclerViewPopup: RecyclerView
     private lateinit var fabBack: ExtendedFloatingActionButton
     private lateinit var fabNext: ExtendedFloatingActionButton
     private lateinit var monthTextView: TextView
@@ -57,6 +59,10 @@ class OutflowFragment : Fragment(), MenuProvider {
     private lateinit var entries: MutableList<PieEntry>
     private lateinit var set: PieDataSet
     private lateinit var data: PieData
+
+    //popup
+    private var popup: PopupWindow? = null
+    private var popupActive: Boolean = false  //At start the popup is not open
 
     private lateinit var month : String
     private var year by Delegates.notNull<Int>()
@@ -97,7 +103,7 @@ class OutflowFragment : Fragment(), MenuProvider {
         monthTextView = view.findViewById<TextView>(R.id.month_text)
         yearTextView = view.findViewById<TextView>(R.id.year_text)
         recyclerView = view.findViewById(R.id.recycler_view)
-        recyclerView.adapter = OutflowListAdapter(itemByCategory, colorByCategory, rateArray)
+        recyclerView.adapter = OutflowListAdapter(itemByCategory, colorByCategory, rateArray, this)
         recyclerView.layoutManager = LinearLayoutManager(this.context, LinearLayoutManager.VERTICAL, false)
 
 
@@ -343,6 +349,58 @@ class OutflowFragment : Fragment(), MenuProvider {
 
     }
 
+    fun createPopUp(selectedCategory: String, itemByCategory: MutableMap<String, ArrayList<DBHelper.ItemInfo>>){
+        //dichiare l'inflater
+        val inflater = LayoutInflater.from((view as View).context)
+        //inserire nella view il popup
+        val popupView = inflater.inflate(R.layout.popup_category_detail, view as ViewGroup, false)
+
+        val arrayOfItem = getItemsList(selectedCategory, itemByCategory)
+
+        recyclerViewPopup = popupView.findViewById(R.id.recycler_view_popup)
+        recyclerViewPopup.adapter = CategoryDetailAdapter(arrayOfItem)
+        recyclerViewPopup.layoutManager = LinearLayoutManager(this.context, LinearLayoutManager.VERTICAL, false)
+
+        //imposta la grandezza del popup all 85% della schermata su cui viene creato
+        val width = ((view as View).width*0.85).toInt()
+        //create the popup with specific size
+        popup = PopupWindow(popupView, width, ViewGroup.LayoutParams.WRAP_CONTENT,true)
+
+        //set the animation when the popup appear and disappear
+        popup?.animationStyle = androidx.appcompat.R.style.Animation_AppCompat_DropDownUp
+        //set the elevation of the popup view
+        popup?.elevation = 100F
+        //the popup can listen the touch outside his view
+        popup?.isOutsideTouchable = true
+        popupActive = true
+
+        popup?.setOnDismissListener {
+            popupActive = false
+            popup = null
+        }
+
+        //Set the container of the popup (the fragment that is in background of him)
+        val popupContainerView = (view as View).findViewById<View>(R.id.constraint_incoming)
+
+        popup?.showAtLocation(popupContainerView, Gravity.CENTER, 0, 0)
+        popup?.dimBehind()
+    }
+
+    private fun PopupWindow.dimBehind() {
+        val container = contentView.rootView
+        val context = contentView.context
+        val wm = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+        val p = container.layoutParams as WindowManager.LayoutParams
+        p.flags = p.flags or WindowManager.LayoutParams.FLAG_DIM_BEHIND
+        p.dimAmount = 0.3f
+        wm.updateViewLayout(container, p)
+    }
+
+    private fun getItemsList(category: String, itemByCategory: MutableMap<String, ArrayList<DBHelper.ItemInfo>>): ArrayList<DBHelper.ItemInfo> {
+        var itemsOfThisCategory = itemByCategory[category]
+        return itemsOfThisCategory!!
+    }
+
 
     private fun getCurrentMonth() : String {
         return when (SimpleDateFormat("MM", Locale.ENGLISH).format(Date())) {
@@ -424,7 +482,7 @@ class OutflowFragment : Fragment(), MenuProvider {
 
         updatePieChart(itemByCategory, allCategories)
         //aggiornamento recyclerView
-        recyclerView.adapter = OutflowListAdapter(itemByCategory, colorMap, rateArray)
+        recyclerView.adapter = OutflowListAdapter(itemByCategory, colorMap, rateArray, this)
     }
     override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
         menuInflater.inflate(R.menu.menu_empty, menu)
