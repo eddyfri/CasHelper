@@ -49,13 +49,13 @@
 
         android:layout_marginTop="5pt"
         app:layout_constraintTop_toBottomOf="@id/container_title"
-        app:layout_constraintBottom_toTopOf="200dp"
+        app:layout_constraintBottom_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         >
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view_popup"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="200dp"
             android:theme="@style/TextStyle"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             />

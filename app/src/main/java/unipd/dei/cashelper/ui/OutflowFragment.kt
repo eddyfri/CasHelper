@@ -116,6 +116,9 @@ class OutflowFragment : Fragment(), MenuProvider {
         recyclerView.adapter = OutflowListAdapter(itemByCategory, colorByCategory, rateArray, this)
         recyclerView.layoutManager = LinearLayoutManager(this.context, LinearLayoutManager.VERTICAL, false)
 
+        //set selectedItem value because when we turn the screen the popup is created before the fragment
+        if (savedInstanceState != null)
+            selectedItem = savedInstanceState.getString("popupSelectedItem").toString()
 
         return view
     }

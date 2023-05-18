@@ -109,6 +109,9 @@ class IncomingFragment : Fragment(), MenuProvider {
         recyclerView.layoutManager = LinearLayoutManager(this.context, LinearLayoutManager.VERTICAL, false)
 
 
+        //set selectedItem value because when we turn the screen the popup is created before the fragment
+        if (savedInstanceState != null)
+            selectedItem = savedInstanceState.getString("popupSelectedItem").toString()
 
         return view
     }
