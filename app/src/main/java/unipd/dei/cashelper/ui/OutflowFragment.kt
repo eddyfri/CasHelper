@@ -69,6 +69,9 @@ class OutflowFragment : Fragment(), MenuProvider {
     private lateinit var selectedItem : String
     private lateinit var itemByCategory : MutableMap<String, ArrayList<DBHelper.ItemInfo>>
 
+    private lateinit var allItemOutflows : MutableList<DBHelper.ItemInfo>
+    private lateinit var allCategories : ArrayList<String>
+
     private lateinit var month : String
     private var year by Delegates.notNull<Int>()
 
@@ -97,9 +100,9 @@ class OutflowFragment : Fragment(), MenuProvider {
         year = IncomingFragmentArgs.fromBundle(requireArguments()).year
 
         //qui mi serve per passare all'adapter gli elementi
-        var allItemOutflows = db.getItemsByType("Uscita", month, year)
-        var allCategories = db.getCategoryName()
-        var itemByCategory = getOutflowByCategory(allCategories, allItemOutflows)
+        allItemOutflows = db.getItemsByType("Uscita", month, year)
+        allCategories = db.getCategoryName()
+        itemByCategory = getOutflowByCategory(allCategories, allItemOutflows)
         var colorByCategory = setColorCategory(allCategories, itemByCategory)
         var totalAmount = getTotalAmount(allItemOutflows)
         var rateArray = getRateByCategory(itemByCategory, totalAmount)
@@ -184,10 +187,6 @@ class OutflowFragment : Fragment(), MenuProvider {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        var allItemOutflow = db.getItemsByType("Uscita", month, year)
-        var allCategories = db.getCategoryName()
-        var itemByCategory = getOutflowByCategory(allCategories, allItemOutflow)
 
         //add MenuProvider
         activity?.addMenuProvider(this, viewLifecycleOwner, Lifecycle.State.RESUMED)

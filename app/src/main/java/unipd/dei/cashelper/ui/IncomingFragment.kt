@@ -60,6 +60,9 @@ class IncomingFragment : Fragment(), MenuProvider {
     private lateinit var selectedItem : String
     private lateinit var itemByCategory : MutableMap<String, ArrayList<DBHelper.ItemInfo>>
 
+    private lateinit var allItemIncoming : MutableList<DBHelper.ItemInfo>
+    private lateinit var allCategories : ArrayList<String>
+
 
 
     private lateinit var month : String
@@ -90,8 +93,8 @@ class IncomingFragment : Fragment(), MenuProvider {
         year = IncomingFragmentArgs.fromBundle(requireArguments()).year
 
         //qui mi serve per passare all'adapter gli elementi
-        var allItemIncoming = db.getItemsByType("Entrata", month, year)
-        var allCategories = db.getCategoryName()
+        allItemIncoming = db.getItemsByType("Entrata", month, year)
+        allCategories = db.getCategoryName()
         itemByCategory = getIncomingByCategory(allCategories, allItemIncoming)
         var colorByCategory = setColorCategory(allCategories, itemByCategory)
         val totalAmount = getTotalAmount(allItemIncoming)
@@ -181,9 +184,9 @@ class IncomingFragment : Fragment(), MenuProvider {
         //add MenuProvider
         activity?.addMenuProvider(this, viewLifecycleOwner, Lifecycle.State.RESUMED)
 
-        var allItemIncoming = db.getItemsByType("Entrata", month, year)
-        var allCategories = db.getCategoryName()
-        var itemByCategory = getIncomingByCategory(allCategories, allItemIncoming)
+        allItemIncoming = db.getItemsByType("Entrata", month, year)
+        allCategories = db.getCategoryName()
+        itemByCategory = getIncomingByCategory(allCategories, allItemIncoming)
 
         //imposto le textview di mese e anno nel mese e anno che mi vengono passati dalla schermata home
         monthTextView.text = month
