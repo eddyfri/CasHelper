@@ -6,6 +6,8 @@
     android:background="@drawable/container_home"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/container_title"
         android:layout_width="match_parent"
@@ -47,7 +49,7 @@
 
         android:layout_marginTop="5pt"
         app:layout_constraintTop_toBottomOf="@id/container_title"
-        app:layout_constraintBottom_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="200dp"
         app:layout_constraintStart_toStartOf="parent"
         >
         <androidx.recyclerview.widget.RecyclerView
