@@ -165,6 +165,8 @@ class WidgetApp : AppWidgetProvider() {
             remoteViews = RemoteViews(viewMapping)
             appWidgetManager.updateAppWidget(appWidgetId, remoteViews)
         }
+        //brutto ma funziona, risolve problema di visualizzazione strana del primo widget creato
+        db.sendWidgetUpdateBroadcast(context)
     }
 
     override fun onReceive(context: Context, intent: Intent) {

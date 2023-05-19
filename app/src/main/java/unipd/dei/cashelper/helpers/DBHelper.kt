@@ -7,8 +7,6 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
 import kotlin.collections.ArrayList
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import unipd.dei.cashelper.WidgetApp
 
 
@@ -89,7 +87,7 @@ class DBHelper(context: Context): SQLiteOpenHelper(context, DB_NAME, null, DB_VE
         }
     }
 */
-    private fun sendWidgetUpdateBroadcast(context: Context) {
+    fun sendWidgetUpdateBroadcast(context: Context) {
         /*
         val updateIntent = Intent(context, WidgetApp::class.java)
         updateIntent.action = AppWidgetManager.ACTION_APPWIDGET_UPDATE
