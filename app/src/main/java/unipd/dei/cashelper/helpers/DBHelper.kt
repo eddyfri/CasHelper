@@ -87,23 +87,11 @@ class DBHelper(context: Context): SQLiteOpenHelper(context, DB_NAME, null, DB_VE
         }
     }
 */
-    fun sendWidgetUpdateBroadcast(context: Context) {
-        /*
+    private fun sendWidgetUpdateBroadcast(context: Context) {
+
         val updateIntent = Intent(context, WidgetApp::class.java)
         updateIntent.action = AppWidgetManager.ACTION_APPWIDGET_UPDATE
         context.sendBroadcast(updateIntent)
-
-         */
-        var widgetApp = WidgetApp.getInstance()
-        if(widgetApp == null) {
-            widgetApp = WidgetApp.restoreInstance(context)
-            Log.d(TAG, "database: restore instances -> $widgetApp")
-        }
-        widgetApp?.let {
-            val updateIntent = Intent(AppWidgetManager.ACTION_APPWIDGET_UPDATE)
-            updateIntent.component = ComponentName(appContext, widgetApp::class.java)
-            appContext.sendBroadcast(updateIntent)
-        }
     }
 
     fun addCategory(name: String): Boolean {

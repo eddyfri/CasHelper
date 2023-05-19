@@ -45,55 +45,17 @@ class WidgetApp : AppWidgetProvider() {
     companion object {
         private const val PREFS_NAME = "WidgetPrefs"
         private const val KEY_WIDGET_IDS = "widgetIds"
-        private const val PREF_WIDGET_APP_EXISTS = "WidgetAppExists"
-        private var instance: WidgetApp? = null
-
-        fun getInstance(): WidgetApp? {
-            return instance
-        }
-        fun saveInstance(context: Context) {
-            val sharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-            val editor = sharedPreferences.edit()
-            editor.putBoolean(PREF_WIDGET_APP_EXISTS, true)
-            editor.apply()
-        }
-
-        fun restoreInstance(context: Context): WidgetApp? {
-            val sharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-            val instanceExists = sharedPreferences.getBoolean(PREF_WIDGET_APP_EXISTS, false)
-            return if (instanceExists) WidgetApp() else null
-        }
     }
 
     // Metodo che viene chiamato dal sistema Android quando un'applicazione Widget deve essere aggiornata.
     // Questo metodo viene definito all'interno di una classe che estende AppWidgetProvider,
     // e si occupa di aggiornare l'interfaccia utente del widget
     override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray) {
-        /*
-        // There may be multiple widgets active, so update all of them
-        for (appWidgetId in appWidgetIds) {
-            // updateAppWidget(context, appWidgetManager, appWidgetId)
-            val views = RemoteViews(context.packageName, R.layout.widget_app)
-
-            // Crea il PieChart e imposta i dati e la configurazione
-            db = DBHelper(context as Context)
-
-            val itemInfo: MutableList<DBHelper.ItemInfo>
-            itemInfo = db.getItem(getCurrentMonth(), getCurrentYear())
-            pieChart = PieChart(context)
-            createPieChartWidget(views, itemInfo, context)
-
-            appWidgetManager.updateAppWidget(appWidgetId, views)
-        }
-         */
         // Crea il PieChart e imposta i dati e la configurazione
         val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
         val editor = prefs.edit()
         editor.putString(KEY_WIDGET_IDS, appWidgetIds.joinToString(","))
         editor.apply()
-        instance = this
-        Log.d(TAG, "onUpdate: instance -> $instance")
-        saveInstance(context)
         Log.d(TAG, "onUpdate()")
         db = DBHelper(context as Context)
         this.appWidgetManager = appWidgetManager
@@ -143,6 +105,10 @@ class WidgetApp : AppWidgetProvider() {
             wideView.setTextViewText(R.id.outflow_widget_text, "Uscite: ${getExits(itemInfo)} €")
             wideView.setTextViewText(R.id.total_widget_text, "Totale: ${getTotal(itemInfo)} €")
             wideView.setOnClickPendingIntent(R.id.widget_container, pendingIntent)
+            val buttonIntent = Intent(context, MainActivity::class.java)
+            buttonIntent.action = "OPEN_ADD_ITEM_FRAGMENT"
+            val pendingButtonIntent = PendingIntent.getActivity(context, 0, buttonIntent, PendingIntent.FLAG_IMMUTABLE)
+            wideView.setOnClickPendingIntent(R.id.add_item_widget, pendingButtonIntent)
             tallView = RemoteViews(context.packageName, R.layout.widget_app_tall)
             tallView.setImageViewBitmap(R.id.pieChartWidgetTall, bitmap)
             pieChart.layout(0, 0, width, height)
@@ -152,6 +118,7 @@ class WidgetApp : AppWidgetProvider() {
             tallView.setTextViewText(R.id.outflow_widget_text, "Uscite: ${getExits(itemInfo)} €")
             tallView.setTextViewText(R.id.total_widget_text, "Totale: ${getTotal(itemInfo)} €")
             tallView.setOnClickPendingIntent(R.id.widget_container, pendingIntent)
+            tallView.setOnClickPendingIntent(R.id.add_item_widget, pendingButtonIntent)
 
             serviceIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
             serviceIntent.data = Uri.parse(serviceIntent.toUri(Intent.URI_INTENT_SCHEME))
@@ -172,11 +139,9 @@ class WidgetApp : AppWidgetProvider() {
     override fun onReceive(context: Context, intent: Intent) {
         super.onReceive(context, intent)
         Log.d(TAG, "onReceive: Aggiornamento Widget")
-        Log.d(TAG, "onReceive: instance: $instance")
-        val action = intent.action
-        Log.d(TAG, "ACTION: $action")
+        Log.d(TAG, "ACTION: $intent.action")
         db = DBHelper(context as Context)
-        if(action == AppWidgetManager.ACTION_APPWIDGET_UPDATE) {
+        if(intent.action == AppWidgetManager.ACTION_APPWIDGET_UPDATE) {
             val appWidgetManager = AppWidgetManager.getInstance(context)
             val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
             val widgetIdsString = prefs.getString(KEY_WIDGET_IDS, null)
@@ -215,6 +180,10 @@ class WidgetApp : AppWidgetProvider() {
                     wideView.setTextViewText(R.id.outflow_widget_text, "Uscite: ${getExits(itemInfo)} €")
                     wideView.setTextViewText(R.id.total_widget_text, "Totale: ${getTotal(itemInfo)} €")
                     wideView.setOnClickPendingIntent(R.id.widget_container, pendingIntent)
+                    val buttonIntent = Intent(context, MainActivity::class.java)
+                    buttonIntent.action = "OPEN_ADD_ITEM_FRAGMENT"
+                    val pendingButtonIntent = PendingIntent.getActivity(context, 0, buttonIntent, PendingIntent.FLAG_IMMUTABLE)
+                    wideView.setOnClickPendingIntent(R.id.add_item_widget, pendingButtonIntent)
                     tallView = RemoteViews(context.packageName, R.layout.widget_app_tall)
                     tallView.setImageViewBitmap(R.id.pieChartWidgetTall, bitmap)
                     pieChart.layout(0, 0, width, height)
@@ -224,16 +193,7 @@ class WidgetApp : AppWidgetProvider() {
                     tallView.setTextViewText(R.id.outflow_widget_text, "Uscite: ${getExits(itemInfo)} €")
                     tallView.setTextViewText(R.id.total_widget_text, "Totale: ${getTotal(itemInfo)} €")
                     tallView.setOnClickPendingIntent(R.id.widget_container, pendingIntent)
-                    /*
-                    if(!::serviceIntent.isInitialized) {
-                        Log.d(TAG, "onReceive(), serviceIntent non inizializzato")
-                        serviceIntent = Intent(context, ListWidgetService::class.java)
-                        serviceIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
-                    }
-                    serviceIntent.data = Uri.parse(serviceIntent.toUri(Intent.URI_INTENT_SCHEME))
-                    tallView.setRemoteAdapter(R.id.item_list_widget, serviceIntent)
-
-                     */
+                    tallView.setOnClickPendingIntent(R.id.add_item_widget, pendingButtonIntent)
                     tallView.setRemoteAdapter(R.id.item_list_widget, Intent(context, ListWidgetService::class.java))
                     appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetId, R.id.item_list_widget)
                     appWidgetManager.updateAppWidget(appWidgetId, tallView)
@@ -251,6 +211,7 @@ class WidgetApp : AppWidgetProvider() {
     }
 
     private fun createPieChartWidget(itemInfo: MutableList<DBHelper.ItemInfo>, context: Context) {
+        Log.d(TAG, "sono in createPieChartWidget")
         val totIncoming = getIncoming(itemInfo)
         val totExits = getExits(itemInfo)
         //entries values
@@ -288,7 +249,7 @@ class WidgetApp : AppWidgetProvider() {
         val totIncoming = getIncoming(itemInfo)
         val totExits = getExits(itemInfo)
         if(!::entries.isInitialized) {
-            Log.d(TAG, "pieChart non creato, passo a create")
+            Log.d(TAG, "sono in updatePieChart ma adesso vado in create")
             createPieChartWidget(itemInfo, context)
             return
         }
