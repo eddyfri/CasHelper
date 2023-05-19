@@ -1,16 +1,15 @@
 package unipd.dei.cashelper.helpers
 
 import android.appwidget.AppWidgetManager
-import android.content.ContentValues
+import android.content.*
 import android.content.ContentValues.TAG
-import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
 import kotlin.collections.ArrayList
-import android.content.SharedPreferences
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import unipd.dei.cashelper.WidgetApp
 
 
 class DBHelper(context: Context): SQLiteOpenHelper(context, DB_NAME, null, DB_VERSION) {
@@ -61,10 +60,6 @@ class DBHelper(context: Context): SQLiteOpenHelper(context, DB_NAME, null, DB_VE
         db.execSQL(dateTable)
         db.execSQL(itemTable)
         db.execSQL(categoryValues)
-
-        val savedObservers = getObserversFromSharedPreferences()
-        observers.putAll(savedObservers)
-        Log.d(TAG, "sono in onCreate di DBHelper: observers: $observers")
     }
 
     // non previsti aggiornamenti
@@ -75,16 +70,15 @@ class DBHelper(context: Context): SQLiteOpenHelper(context, DB_NAME, null, DB_VE
         db.setForeignKeyConstraintsEnabled(true)
     }
 
+    /*
     fun addObserver(observer: DatabaseObserver, appWidgetManager: AppWidgetManager, appWidgetId: Int) {
         Log.d(TAG, "aggiunto osservatore")
         observers[observer] = Pair(appWidgetManager, appWidgetId)
         Log.d(TAG, "observers: $observers")
-        saveObserversToSharedPreferences()
     }
 
     private fun removeObserver(observer: DatabaseObserver) {
         observers.remove(observer)
-        saveObserversToSharedPreferences()
     }
 
     private fun notifyWidgetChange() {
@@ -92,6 +86,25 @@ class DBHelper(context: Context): SQLiteOpenHelper(context, DB_NAME, null, DB_VE
         observers.forEach { (observer, pair) ->
             Log.d(TAG, "notifico osservatore")
             observer.changeWidget(appContext, pair.first, pair.second)
+        }
+    }
+*/
+    private fun sendWidgetUpdateBroadcast(context: Context) {
+        /*
+        val updateIntent = Intent(context, WidgetApp::class.java)
+        updateIntent.action = AppWidgetManager.ACTION_APPWIDGET_UPDATE
+        context.sendBroadcast(updateIntent)
+
+         */
+        var widgetApp = WidgetApp.getInstance()
+        if(widgetApp == null) {
+            widgetApp = WidgetApp.restoreInstance(context)
+            Log.d(TAG, "database: restore instances -> $widgetApp")
+        }
+        widgetApp?.let {
+            val updateIntent = Intent(AppWidgetManager.ACTION_APPWIDGET_UPDATE)
+            updateIntent.component = ComponentName(appContext, widgetApp::class.java)
+            appContext.sendBroadcast(updateIntent)
         }
     }
 
@@ -140,7 +153,8 @@ class DBHelper(context: Context): SQLiteOpenHelper(context, DB_NAME, null, DB_VE
         Log.d(TAG, "aggiunta item")
         // da cambiare: fare solo per mese e anno attuale
         val check = writableDatabase.insert("Item", null, values) != -1L
-        notifyWidgetChange()
+        // notifyWidgetChange()
+        sendWidgetUpdateBroadcast(appContext)
         return check
     }
 
@@ -171,7 +185,8 @@ class DBHelper(context: Context): SQLiteOpenHelper(context, DB_NAME, null, DB_VE
                 put("Anno", year)
         }
         val check = writableDatabase.update("Item", values, "Id=?", arrayOf("$originalId")) > 0
-        notifyWidgetChange()
+        // notifyWidgetChange()
+        sendWidgetUpdateBroadcast(appContext)
         return check
     }
 
@@ -179,7 +194,8 @@ class DBHelper(context: Context): SQLiteOpenHelper(context, DB_NAME, null, DB_VE
     // DA TESTARE !!!
     fun removeItem(originalId: Int): Boolean {
         val check = writableDatabase.delete("Item", "Id=?", arrayOf("$originalId")) > 0
-        notifyWidgetChange()
+        // notifyWidgetChange()
+        sendWidgetUpdateBroadcast(appContext)
         return check
     }
 
@@ -265,22 +281,7 @@ class DBHelper(context: Context): SQLiteOpenHelper(context, DB_NAME, null, DB_VE
     {
         private const val DB_NAME = "database.db"
         private const val DB_VERSION = 1
-        private var observers: MutableMap<DatabaseObserver, Pair<AppWidgetManager, Int>> = mutableMapOf()
-        private const val SHARED_PREFERENCES_NAME = "MyAppPreferences"
-    }
-    private fun getSharedPreferences(): SharedPreferences {
-        return appContext.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
-    }
-    private fun getObserversFromSharedPreferences(): MutableMap<DatabaseObserver, Pair<AppWidgetManager, Int>> {
-        val sharedPreferences = getSharedPreferences()
-        val observersJson = sharedPreferences.getString("observers", null)
-        val typeToken = object : TypeToken<MutableMap<DatabaseObserver, Pair<AppWidgetManager, Int>>>() {}.type
-        return Gson().fromJson(observersJson, typeToken) ?: mutableMapOf()
-    }
-    private fun saveObserversToSharedPreferences() {
-        val sharedPreferences = getSharedPreferences()
-        val observersJson = Gson().toJson(observers)
-        sharedPreferences.edit().putString("observers", observersJson).apply()
+        // private var observers: MutableMap<DatabaseObserver, Pair<AppWidgetManager, Int>> = mutableMapOf()
     }
 
     data class DateInfo(var changes: String) {
@@ -300,7 +301,10 @@ class DBHelper(context: Context): SQLiteOpenHelper(context, DB_NAME, null, DB_VE
         var description: String = ""
     }
 
+    /*
     interface DatabaseObserver {
         fun changeWidget(context: Context, appWidgetManager: AppWidgetManager, appWidgetId: Int)
     }
+
+     */
 }

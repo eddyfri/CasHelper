@@ -19,7 +19,6 @@ class ListWidgetService : RemoteViewsService() {
 
         private lateinit var db : DBHelper
         private lateinit var itemList: MutableList<DBHelper.ItemInfo>
-        private val appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID)
 
         override fun onCreate() {
             db = DBHelper(context as Context)
@@ -27,7 +26,8 @@ class ListWidgetService : RemoteViewsService() {
         }
 
         override fun onDataSetChanged() {
-            // dataset changed
+            db = DBHelper(context as Context)
+            itemList = db.getItem(getCurrentMonth(), getCurrentYear())
         }
 
         override fun onDestroy() {
@@ -41,7 +41,10 @@ class ListWidgetService : RemoteViewsService() {
         override fun getViewAt(position: Int): RemoteViews {
             val views = RemoteViews(context.packageName, R.layout.item_widget)
             views.setTextViewText(R.id.category_item_widget, itemList[position].category)
-            views.setTextViewText(R.id.price_item_widget, itemList[position].price.toString())
+            if(itemList[position].type == "Uscita")
+                views.setTextViewText(R.id.price_item_widget, "-" + itemList[position].price.toString())
+            else
+                views.setTextViewText(R.id.price_item_widget, itemList[position].price.toString())
             views.setTextViewText(R.id.date_item_widget, "${itemList[position].day}/${getNumberMonth(itemList[position].month)}/${itemList[position].year}")
             return views
         }
