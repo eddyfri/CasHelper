@@ -492,7 +492,7 @@ class IncomingFragment : Fragment(), MenuProvider {
     }
     fun createPopUp(selectedCategory: String, itemByCategory: MutableMap<String, ArrayList<DBHelper.ItemInfo>>){
         //save the current category shown
-        this.selectedItem = selectedItem
+        this.selectedItem = selectedCategory
         this.itemByCategory = itemByCategory
 
 
@@ -585,11 +585,6 @@ class IncomingFragment : Fragment(), MenuProvider {
         val restore = popupActive
         popup?.dismiss()  //close popup
         popupActive = restore //save the state of the popup
-    }
-
-    fun setSelectedItem(selectedItem : String, itemByCategory: MutableMap<String, ArrayList<DBHelper.ItemInfo>>) {
-        this.selectedItem = selectedItem
-        this.itemByCategory = itemByCategory
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

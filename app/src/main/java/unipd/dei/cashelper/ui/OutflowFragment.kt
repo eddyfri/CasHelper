@@ -138,7 +138,7 @@ class OutflowFragment : Fragment(), MenuProvider {
         return view
     }
 
-    //get an array of rate for all the categories that have at least one incoming
+    //get an array of rate for all the categories that have at least one out
     private fun getRateByCategory(itemByCategory: MutableMap<String, ArrayList<DBHelper.ItemInfo>>, totalAmount: Double): ArrayList<Double>{
         var rateArray = ArrayList<Double>(itemByCategory.size)
         for (item in itemByCategory) {
@@ -408,7 +408,7 @@ class OutflowFragment : Fragment(), MenuProvider {
 
     fun createPopUp(selectedCategory: String, itemByCategory: MutableMap<String, ArrayList<DBHelper.ItemInfo>>){
         //save the current category shown
-        this.selectedItem = selectedItem
+        this.selectedItem = selectedCategory
         this.itemByCategory = itemByCategory
 
         //dichiare l'inflater
@@ -588,11 +588,7 @@ class OutflowFragment : Fragment(), MenuProvider {
         popup?.dismiss()  //close popup
         popupActive = restore //save the state of the popup
     }
-
-    fun setSelectedItem(selectedItem : String, itemByCategory: MutableMap<String, ArrayList<DBHelper.ItemInfo>>) {
-        this.selectedItem = selectedItem
-        this.itemByCategory = itemByCategory
-    }
+    
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)

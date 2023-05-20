@@ -58,7 +58,6 @@ class IncomingListAdapter(private val itemByCategory: MutableMap<String, ArrayLi
         holder.bind(selectedItem, totalByCategory[position], categoryColor[position], rateFormatted)
 
         holder.itemView.setOnClickListener{
-            incomingFragment.setSelectedItem(selectedItem, itemByCategory)
             incomingFragment.createPopUp(selectedItem, itemByCategory)
         }
     }

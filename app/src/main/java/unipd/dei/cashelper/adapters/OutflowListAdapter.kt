@@ -54,7 +54,6 @@ class OutflowListAdapter(private val itemByCategory: MutableMap<String, ArrayLis
         holder.bind(selectedItem, totalByCategory[position], categoryColor[position], rateFormatted)
 
         holder.itemView.setOnClickListener{
-            outflowFragment.setSelectedItem(selectedItem, itemByCategory)
             outflowFragment.createPopUp(selectedItem, itemByCategory)
         }
 
