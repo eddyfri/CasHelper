@@ -15,26 +15,17 @@
         android:background="@drawable/container_home"
         android:padding="5dp">
 
+
         <TextView
-            android:id="@+id/category_detail_title"
+            android:id="@+id/title_item"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:text="Transazioni registrate per "
-            app:drawableStartCompat="@drawable/list_numbered_icon"
-            style="@style/TextAppearance.Material3.TitleMedium"
-            android:textColor="@color/black" />
-
-        <TextView
-            android:id="@+id/title_item"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintStart_toEndOf="@id/category_detail_title"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:drawablePadding="2dp"
             android:text="--"
+            app:drawableStartCompat="@drawable/list_numbered_icon"
             style="@style/TextAppearance.Material3.TitleMedium"
             android:textColor="@color/black" />
 

@@ -25,7 +25,9 @@ import kotlin.properties.Delegates
 import android.view.*
 import android.view.animation.AlphaAnimation
 import android.view.animation.Animation
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.MenuProvider
+import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import com.github.mikephil.charting.animation.Easing
 import com.github.mikephil.charting.components.Legend
@@ -43,6 +45,10 @@ class IncomingFragment : Fragment(), MenuProvider {
     private lateinit var fabNext: ExtendedFloatingActionButton
     private lateinit var monthTextView: TextView
     private lateinit var yearTextView: TextView
+    private lateinit var constraintLayoutEmptyList: ConstraintLayout
+    private lateinit var emptyIcon: ImageView
+    private lateinit var emptyText: TextView
+    private lateinit var emptyChartText: TextView
 
     private lateinit var db: DBHelper
 
@@ -104,6 +110,11 @@ class IncomingFragment : Fragment(), MenuProvider {
         fabNext = view.findViewById<ExtendedFloatingActionButton>(R.id.next_month)
         monthTextView = view.findViewById<TextView>(R.id.month_text)
         yearTextView = view.findViewById<TextView>(R.id.year_text)
+        constraintLayoutEmptyList = view.findViewById(R.id.constraint_empty_list_incoming)
+        emptyIcon = view.findViewById(R.id.empty_icon_incoming)
+        emptyText = view.findViewById(R.id.empty_text_incoming)
+        emptyChartText = view.findViewById(R.id.empty_chart_text_incoming)
+
         recyclerView = view.findViewById(R.id.recycler_view)
         recyclerView.adapter = IncomingListAdapter(itemByCategory, colorByCategory, rateArray, this)
         recyclerView.layoutManager = LinearLayoutManager(this.context, LinearLayoutManager.VERTICAL, false)
@@ -194,6 +205,10 @@ class IncomingFragment : Fragment(), MenuProvider {
         //imposto le textview di mese e anno nel mese e anno che mi vengono passati dalla schermata home
         monthTextView.text = month
         yearTextView.text = year.toString()
+        constraintLayoutEmptyList.isVisible = itemByCategory.isEmpty()
+        emptyIcon.isVisible = itemByCategory.isEmpty()
+        emptyText.isVisible = itemByCategory.isEmpty()
+        emptyChartText.isVisible = itemByCategory.isEmpty()
 
         createPieChart(view, itemByCategory, allCategories)
         if (itemByCategory.isEmpty())
@@ -476,6 +491,12 @@ class IncomingFragment : Fragment(), MenuProvider {
             fabNext.show()
         else fabNext.hide()
 
+        constraintLayoutEmptyList.isVisible = itemByCategory.isEmpty()
+        emptyIcon.isVisible = itemByCategory.isEmpty()
+        emptyText.isVisible = itemByCategory.isEmpty()
+        emptyChartText.isVisible = itemByCategory.isEmpty()
+
+
         if (itemByCategory.isEmpty())
             pieChart.visibility = View.GONE
         else
@@ -500,7 +521,7 @@ class IncomingFragment : Fragment(), MenuProvider {
 
         val arrayOfItem = getItemsList(selectedCategory, itemByCategory)
 
-        popupTitle.text = selectedCategory
+        popupTitle.text = selectedCategory + ":"
         recyclerViewPopup = popupView.findViewById(R.id.recycler_view_popup)
         recyclerViewPopup.adapter = CategoryDetailAdapter(arrayOfItem)
         recyclerViewPopup.layoutManager = LinearLayoutManager(this.context, LinearLayoutManager.VERTICAL, false)

@@ -2,7 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
 
-    android:id="@+id/constraint_incoming"
+    android:id="@+id/constraint_outflow"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -10,14 +10,14 @@
     android:background="?attr/backgroundColor">
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline_incoming0"
+        android:id="@+id/guideline_outflow0"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.15"/>
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/midline_incoming"
+        android:id="@+id/midline_outflow"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -27,9 +27,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/month"
-        app:layout_constraintRight_toLeftOf="@id/midline_incoming"
+        app:layout_constraintRight_toLeftOf="@id/midline_outflow"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/guideline_incoming0"
+        app:layout_constraintBottom_toTopOf="@id/guideline_outflow0"
         android:layout_margin="2pt"
         style = "@style/DateStyle"/>
 
@@ -38,9 +38,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/year"
-        app:layout_constraintLeft_toRightOf="@id/midline_incoming"
+        app:layout_constraintLeft_toRightOf="@id/midline_outflow"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/guideline_incoming0"
+        app:layout_constraintBottom_toTopOf="@id/guideline_outflow0"
         android:layout_margin="2pt"
         style = "@style/DateStyle"/>
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
@@ -56,7 +56,7 @@
         android:layout_marginStart="5pt"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/guideline_incoming0"/>
+        app:layout_constraintBottom_toTopOf="@id/guideline_outflow0"/>
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/next_month"
@@ -71,21 +71,36 @@
         android:layout_marginEnd="5pt"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/guideline_incoming0"/>
+        app:layout_constraintBottom_toTopOf="@id/guideline_outflow0"/>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="@drawable/container_home"
-        app:layout_constraintTop_toBottomOf="@id/guideline_incoming0"
+        app:layout_constraintTop_toBottomOf="@id/guideline_outflow0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/guideline_incoming1"
+        app:layout_constraintBottom_toTopOf="@id/guideline_outflow1"
         android:layout_marginStart="10pt"
         android:layout_marginEnd="10pt"
         android:layout_marginBottom="5pt"
         android:layout_marginTop="5pt"
         >
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+            <TextView
+                android:id="@+id/empty_chart_text_outflow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/empty_chart_string"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginTop="10dp"
+                android:theme="@style/TextStyle"
+                />
+        </androidx.constraintlayout.widget.ConstraintLayout>
         <com.github.mikephil.charting.charts.PieChart
             android:id="@+id/chart_outflow"
             android:layout_width="match_parent"
@@ -99,7 +114,7 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline_incoming1"
+        android:id="@+id/guideline_outflow1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -107,7 +122,7 @@
 
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline_incomingEnd"
+        android:id="@+id/guideline_outflowEnd"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -121,10 +136,38 @@
         android:layout_marginStart="10pt"
         android:layout_marginEnd="10pt"
         android:layout_marginTop="5pt"
-        app:layout_constraintTop_toBottomOf="@id/guideline_incoming1"
-        app:layout_constraintBottom_toTopOf="@id/guideline_incomingEnd"
+        app:layout_constraintTop_toBottomOf="@id/guideline_outflow1"
+        app:layout_constraintBottom_toTopOf="@id/guideline_outflowEnd"
         app:layout_constraintStart_toStartOf="parent"
+        android:orientation="horizontal"
         >
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraint_empty_list_outflow"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            >
+            <ImageView
+                android:id="@+id/empty_icon_outflow"
+                android:layout_width="100dp"
+                android:layout_height="125dp"
+                android:src="@drawable/empty"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:contentDescription="@string/empty_img"
+                />
+            <TextView
+                android:id="@+id/empty_text_outflow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/stringTransaction"
+                android:theme="@style/TextStyle"
+                app:layout_constraintTop_toBottomOf="@id/empty_icon_outflow"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginTop="5dp"
+                />
+        </androidx.constraintlayout.widget.ConstraintLayout>
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view"
             android:layout_width="match_parent"

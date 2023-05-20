@@ -205,7 +205,6 @@
             />
     </androidx.constraintlayout.widget.ConstraintLayout>
     <LinearLayout
-        android:id="@+id/linear_layout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:background="@drawable/container_home"
