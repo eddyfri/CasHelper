@@ -124,13 +124,6 @@ class IncomingFragment : Fragment(), MenuProvider {
         recyclerView.layoutManager = LinearLayoutManager(this.context, LinearLayoutManager.VERTICAL, false)
 
 
-        //set the empty value of selectedItem
-        selectedItem = ""
-
-        //set selectedItem value because when we turn the screen the popup is created before the fragment
-        if (savedInstanceState != null)
-            selectedItem = savedInstanceState.getString("popupSelectedItem").toString()
-
         return view
     }
 
@@ -285,36 +278,19 @@ class IncomingFragment : Fragment(), MenuProvider {
             fabNext.hide()
 
 
-        //imposto il pulsante per scegliere il mese precedente a quello selezionato
-        fabBack.setOnClickListener {
-            // cambio l'anno se siamo a gennaio
-            if(month == "Gennaio")
-                year--
-            month = backMonth(month)
-            monthTextView.text = month
-            yearTextView.text = year.toString()
-            updateAll(month, year)
-        }
 
-        //imposto il pulsante per scegliere il mese successivo a quello selezionato
-        fabNext.setOnClickListener {
-            //elimino la possibilità di scegliere dei mesi futuri a quello corrente
-            if(month == getCurrentMonth() && year == getCurrentYear())
-                fabNext.hide()
-            else {
-                // cambio l'anno se siamo a dicembre
-                if(month == "Dicembre")
-                    year++
-                month = nextMonth(month)
-                monthTextView.text = month
-                yearTextView.text = year.toString()
-                updateAll(month, year)
-            }
-        }
+        //set selectedItem value because when we turn the screen the popup is created before the fragment
+        if (savedInstanceState != null)
+            selectedItem = savedInstanceState.getString("popupSelectedItem").toString()
+        else
+        //set the empty value of selectedItem
+            selectedItem = ""
+
+
+
         //popup visibility save instance
         if (savedInstanceState != null) {
             popupActive= savedInstanceState.getBoolean("popup_visibility")
-            selectedItem = savedInstanceState.getString("popupSelectedItem").toString()
 
             //If there was the popup when the activity was active, create it.
             if (popupActive) {

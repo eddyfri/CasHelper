@@ -32,6 +32,8 @@ import kotlin.collections.ArrayList
 import kotlin.properties.Delegates
 import android.util.Log
 import android.view.*
+import android.view.animation.AlphaAnimation
+import android.view.animation.Animation
 import androidx.core.view.MenuProvider
 import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
@@ -84,6 +86,8 @@ class OutflowFragment : Fragment(), MenuProvider {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enterTransition = MaterialFadeThrough()
+        exitTransition = MaterialFadeThrough()
+        reenterTransition = MaterialFadeThrough()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -130,14 +134,6 @@ class OutflowFragment : Fragment(), MenuProvider {
         recyclerView.adapter = OutflowListAdapter(itemByCategory, colorByCategory, rateArray, this)
         recyclerView.layoutManager = LinearLayoutManager(this.context, LinearLayoutManager.VERTICAL, false)
 
-
-
-        //set the empty value of selectedItem
-        selectedItem = ""
-
-        //set selectedItem value because when we turn the screen the popup is created before the fragment
-        if (savedInstanceState != null)
-            selectedItem = savedInstanceState.getString("popupSelectedItem").toString()
 
         return view
     }
@@ -213,6 +209,12 @@ class OutflowFragment : Fragment(), MenuProvider {
         //add MenuProvider
         activity?.addMenuProvider(this, viewLifecycleOwner, Lifecycle.State.RESUMED)
 
+
+        allItemOutflows = db.getItemsByType("Entrata", month, year)
+        allCategories = db.getCategoryName()
+        itemByCategory = getOutflowByCategory(allCategories, allItemOutflows)
+
+
         //imposto le textview di mese e anno nel mese e anno che mi vengono passati dalla schermata home
         monthTextView.text = month
         yearTextView.text = year.toString()
@@ -234,7 +236,23 @@ class OutflowFragment : Fragment(), MenuProvider {
             month = backMonth(month)
             monthTextView.text = month
             yearTextView.text = year.toString()
-            updateAll(month, year)
+            val anim = AlphaAnimation(1.0f, 0.0f)
+            anim.duration = 200
+            anim.repeatCount = 1
+            anim.repeatMode = Animation.REVERSE
+            anim.setAnimationListener(object : Animation.AnimationListener {
+                override fun onAnimationEnd(animation: Animation?) {}
+                override fun onAnimationStart(animation: Animation?) {}
+                override fun onAnimationRepeat(animation: Animation?) {
+                    updateAll(month, year)
+                }
+            })
+            monthTextView.startAnimation(anim)
+            yearTextView.startAnimation(anim)
+            fabBack.startAnimation(anim)
+            fabNext.startAnimation(anim)
+            recyclerView.startAnimation(anim)
+            pieChart.startAnimation(anim)
         }
         fabNext.setOnClickListener {
             // non posso andare più avanti del mese corrente, no mesi futuri
@@ -245,7 +263,23 @@ class OutflowFragment : Fragment(), MenuProvider {
                 month = nextMonth(month)
                 monthTextView.text = month
                 yearTextView.text = year.toString()
-                updateAll(month, year)
+                val anim = AlphaAnimation(1.0f, 0.0f)
+                anim.duration = 200
+                anim.repeatCount = 1
+                anim.repeatMode = Animation.REVERSE
+                anim.setAnimationListener(object : Animation.AnimationListener {
+                    override fun onAnimationEnd(animation: Animation?) {}
+                    override fun onAnimationStart(animation: Animation?) {}
+                    override fun onAnimationRepeat(animation: Animation?) {
+                        updateAll(month, year)
+                    }
+                })
+                monthTextView.startAnimation(anim)
+                yearTextView.startAnimation(anim)
+                fabBack.startAnimation(anim)
+                fabNext.startAnimation(anim)
+                recyclerView.startAnimation(anim)
+                pieChart.startAnimation(anim)
             }
             else
                 fabNext.hide()
@@ -256,37 +290,17 @@ class OutflowFragment : Fragment(), MenuProvider {
             fabNext.hide()
 
 
-        //imposto il pulsante per scegliere il mese precedente a quello selezionato
-        fabBack.setOnClickListener {
-            // cambio l'anno se siamo a gennaio
-            if(month == "Gennaio")
-                year--
-            month = backMonth(month)
-            monthTextView.text = month
-            yearTextView.text = year.toString()
-            updateAll(month, year)
-        }
+        //set selectedItem value because when we turn the screen the popup is created before the fragment
+        if (savedInstanceState != null)
+            selectedItem = savedInstanceState.getString("popupSelectedItem").toString()
+        else
+        //set the empty value of selectedItem
+            selectedItem = ""
 
-        //imposto il pulsante per scegliere il mese successivo a quello selezionato
-        fabNext.setOnClickListener {
-            //elimino la possibilità di scegliere dei mesi futuri a quello corrente
-            if(month == getCurrentMonth() && year == getCurrentYear())
-                fabNext.hide()
-            else {
-                // cambio l'anno se siamo a dicembre
-                if(month == "Dicembre")
-                    year++
-                month = nextMonth(month)
-                monthTextView.text = month
-                yearTextView.text = year.toString()
-                updateAll(month, year)
-            }
-        }
 
         //popup visibility save instance
         if (savedInstanceState != null) {
             popupActive= savedInstanceState.getBoolean("popup_visibility")
-            selectedItem = savedInstanceState.getString("popupSelectedItem").toString()
 
             //If there was the popup when the activity was active, create it.
             if (popupActive) {
