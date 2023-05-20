@@ -292,7 +292,7 @@ class OutflowFragment : Fragment(), MenuProvider {
 
         //set selectedItem value because when we turn the screen the popup is created before the fragment
         if (savedInstanceState != null)
-            selectedItem = savedInstanceState.getString("popupSelectedItem").toString()
+            selectedItem = savedInstanceState.getString("popupSelectedItem_Outflow").toString()
         else
         //set the empty value of selectedItem
             selectedItem = ""
@@ -300,7 +300,7 @@ class OutflowFragment : Fragment(), MenuProvider {
 
         //popup visibility save instance
         if (savedInstanceState != null) {
-            popupActive= savedInstanceState.getBoolean("popup_visibility")
+            popupActive= savedInstanceState.getBoolean("popup_visibility_Outflow")
 
             //If there was the popup when the activity was active, create it.
             if (popupActive) {
@@ -596,8 +596,11 @@ class OutflowFragment : Fragment(), MenuProvider {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putBoolean("popup_visibility", popupActive)
-        outState.putString("popupSelectedItem", selectedItem)
+        outState.putBoolean("popup_visibility_Outflow", popupActive)
+        if(popupActive)
+            outState.putString("popupSelectedItem_Outflow", selectedItem)
+        else
+            outState.putString("popupSelectedItem_Outflow", "")
     }
 
 }
