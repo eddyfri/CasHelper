@@ -210,7 +210,7 @@ class OutflowFragment : Fragment(), MenuProvider {
         activity?.addMenuProvider(this, viewLifecycleOwner, Lifecycle.State.RESUMED)
 
 
-        allItemOutflows = db.getItemsByType("Entrata", month, year)
+        allItemOutflows = db.getItemsByType("Uscita", month, year)
         allCategories = db.getCategoryName()
         itemByCategory = getOutflowByCategory(allCategories, allItemOutflows)
 
@@ -444,7 +444,7 @@ class OutflowFragment : Fragment(), MenuProvider {
         }
 
         //Set the container of the popup (the fragment that is in background of him)
-        val popupContainerView = (view as View).findViewById<View>(R.id.constraint_incoming)
+        val popupContainerView = (view as View).findViewById<View>(R.id.constraint_outflow)
 
         //when the popup is created automatic by the OutflowFragment.onViewCreated the activity is not created completely and return width = 0.
         //So, if the width is 0, this method slow the creation of the popup when width is initialized correctly
@@ -588,7 +588,7 @@ class OutflowFragment : Fragment(), MenuProvider {
         popup?.dismiss()  //close popup
         popupActive = restore //save the state of the popup
     }
-    
+
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
