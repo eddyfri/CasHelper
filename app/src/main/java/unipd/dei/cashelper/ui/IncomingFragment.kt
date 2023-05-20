@@ -124,6 +124,9 @@ class IncomingFragment : Fragment(), MenuProvider {
         recyclerView.layoutManager = LinearLayoutManager(this.context, LinearLayoutManager.VERTICAL, false)
 
 
+        //set the empty value of selectedItem
+        selectedItem = ""
+
         //set selectedItem value because when we turn the screen the popup is created before the fragment
         if (savedInstanceState != null)
             selectedItem = savedInstanceState.getString("popupSelectedItem").toString()
@@ -616,6 +619,7 @@ class IncomingFragment : Fragment(), MenuProvider {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putBoolean("popup_visibility", popupActive)
+        outState.putString("popupSelectedItem", selectedItem)
         outState.putString("popupSelectedItem", selectedItem)
     }
 
