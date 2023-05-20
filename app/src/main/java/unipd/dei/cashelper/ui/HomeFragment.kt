@@ -95,7 +95,13 @@ class HomeFragment: Fragment(), MenuProvider, HomeListAdapter.OnItemDeletedListe
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+
         val view = inflater.inflate(R.layout.fragment_home, container, false)
+
+        //Set the title in the action bar in the specific fragment
+        requireActivity().title = "CasHelper"
+        requireActivity().actionBar?.title = "CasHelper"
+
 
         //disable the backroll arrow --> done because the arrow stay in the home fragment after return on it
         (activity as MainActivity).supportActionBar?.setDisplayHomeAsUpEnabled(false)

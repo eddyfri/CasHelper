@@ -88,6 +88,10 @@ class OutflowFragment : Fragment(), MenuProvider {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
+        //Set the title in the action bar in the specific fragment
+        requireActivity().title = "Uscite"
+        requireActivity().actionBar?.title = "Uscite"
+
         //enable backroll arrow
         (activity as MainActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
 

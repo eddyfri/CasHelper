@@ -73,6 +73,10 @@ class AddItemFragment : Fragment(), MenuProvider {
         savedInstanceState: Bundle?
     ): View? {
 
+        //Set the title in the action bar in the specific fragment
+        requireActivity().title = "CasHelper"
+        requireActivity().actionBar?.title = "CasHelper"
+
         //enable backroll arrow
         (activity as MainActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
