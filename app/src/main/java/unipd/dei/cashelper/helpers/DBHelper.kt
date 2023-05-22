@@ -13,6 +13,7 @@ import unipd.dei.cashelper.WidgetApp
 class DBHelper(context: Context): SQLiteOpenHelper(context, DB_NAME, null, DB_VERSION) {
 
     private val appContext = context
+    private var prefCategory: ArrayList<String> = ArrayList<String>()
 
     override fun onCreate(db: SQLiteDatabase) {
         val categoryTable = "CREATE TABLE Categoria(\n" +
@@ -58,6 +59,7 @@ class DBHelper(context: Context): SQLiteOpenHelper(context, DB_NAME, null, DB_VE
         db.execSQL(dateTable)
         db.execSQL(itemTable)
         db.execSQL(categoryValues)
+        prefCategory = getCategoryName()
     }
 
     // non previsti aggiornamenti
@@ -72,6 +74,10 @@ class DBHelper(context: Context): SQLiteOpenHelper(context, DB_NAME, null, DB_VE
         val updateIntent = Intent(context, WidgetApp::class.java)
         updateIntent.action = AppWidgetManager.ACTION_APPWIDGET_UPDATE
         context.sendBroadcast(updateIntent)
+    }
+
+    fun isDefaultCategories(category: String): Boolean {
+        return prefCategory.contains(category)
     }
 
     fun addCategory(name: String): Boolean {
@@ -252,7 +258,6 @@ class DBHelper(context: Context): SQLiteOpenHelper(context, DB_NAME, null, DB_VE
     {
         private const val DB_NAME = "database.db"
         private const val DB_VERSION = 1
-        // private var observers: MutableMap<DatabaseObserver, Pair<AppWidgetManager, Int>> = mutableMapOf()
     }
 
     data class DateInfo(var changes: String) {

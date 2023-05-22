@@ -472,21 +472,23 @@ class HomeFragment: Fragment(), MenuProvider, HomeListAdapter.OnItemDeletedListe
             }
             R.id.themeMode -> {
                 // Change the theme
-                if(theme) {
+                if (theme) {
                     //if dark set light
                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
                     theme = false
-                }else {
+                } else {
                     //if light set dark
                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
                     theme = true
                 }
 
                 // Save the theme preference
-                val preferences = requireActivity().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
+                val preferences =
+                    requireActivity().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
                 val editor = preferences.edit()
                 editor.putBoolean("selectedTheme", theme)
                 editor.apply()
+            }
             R.id.Categorie -> {
                 val action = HomeFragmentDirections.actionHomeFragmentToCategoryFragment()
                 view?.findNavController()?.navigate(action)
