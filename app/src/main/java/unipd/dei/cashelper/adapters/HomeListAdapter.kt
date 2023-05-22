@@ -64,13 +64,6 @@ class HomeListAdapter(private val itemList: MutableList<DBHelper.ItemInfo>, priv
             itemDate.text = date
             itemView.setOnCreateContextMenuListener(this)
             itemView.tag = itemInfo.id
-            /*
-            itemView.setOnClickListener {
-                val action = HomeFragmentDirections.actionHomeFragmentToUpdateFragment(itemInfo.id)
-                itemView.findNavController().navigate(action)
-            }
-
-             */
         }
 
         override fun onCreateContextMenu(menu: ContextMenu?, v: View?, menuInfo: ContextMenu.ContextMenuInfo?) {

@@ -34,6 +34,10 @@
             android:id="@+id/action_homeFragment_to_outflowFragment"
             app:destination="@id/outflowFragment"
             />
+        <action
+            android:id="@+id/action_homeFragment_to_categoryFragment"
+            app:destination="@id/categoryFragment"
+            />
 
     </fragment>
     <fragment
@@ -90,6 +94,18 @@
             app:argType="integer" />
         <action
             android:id="@+id/action_outflowFragment_to_homeFragment"
+            app:destination="@id/homeFragment"
+            />
+    </fragment>
+
+    <fragment
+        android:id="@+id/categoryFragment"
+        android:name="unipd.dei.cashelper.ui.UpdateCategoryFragment"
+        android:label="Category"
+        tools:layout="@layout/fragment_category"
+        >
+        <action
+            android:id="@+id/action_categoryFragment_to_homeFragment"
             app:destination="@id/homeFragment"
             />
     </fragment>

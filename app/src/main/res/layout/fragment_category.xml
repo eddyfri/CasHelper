@@ -10,7 +10,7 @@
     >
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidline_category0"
+        android:id="@+id/guideline_category0"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal"
@@ -26,7 +26,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/guidline_category0"
+        app:layout_constraintBottom_toTopOf="@id/guideline_category0"
         />
 
     <LinearLayout
@@ -37,7 +37,9 @@
         android:layout_marginStart="10pt"
         android:layout_marginEnd="10pt"
         android:layout_marginTop="5pt"
-        app:layout_constraintTop_toBottomOf="@id/guidline_category0"
+        android:layout_marginBottom="5pt"
+        app:layout_constraintTop_toBottomOf="@id/guideline_category0"
+        app:layout_constraintBottom_toBottomOf="parent"
         >
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view_category"

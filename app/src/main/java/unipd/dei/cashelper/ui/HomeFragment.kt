@@ -463,7 +463,7 @@ class HomeFragment: Fragment(), MenuProvider, HomeListAdapter.OnItemDeletedListe
     override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
         when(menuItem.itemId){
             R.id.Spese -> {
-                val action =HomeFragmentDirections.actionHomeFragmentToOutflowFragment(month, year)
+                val action = HomeFragmentDirections.actionHomeFragmentToOutflowFragment(month, year)
                 view?.findNavController()?.navigate(action)
             }
             R.id.Entrate -> {
@@ -487,6 +487,9 @@ class HomeFragment: Fragment(), MenuProvider, HomeListAdapter.OnItemDeletedListe
                 val editor = preferences.edit()
                 editor.putBoolean("selectedTheme", theme)
                 editor.apply()
+            R.id.Categorie -> {
+                val action = HomeFragmentDirections.actionHomeFragmentToCategoryFragment()
+                view?.findNavController()?.navigate(action)
             }
         }
         return true
