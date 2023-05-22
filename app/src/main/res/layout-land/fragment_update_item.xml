@@ -3,10 +3,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:theme="@style/Theme.CasHelper"
     android:background="?attr/backgroundColor"
-    android:id="@+id/Constraint_add_item"
-    android:clickable="true"
-    android:onClick="hideKeyboard">
+    android:id="@+id/constraint_update_item">
+
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline25_horizontal"
         android:layout_width="wrap_content"
@@ -27,23 +27,25 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.5"/>
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/guideline25_horizontal"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:text="@string/add_title"
+        android:text="@string/update_item"
         android:theme="@style/TitleStyle"
         />
+
     <androidx.appcompat.widget.SwitchCompat
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/guideline25_horizontal"
         app:layout_constraintEnd_toStartOf="@id/midline_vertical"
-        android:id="@+id/Switch_add_item"
+        android:id="@+id/Switch_update_item"
         android:checked="false"
         android:textOff="@string/exits_add_item"
         android:textOn="@string/incoming_add_item"
@@ -53,28 +55,32 @@
         android:scaleX="1.2"
         android:scaleY="1.2"
         />
+
     <Spinner
-        android:id="@+id/category_select"
+        android:id="@+id/category_select_update"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:minHeight="48dp"
         android:gravity="center"
-        app:layout_constraintTop_toBottomOf="@id/midline_horizontal"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/midline_horizontal"
         app:layout_constraintEnd_toStartOf="@id/midline_vertical"
-        android:contentDescription="Seleziona categoria"/>
+        android:contentDescription="Categorie"
+        />
+
     <Button
-        android:id="@+id/add_category"
+        android:id="@+id/update_category"
         app:icon="@drawable/add_fab_home"
         android:layout_width="55dp"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toEndOf="@id/category_select"
+        app:layout_constraintStart_toEndOf="@id/category_select_update"
         app:layout_constraintTop_toBottomOf="@id/midline_horizontal"
         android:gravity="center"
         android:contentDescription="Aggiungi categoria"
         />
+
     <EditText
-        android:id="@+id/value_add_item"
+        android:id="@+id/value_update_item"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:hint="@string/value_add"
@@ -92,16 +98,17 @@
         android:layout_height="wrap_content"
         android:src="@drawable/baseline_euro"
         android:layout_margin="15dp"
-        app:layout_constraintStart_toEndOf="@id/value_add_item"
+        app:layout_constraintStart_toEndOf="@id/value_update_item"
         app:layout_constraintBottom_toBottomOf="parent"
         />
+
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_margin="10dp"
         app:layout_constraintStart_toEndOf="@id/midline_vertical"
         app:layout_constraintTop_toBottomOf="@id/guideline25_horizontal"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_margin="10dp"
         app:counterMaxLength="50"
         app:counterEnabled="true">
 
@@ -110,45 +117,48 @@
             android:layout_height="wrap_content"
             android:inputType="textMultiLine"
             android:hint="@string/description_add"
-            android:id="@+id/description_add_item"
+            android:id="@+id/description_update_item"
             android:maxLength="50"
 
             />
     </com.google.android.material.textfield.TextInputLayout>
-
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/container_home"
         android:layout_marginTop="5dp"
+        app:layout_constraintStart_toEndOf="@id/midline_vertical"
         app:layout_constraintTop_toBottomOf="@id/midline_horizontal"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@id/midline_vertical"
         android:backgroundTint="@color/violet"
-        android:id="@+id/date_add_item"
-        android:contentDescription="Calendario"/>
+        android:id="@+id/date_update_item"
+        android:contentDescription="Calendario"
+        />
+
     <Button
-        android:id="@+id/confirm_button"
+        android:id="@+id/update_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/container_add_button"
-        android:text="@string/confirm_button"
+        android:text="@string/update_button"
         style = "@style/add_button"
         android:layout_margin="10dp"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:enabled="false"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+
         />
 
     <Button
         android:id="@+id/delete_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
         android:background="@drawable/container_delete_button"
         android:text="@string/delete_button"
         style="@style/delete_button"
+        android:layout_margin="10dp"
+        app:layout_constraintStart_toEndOf="@id/midline_vertical"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="@id/midline_vertical"
         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
