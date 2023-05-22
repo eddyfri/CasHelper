@@ -59,7 +59,6 @@ class DBHelper(context: Context): SQLiteOpenHelper(context, DB_NAME, null, DB_VE
         db.execSQL(dateTable)
         db.execSQL(itemTable)
         db.execSQL(categoryValues)
-        prefCategory = getCategoryName()
     }
 
     // non previsti aggiornamenti

@@ -73,6 +73,10 @@
         <item name="android:icon">@drawable/basket_dark</item>
     </style>
 
+    <style name="Delete_category">
+        <item name="android:background">@drawable/basket_dark</item>
+    </style>
+
     <style name="MenuStyle_empty" parent="Widget.AppCompat.ActionButton.Overflow">
     <item name="android:icon">@drawable/backroll_dark</item>
     </style>

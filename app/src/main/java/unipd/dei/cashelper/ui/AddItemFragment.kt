@@ -338,11 +338,11 @@ class AddItemFragment : Fragment(), MenuProvider {
     }
 
 
-    override fun onPause() {
+  /* override fun onPause() {
         super.onPause()
         //when return to the home fragment show the app bar
         (requireActivity() as AppCompatActivity).supportActionBar?.show()
-    }
+    }*/
 
     private fun hideKeyboard(view: View) {
         val hide = view.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager

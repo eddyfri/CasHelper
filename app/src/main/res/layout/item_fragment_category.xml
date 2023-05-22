@@ -2,13 +2,11 @@
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:clickable="true"
     android:focusable="true"
-    android:background="?attr/selectableItemBackground"
-    style="@style/MenuStyle_update">
+    android:background="?attr/selectableItemBackground">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -36,12 +34,13 @@
             android:id="@+id/delete_basket"
             android:layout_width="48dp"
             android:layout_height="wrap_content"
-            app:icon="@drawable/basket_light"
+            android:layout_gravity="end"
             android:gravity="center"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             android:contentDescription="Elimina"
+            style = "@style/Delete_category"
             />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

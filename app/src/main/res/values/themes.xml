@@ -55,6 +55,11 @@
         <item name="android:icon">@drawable/night</item>
     </style>
 
+    <style name="Delete_category" parent="Widget.MaterialComponents.Button">
+        <item name="android:background">@drawable/basket_light</item>
+        <item name="android:backgroundTint">@color/black</item>
+    </style>
+
 
     <style name="MenuStyle_empty" parent="Widget.AppCompat.ActionButton.Overflow">
         <item name="android:icon">@drawable/backroll_light</item>
