@@ -20,4 +20,11 @@
         android:id="@+id/Crediti"
         app:showAsAction="never"
         android:title="@string/menu_crediti"/>
+
+    <item
+        android:id="@+id/themeMode"
+        app:showAsAction="ifRoom"
+        android:title="Tema"
+        style= "@style/MenuStyle_mode"
+        />
 </menu>

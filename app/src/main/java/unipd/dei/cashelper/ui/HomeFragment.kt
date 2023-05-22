@@ -37,6 +37,7 @@ import android.view.animation.AlphaAnimation
 import android.view.animation.Animation
 import android.widget.ImageView
 import androidx.activity.addCallback
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
 import com.github.mikephil.charting.animation.Easing
@@ -71,6 +72,10 @@ class HomeFragment: Fragment(), MenuProvider, HomeListAdapter.OnItemDeletedListe
     private lateinit var month : String
     private var year by Delegates.notNull<Int>()
 
+    //light/dark theme
+    private var theme = false //false = light
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -92,6 +97,16 @@ class HomeFragment: Fragment(), MenuProvider, HomeListAdapter.OnItemDeletedListe
         enterTransition = MaterialFadeThrough()
         exitTransition = MaterialFadeThrough()
         reenterTransition = MaterialFadeThrough()
+
+        //set theme
+        val preferences = requireActivity().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
+        //first time preferences -> false so set the light mode
+        theme = preferences.getBoolean("selectedTheme", theme)
+        if(theme)
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+        else
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -101,6 +116,9 @@ class HomeFragment: Fragment(), MenuProvider, HomeListAdapter.OnItemDeletedListe
         //Set the title in the action bar in the specific fragment
         requireActivity().title = "CasHelper"
         requireActivity().actionBar?.title = "CasHelper"
+
+
+
 
 
         //disable the backroll arrow --> done because the arrow stay in the home fragment after return on it
@@ -451,6 +469,24 @@ class HomeFragment: Fragment(), MenuProvider, HomeListAdapter.OnItemDeletedListe
             R.id.Entrate -> {
                 val action = HomeFragmentDirections.actionHomeFragmentToIncomingFragment(month, year)
                 view?.findNavController()?.navigate(action)
+            }
+            R.id.themeMode -> {
+                // Change the theme
+                if(theme) {
+                    //if dark set light
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                    theme = false
+                }else {
+                    //if light set dark
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                    theme = true
+                }
+
+                // Save the theme preference
+                val preferences = requireActivity().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
+                val editor = preferences.edit()
+                editor.putBoolean("selectedTheme", theme)
+                editor.apply()
             }
         }
         return true

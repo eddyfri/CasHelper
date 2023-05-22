@@ -65,6 +65,10 @@
         <item name="android:textStyle">bold</item>
     </style>
 
+    <style name="MenuStyle_mode" parent="Widget.AppCompat.ActionButton.Overflow">
+        <item name="android:icon">@drawable/day</item>
+    </style>
+
     <style name="MenuStyle_update" parent="Widget.AppCompat.ActionButton.Overflow">
         <item name="android:icon">@drawable/basket_dark</item>
     </style>

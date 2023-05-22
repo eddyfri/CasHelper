@@ -50,6 +50,12 @@
         <item name="android:icon">@drawable/basket_light</item>
     </style>
 
+
+    <style name="MenuStyle_mode" parent="Widget.AppCompat.ActionButton.Overflow">
+        <item name="android:icon">@drawable/night</item>
+    </style>
+
+
     <style name="MenuStyle_empty" parent="Widget.AppCompat.ActionButton.Overflow">
         <item name="android:icon">@drawable/backroll_light</item>
     </style>

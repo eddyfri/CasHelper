@@ -39,4 +39,14 @@ class MainActivity : AppCompatActivity() {
             navController.navigate(action)
         }
     }
+
+    //animation when change theme mode
+    override fun recreate() {
+        finish()
+        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+
+        startActivity(intent)
+        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+        super.recreate()
+    }
 }
