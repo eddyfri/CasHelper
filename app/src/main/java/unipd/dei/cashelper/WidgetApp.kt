@@ -46,10 +46,6 @@ class WidgetApp : AppWidgetProvider() {
         private const val PREFS_NAME = "WidgetPrefs"
         private const val KEY_WIDGET_IDS = "widgetIds"
     }
-
-    // Metodo che viene chiamato dal sistema Android quando un'applicazione Widget deve essere aggiornata.
-    // Questo metodo viene definito all'interno di una classe che estende AppWidgetProvider,
-    // e si occupa di aggiornare l'interfaccia utente del widget
     override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray) {
         // Crea il PieChart e imposta i dati e la configurazione
         val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
@@ -64,62 +60,14 @@ class WidgetApp : AppWidgetProvider() {
         updateIntent.action = AppWidgetManager.ACTION_APPWIDGET_UPDATE
         updateIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, appWidgetIds)
 
-        if(!::serviceIntent.isInitialized) {
-            Log.d(TAG, "onUpdate(), serviceIntent non inizializzato")
+        if(!::serviceIntent.isInitialized)
             serviceIntent = Intent(context, ListWidgetService::class.java)
-        }
 
         // Crea un PendingIntent per l'Intent
         var pendingUpdateIntent = PendingIntent.getBroadcast(context, 0, updateIntent, PendingIntent.FLAG_IMMUTABLE)
 
         for(appWidgetId in appWidgetIds) {
-            // db.addObserver(this, appWidgetManager, appWidgetId)
-
-            val itemInfo: MutableList<DBHelper.ItemInfo>
-            itemInfo = db.getItem(getCurrentMonth(), getCurrentYear())
-            Log.d(TAG, "prima inizializzazione pieChart")
-            pieChart = PieChart(context)
-            Log.d(TAG, "dopo inizializzazione pieChart")
-            // Crea una Bitmap del PieChart
-            val width = 400 // Larghezza della Bitmap
-            val height = 400 // Altezza della Bitmap
-            val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
-            val canvas = Canvas(bitmap)
-
-            val intent = Intent(context, MainActivity::class.java)
-            val pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
-
-            smallView = RemoteViews(context.packageName, R.layout.widget_app)
-            updatePieChartWidget(itemInfo, context)
-            // Imposta la Bitmap come immagine della ImageView all'interno della RemoteViews
-            smallView.setImageViewBitmap(R.id.pieChartWidget, bitmap)
-            pieChart.layout(0, 0, width, height)
-            pieChart.draw(canvas)
-            smallView.setOnClickPendingIntent(R.id.widget_container, pendingIntent)
-            wideView = RemoteViews(context.packageName, R.layout.widget_app_wide)
-            wideView.setImageViewBitmap(R.id.pieChartWidgetWide, bitmap)
-            pieChart.layout(0, 0, width, height)
-            pieChart.draw(canvas)
-            wideView.setTextViewText(R.id.month_year_widget_text, "${getCurrentMonth()} ${getCurrentYear()}")
-            wideView.setTextViewText(R.id.incoming_widget_text, "Entrate: ${getIncoming(itemInfo)} €")
-            wideView.setTextViewText(R.id.outflow_widget_text, "Uscite: ${getExits(itemInfo)} €")
-            wideView.setTextViewText(R.id.total_widget_text, "Totale: ${getTotal(itemInfo)} €")
-            wideView.setOnClickPendingIntent(R.id.widget_container, pendingIntent)
-            val buttonIntent = Intent(context, MainActivity::class.java)
-            buttonIntent.action = "OPEN_ADD_ITEM_FRAGMENT"
-            val pendingButtonIntent = PendingIntent.getActivity(context, 0, buttonIntent, PendingIntent.FLAG_IMMUTABLE)
-            wideView.setOnClickPendingIntent(R.id.add_item_widget, pendingButtonIntent)
-            tallView = RemoteViews(context.packageName, R.layout.widget_app_tall)
-            tallView.setImageViewBitmap(R.id.pieChartWidgetTall, bitmap)
-            pieChart.layout(0, 0, width, height)
-            pieChart.draw(canvas)
-            tallView.setTextViewText(R.id.month_year_widget_text, "${getCurrentMonth()} ${getCurrentYear()}")
-            tallView.setTextViewText(R.id.incoming_widget_text, "Entrate: ${getIncoming(itemInfo)} €")
-            tallView.setTextViewText(R.id.outflow_widget_text, "Uscite: ${getExits(itemInfo)} €")
-            tallView.setTextViewText(R.id.total_widget_text, "Totale: ${getTotal(itemInfo)} €")
-            tallView.setOnClickPendingIntent(R.id.widget_container, pendingIntent)
-            tallView.setOnClickPendingIntent(R.id.add_item_widget, pendingButtonIntent)
-
+            updateWidget(context)
             serviceIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
             serviceIntent.data = Uri.parse(serviceIntent.toUri(Intent.URI_INTENT_SCHEME))
             tallView.setRemoteAdapter(R.id.item_list_widget, serviceIntent)
@@ -138,8 +86,6 @@ class WidgetApp : AppWidgetProvider() {
 
     override fun onReceive(context: Context, intent: Intent) {
         super.onReceive(context, intent)
-        Log.d(TAG, "onReceive: Aggiornamento Widget")
-        Log.d(TAG, "ACTION: $intent.action")
         db = DBHelper(context as Context)
         if(intent.action == AppWidgetManager.ACTION_APPWIDGET_UPDATE) {
             val appWidgetManager = AppWidgetManager.getInstance(context)
@@ -149,51 +95,7 @@ class WidgetApp : AppWidgetProvider() {
 
             widgetIds?.let { widgetIds ->
                 for(appWidgetId in widgetIds) {
-                    Log.d(TAG, "AGGIORNAMENTO WIDGET")
-                    val itemInfo: MutableList<DBHelper.ItemInfo>
-                    itemInfo = db.getItem(getCurrentMonth(), getCurrentYear())
-                    Log.d(TAG, "prima inizializzazione pieChart")
-                    pieChart = PieChart(context)
-                    Log.d(TAG, "dopo inizializzazione pieChart")
-                    // Crea una Bitmap del PieChart
-                    val width = 400 // Larghezza della Bitmap
-                    val height = 400 // Altezza della Bitmap
-                    val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
-                    val canvas = Canvas(bitmap)
-
-                    val intent = Intent(context, MainActivity::class.java)
-                    val pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
-
-                    smallView = RemoteViews(context.packageName, R.layout.widget_app)
-                    updatePieChartWidget(itemInfo, context)
-                    // Imposta la Bitmap come immagine della ImageView all'interno della RemoteViews
-                    smallView.setImageViewBitmap(R.id.pieChartWidget, bitmap)
-                    pieChart.layout(0, 0, width, height)
-                    pieChart.draw(canvas)
-                    smallView.setOnClickPendingIntent(R.id.widget_container, pendingIntent)
-                    wideView = RemoteViews(context.packageName, R.layout.widget_app_wide)
-                    wideView.setImageViewBitmap(R.id.pieChartWidgetWide, bitmap)
-                    pieChart.layout(0, 0, width, height)
-                    pieChart.draw(canvas)
-                    wideView.setTextViewText(R.id.month_year_widget_text, "${getCurrentMonth()} ${getCurrentYear()}")
-                    wideView.setTextViewText(R.id.incoming_widget_text, "Entrate: ${getIncoming(itemInfo)} €")
-                    wideView.setTextViewText(R.id.outflow_widget_text, "Uscite: ${getExits(itemInfo)} €")
-                    wideView.setTextViewText(R.id.total_widget_text, "Totale: ${getTotal(itemInfo)} €")
-                    wideView.setOnClickPendingIntent(R.id.widget_container, pendingIntent)
-                    val buttonIntent = Intent(context, MainActivity::class.java)
-                    buttonIntent.action = "OPEN_ADD_ITEM_FRAGMENT"
-                    val pendingButtonIntent = PendingIntent.getActivity(context, 0, buttonIntent, PendingIntent.FLAG_IMMUTABLE)
-                    wideView.setOnClickPendingIntent(R.id.add_item_widget, pendingButtonIntent)
-                    tallView = RemoteViews(context.packageName, R.layout.widget_app_tall)
-                    tallView.setImageViewBitmap(R.id.pieChartWidgetTall, bitmap)
-                    pieChart.layout(0, 0, width, height)
-                    pieChart.draw(canvas)
-                    tallView.setTextViewText(R.id.month_year_widget_text, "${getCurrentMonth()} ${getCurrentYear()}")
-                    tallView.setTextViewText(R.id.incoming_widget_text, "Entrate: ${getIncoming(itemInfo)} €")
-                    tallView.setTextViewText(R.id.outflow_widget_text, "Uscite: ${getExits(itemInfo)} €")
-                    tallView.setTextViewText(R.id.total_widget_text, "Totale: ${getTotal(itemInfo)} €")
-                    tallView.setOnClickPendingIntent(R.id.widget_container, pendingIntent)
-                    tallView.setOnClickPendingIntent(R.id.add_item_widget, pendingButtonIntent)
+                    updateWidget(context)
                     tallView.setRemoteAdapter(R.id.item_list_widget, Intent(context, ListWidgetService::class.java))
                     appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetId, R.id.item_list_widget)
                     appWidgetManager.updateAppWidget(appWidgetId, tallView)
@@ -211,7 +113,6 @@ class WidgetApp : AppWidgetProvider() {
     }
 
     private fun createPieChartWidget(itemInfo: MutableList<DBHelper.ItemInfo>, context: Context) {
-        Log.d(TAG, "sono in createPieChartWidget")
         val totIncoming = getIncoming(itemInfo)
         val totExits = getExits(itemInfo)
         //entries values
@@ -245,31 +146,49 @@ class WidgetApp : AppWidgetProvider() {
         pieChart.setTransparentCircleAlpha(0)
     }
 
-    private fun updatePieChartWidget(itemInfo: MutableList<DBHelper.ItemInfo>, context: Context) {
-        val totIncoming = getIncoming(itemInfo)
-        val totExits = getExits(itemInfo)
-        if(!::entries.isInitialized) {
-            Log.d(TAG, "sono in updatePieChart ma adesso vado in create")
-            createPieChartWidget(itemInfo, context)
-            return
-        }
-        entries.clear()
-        entries.add(PieEntry(totIncoming.toFloat(), "Entrate"))
-        entries.add(PieEntry(totExits.toFloat(), "Uscite"))
-        set = PieDataSet(entries, "")
-        data = PieData(set)
-        pieChart.data = data
-        val colors: MutableList<Int> = ArrayList()
-        val exitColor = ContextCompat.getColor(context, R.color.Entries)
-        colors.add(exitColor)
-        val entriesColor = ContextCompat.getColor(context, R.color.Exits)
-        colors.add(entriesColor)
-        set.colors = colors
-        pieChart.data.setValueTextSize(0f)
-        data.notifyDataChanged()
-        set.notifyDataSetChanged()
-        pieChart.notifyDataSetChanged()
-        pieChart.invalidate()
+    private fun updateWidget(context: Context) {
+        val itemInfo: MutableList<DBHelper.ItemInfo>
+        itemInfo = db.getItem(getCurrentMonth(), getCurrentYear())
+        pieChart = PieChart(context)
+        // Crea una Bitmap del PieChart
+        val width = 400 // Larghezza della Bitmap
+        val height = 400 // Altezza della Bitmap
+        val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(bitmap)
+
+        val intent = Intent(context, MainActivity::class.java)
+        val pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
+
+        smallView = RemoteViews(context.packageName, R.layout.widget_app)
+        createPieChartWidget(itemInfo, context)
+        // Imposta la Bitmap come immagine della ImageView all'interno della RemoteViews
+        smallView.setImageViewBitmap(R.id.pieChartWidget, bitmap)
+        pieChart.layout(0, 0, width, height)
+        pieChart.draw(canvas)
+        smallView.setOnClickPendingIntent(R.id.widget_container, pendingIntent)
+        wideView = RemoteViews(context.packageName, R.layout.widget_app_wide)
+        wideView.setImageViewBitmap(R.id.pieChartWidgetWide, bitmap)
+        pieChart.layout(0, 0, width, height)
+        pieChart.draw(canvas)
+        wideView.setTextViewText(R.id.month_year_widget_text, "${getCurrentMonth()} ${getCurrentYear()}")
+        wideView.setTextViewText(R.id.incoming_widget_text, "Entrate: ${getIncoming(itemInfo)} €")
+        wideView.setTextViewText(R.id.outflow_widget_text, "Uscite: ${getExits(itemInfo)} €")
+        wideView.setTextViewText(R.id.total_widget_text, "Totale: ${getTotal(itemInfo)} €")
+        wideView.setOnClickPendingIntent(R.id.widget_container, pendingIntent)
+        val buttonIntent = Intent(context, MainActivity::class.java)
+        buttonIntent.action = "OPEN_ADD_ITEM_FRAGMENT"
+        val pendingButtonIntent = PendingIntent.getActivity(context, 0, buttonIntent, PendingIntent.FLAG_IMMUTABLE)
+        wideView.setOnClickPendingIntent(R.id.add_item_widget, pendingButtonIntent)
+        tallView = RemoteViews(context.packageName, R.layout.widget_app_tall)
+        tallView.setImageViewBitmap(R.id.pieChartWidgetTall, bitmap)
+        pieChart.layout(0, 0, width, height)
+        pieChart.draw(canvas)
+        tallView.setTextViewText(R.id.month_year_widget_text, "${getCurrentMonth()} ${getCurrentYear()}")
+        tallView.setTextViewText(R.id.incoming_widget_text, "Entrate: ${getIncoming(itemInfo)} €")
+        tallView.setTextViewText(R.id.outflow_widget_text, "Uscite: ${getExits(itemInfo)} €")
+        tallView.setTextViewText(R.id.total_widget_text, "Totale: ${getTotal(itemInfo)} €")
+        tallView.setOnClickPendingIntent(R.id.widget_container, pendingIntent)
+        tallView.setOnClickPendingIntent(R.id.add_item_widget, pendingButtonIntent)
     }
 
     private fun getIncoming(itemInfo: MutableList<DBHelper.ItemInfo>): Double {
@@ -292,69 +211,6 @@ class WidgetApp : AppWidgetProvider() {
 
     private fun getTotal(itemInfo: MutableList<DBHelper.ItemInfo>): Double = getIncoming(itemInfo) - getExits(itemInfo)
 
-    /*
-    fun changeWidget(context: Context, appWidgetId: Int) {
-        Log.d(TAG, "AGGIORNAMENTO WIDGET")
-        // aggiornare widget
-        val itemInfo = db.getItem(getCurrentMonth(), getCurrentYear())
-        // Crea una Bitmap del PieChart
-        val width = 400 // Larghezza della Bitmap
-        val height = 400 // Altezza della Bitmap
-        val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
-        val canvas = Canvas(bitmap)
-        Log.d(TAG, "itemInfo: $itemInfo")
-        Log.d(TAG, "change widget: incomings=${getIncoming(itemInfo)}, outflows=${getExits(itemInfo)}")
-        smallView = RemoteViews(context.packageName, R.layout.widget_app)
-        updatePieChartWidget(itemInfo, context)
-        // Imposta la Bitmap come immagine della ImageView all'interno della RemoteViews
-        smallView.setImageViewBitmap(R.id.pieChartWidget, bitmap)
-        pieChart.layout(0, 0, width, height)
-        pieChart.draw(canvas)
-        appWidgetManager.updateAppWidget(appWidgetId, smallView)
-        wideView = RemoteViews(context.packageName, R.layout.widget_app_wide)
-        wideView.setImageViewBitmap(R.id.pieChartWidgetWide, bitmap)
-        pieChart.layout(0, 0, width, height)
-        pieChart.draw(canvas)
-        wideView.setTextViewText(R.id.incoming_widget_text, "Entrate: ${getIncoming(itemInfo)} €")
-        wideView.setTextViewText(R.id.outflow_widget_text, "Uscite: ${getExits(itemInfo)} €")
-        wideView.setTextViewText(R.id.total_widget_text, "Totale: ${getTotal(itemInfo)} €")
-        appWidgetManager.updateAppWidget(appWidgetId, wideView)
-        tallView = RemoteViews(context.packageName, R.layout.widget_app_tall)
-        tallView.setImageViewBitmap(R.id.pieChartWidgetTall, bitmap)
-        pieChart.layout(0, 0, width, height)
-        pieChart.draw(canvas)
-        tallView.setTextViewText(R.id.incoming_widget_text, "Entrate: ${getIncoming(itemInfo)} €")
-        tallView.setTextViewText(R.id.outflow_widget_text, "Uscite: ${getExits(itemInfo)} €")
-        tallView.setTextViewText(R.id.total_widget_text, "Totale: ${getTotal(itemInfo)} €")
-        appWidgetManager.updateAppWidget(appWidgetId, tallView)
-        serviceIntent.data = Uri.parse(serviceIntent.toUri(Intent.URI_INTENT_SCHEME))
-        tallView.setRemoteAdapter(R.id.item_list_widget, serviceIntent)
-        val viewMapping: Map<SizeF, RemoteViews> = mapOf(
-            SizeF(140f, 110f) to smallView,
-            SizeF(270f, 110f) to wideView,
-            SizeF(140f, 280f) to tallView
-        )
-        remoteViews = RemoteViews(viewMapping)
-        appWidgetManager.updateAppWidget(appWidgetId, remoteViews)
-    }
-
-     */
-
-}
-
-// Metodo che consente di aggiornare direttamente l'interfaccia utente di un singolo widget, senza dover passare attraverso il sistema Android.
-// Questo metodo viene chiamato all'interno di una classe che estende AppWidgetProvider,
-// o all'interno di un'attività o di un servizio, per aggiornare l'interfaccia utente di un widget specifico
-internal fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManager, appWidgetId: Int) {
-    /*
-    val widgetText = context.getString(R.string.appwidget_text)
-    // Construct the RemoteViews object
-    val views = RemoteViews(context.packageName, R.layout.widget_app)
-    views.setTextViewText(R.id.appwidget_text, widgetText)
-
-    // Instruct the widget manager to update the widget
-    appWidgetManager.updateAppWidget(appWidgetId, views)
-     */
 }
 
 private fun getCurrentMonth() : String {
