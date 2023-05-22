@@ -67,26 +67,6 @@ class DBHelper(context: Context): SQLiteOpenHelper(context, DB_NAME, null, DB_VE
     override fun onConfigure(db: SQLiteDatabase) {
         db.setForeignKeyConstraintsEnabled(true)
     }
-
-    /*
-    fun addObserver(observer: DatabaseObserver, appWidgetManager: AppWidgetManager, appWidgetId: Int) {
-        Log.d(TAG, "aggiunto osservatore")
-        observers[observer] = Pair(appWidgetManager, appWidgetId)
-        Log.d(TAG, "observers: $observers")
-    }
-
-    private fun removeObserver(observer: DatabaseObserver) {
-        observers.remove(observer)
-    }
-
-    private fun notifyWidgetChange() {
-        Log.d(TAG, "sono in notifyWidgetChange, observers: $observers")
-        observers.forEach { (observer, pair) ->
-            Log.d(TAG, "notifico osservatore")
-            observer.changeWidget(appContext, pair.first, pair.second)
-        }
-    }
-*/
     fun sendWidgetUpdateBroadcast(context: Context) {
 
         val updateIntent = Intent(context, WidgetApp::class.java)
@@ -176,11 +156,16 @@ class DBHelper(context: Context): SQLiteOpenHelper(context, DB_NAME, null, DB_VE
         return check
     }
 
-
-    // DA TESTARE !!!
     fun removeItem(originalId: Int): Boolean {
         val check = writableDatabase.delete("Item", "Id=?", arrayOf("$originalId")) > 0
         // notifyWidgetChange()
+        sendWidgetUpdateBroadcast(appContext)
+        return check
+    }
+
+    // testare!!
+    fun removeCategory(nomeCategoria: String): Boolean {
+        val check = writableDatabase.delete("Categoria", "Nome=?", arrayOf("$nomeCategoria")) > 0
         sendWidgetUpdateBroadcast(appContext)
         return check
     }
