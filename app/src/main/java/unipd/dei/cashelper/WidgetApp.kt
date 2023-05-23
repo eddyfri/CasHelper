@@ -138,21 +138,12 @@ class WidgetApp : AppWidgetProvider() {
         //delete description
         pieChart.description.text = ""
 
-        //legend color & hole color
-        val configuration = context.resources.configuration
-        val currentNightMode = configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
-        if (currentNightMode == Configuration.UI_MODE_NIGHT_YES) {
-            pieChart.legend.textColor = ContextCompat.getColor(context, R.color.white)
-            pieChart.setHoleColor(ContextCompat.getColor(context, R.color.black_hole))
-        }
-        else {
-            pieChart.legend.textColor = ContextCompat.getColor(context, R.color.black)
-            pieChart.setHoleColor(ContextCompat.getColor(context, R.color.white))
-        }
+        pieChart.legend.textColor = ContextCompat.getColor(context, R.color.legend)
 
 
         //hole
         pieChart.holeRadius = 30f
+        pieChart.setHoleColor(ContextCompat.getColor(context, R.color.legend))
         pieChart.setTransparentCircleAlpha(0)
     }
 
@@ -161,18 +152,6 @@ class WidgetApp : AppWidgetProvider() {
         itemInfo = db.getItem(getCurrentMonth(), getCurrentYear())
         pieChart = PieChart(context)
 
-        //legend color & hole color
-        val configuration = context.resources.configuration
-        val currentNightMode = configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
-        if (currentNightMode == Configuration.UI_MODE_NIGHT_YES) {
-            pieChart.legend.textColor = ContextCompat.getColor(context, R.color.white)
-            pieChart.setHoleColor(ContextCompat.getColor(context, R.color.black_hole))
-        }
-        else {
-            pieChart.legend.textColor = ContextCompat.getColor(context, R.color.black)
-            pieChart.setHoleColor(ContextCompat.getColor(context, R.color.white))
-        }
-        
         // Crea una Bitmap del PieChart
         val width = 400 // Larghezza della Bitmap
         val height = 400 // Altezza della Bitmap

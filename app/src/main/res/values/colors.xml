@@ -103,6 +103,6 @@
     <color name="thumbFalse">#FF9C9C</color>
 
     <!--pieChart Legend-->
-    <color name="black_hole">#434343</color>
+    <color name="legend">#727070</color>
 
 </resources>
