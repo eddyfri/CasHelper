@@ -8,6 +8,7 @@ import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
@@ -80,7 +81,6 @@ class WidgetApp : AppWidgetProvider() {
             remoteViews = RemoteViews(viewMapping)
             appWidgetManager.updateAppWidget(appWidgetId, remoteViews)
         }
-        //brutto ma funziona, risolve problema di visualizzazione strana del primo widget creato
         db.sendWidgetUpdateBroadcast(context)
     }
 
@@ -133,14 +133,24 @@ class WidgetApp : AppWidgetProvider() {
         set.colors = colors
         //not draw labels
         pieChart.setDrawEntryLabels(false)
-        //enable percent values
-        pieChart.setUsePercentValues(true)
-        //set Entry label's color (temporally dis-activated)
-        pieChart.data.setValueTextColor(Color.rgb(255, 255, 255))
-        //set Entry text
+        //disable text value
         pieChart.data.setValueTextSize(0f)
         //delete description
         pieChart.description.text = ""
+
+        //legend color & hole color
+        val configuration = context.resources.configuration
+        val currentNightMode = configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+        if (currentNightMode == Configuration.UI_MODE_NIGHT_YES) {
+            pieChart.legend.textColor = ContextCompat.getColor(context, R.color.white)
+            pieChart.setHoleColor(ContextCompat.getColor(context, R.color.black_hole))
+        }
+        else {
+            pieChart.legend.textColor = ContextCompat.getColor(context, R.color.black)
+            pieChart.setHoleColor(ContextCompat.getColor(context, R.color.white))
+        }
+
+
         //hole
         pieChart.holeRadius = 30f
         pieChart.setTransparentCircleAlpha(0)
@@ -150,6 +160,19 @@ class WidgetApp : AppWidgetProvider() {
         val itemInfo: MutableList<DBHelper.ItemInfo>
         itemInfo = db.getItem(getCurrentMonth(), getCurrentYear())
         pieChart = PieChart(context)
+
+        //legend color & hole color
+        val configuration = context.resources.configuration
+        val currentNightMode = configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+        if (currentNightMode == Configuration.UI_MODE_NIGHT_YES) {
+            pieChart.legend.textColor = ContextCompat.getColor(context, R.color.white)
+            pieChart.setHoleColor(ContextCompat.getColor(context, R.color.black_hole))
+        }
+        else {
+            pieChart.legend.textColor = ContextCompat.getColor(context, R.color.black)
+            pieChart.setHoleColor(ContextCompat.getColor(context, R.color.white))
+        }
+        
         // Crea una Bitmap del PieChart
         val width = 400 // Larghezza della Bitmap
         val height = 400 // Altezza della Bitmap
@@ -189,6 +212,7 @@ class WidgetApp : AppWidgetProvider() {
         tallView.setTextViewText(R.id.total_widget_text, "Totale: ${getTotal(itemInfo)} €")
         tallView.setOnClickPendingIntent(R.id.widget_container, pendingIntent)
         tallView.setOnClickPendingIntent(R.id.add_item_widget, pendingButtonIntent)
+
     }
 
     private fun getIncoming(itemInfo: MutableList<DBHelper.ItemInfo>): Double {

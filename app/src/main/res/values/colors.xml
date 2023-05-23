@@ -102,4 +102,7 @@
     <color name="thumbTrue">#BEFF9C</color>
     <color name="thumbFalse">#FF9C9C</color>
 
+    <!--pieChart Legend-->
+    <color name="black_hole">#434343</color>
+
 </resources>
