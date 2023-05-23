@@ -34,7 +34,7 @@ class MainActivity : AppCompatActivity() {
 
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.navController
-        if (intent.action == "OPEN_ADD_ITEM_FRAGMENT") {
+        if (intent.action == "OPEN_ADD_ITEM_FRAGMENT" && navController.currentDestination?.id != R.id.addFragment) {
             val action = HomeFragmentDirections.actionHomeFragmentToAddFragment()
             navController.navigate(action)
         }
