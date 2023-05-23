@@ -493,6 +493,10 @@ class HomeFragment: Fragment(), MenuProvider, HomeListAdapter.OnItemDeletedListe
                 val action = HomeFragmentDirections.actionHomeFragmentToCategoryFragment()
                 view?.findNavController()?.navigate(action)
             }
+            R.id.Crediti -> {
+                val action = HomeFragmentDirections.actionHomeFragmentToCreditsFragment()
+                view?.findNavController()?.navigate(action)
+            }
         }
         return true
     }
