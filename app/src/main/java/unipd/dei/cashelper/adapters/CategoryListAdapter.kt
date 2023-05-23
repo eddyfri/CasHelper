@@ -12,13 +12,15 @@ import unipd.dei.cashelper.R
 import unipd.dei.cashelper.helpers.DBHelper
 
 class CategoryListAdapter(private val categoryList: ArrayList<String>, private var listener: CategoryListAdapter.OnCategoryDeletedListener) : RecyclerView.Adapter<CategoryListAdapter.ItemsViewHolder>() {
+    private lateinit var db: DBHelper
+    private lateinit var defaultCategories: ArrayList<String>
     inner class ItemsViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         private val buttonDelete: Button = itemView.findViewById(R.id.delete_basket)
         private val categoryText: TextView = itemView.findViewById(R.id.category_name)
 
         fun bind(category: String) {
             categoryText.text = category
-            // buttonDelete.isEnabled = !db.isDefaultCategories(category)
+            buttonDelete.isEnabled = !defaultCategories.contains(category)
 
             buttonDelete.setOnClickListener { v ->
                 val builder = AlertDialog.Builder(v.context)
@@ -37,6 +39,11 @@ class CategoryListAdapter(private val categoryList: ArrayList<String>, private v
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemsViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_fragment_category, parent, false)
+
+        if (!::db.isInitialized){
+            db = DBHelper(parent.context)
+            defaultCategories = db.getDefaultCategories()
+        }
 
         return ItemsViewHolder(view)
     }

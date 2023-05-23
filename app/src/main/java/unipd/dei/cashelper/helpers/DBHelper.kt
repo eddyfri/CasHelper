@@ -253,10 +253,28 @@ class DBHelper(context: Context): SQLiteOpenHelper(context, DB_NAME, null, DB_VE
         return ret
     }
 
+    fun getDefaultCategories(): ArrayList<String> {
+        return DEFAULT_CAT
+    }
+
     companion object
     {
         private const val DB_NAME = "database.db"
         private const val DB_VERSION = 1
+        private val DEFAULT_CAT: ArrayList<String> = ArrayList<String>()
+        init {
+            DEFAULT_CAT.add("Salario")
+            DEFAULT_CAT.add("Alimentari")
+            DEFAULT_CAT.add("Trasporti")
+            DEFAULT_CAT.add("Shopping")
+            DEFAULT_CAT.add("Viaggi")
+            DEFAULT_CAT.add("Bollette")
+            DEFAULT_CAT.add("Lavoro")
+            DEFAULT_CAT.add("Sport/Hobby")
+            DEFAULT_CAT.add("Automobile")
+            DEFAULT_CAT.add("Regali")
+            DEFAULT_CAT.add("Altro")
+        }
     }
 
     data class DateInfo(var changes: String) {

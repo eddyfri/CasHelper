@@ -96,9 +96,9 @@ class UpdateCategoryFragment: Fragment(), CategoryListAdapter.OnCategoryDeletedL
     }
 
     override fun onCategoryDeleted(category: String) {
-        // val contextView = (view as View).findViewById<View>(R.id.coordinator_layout_message)
+        val contextView = (view as View).findViewById<View>(R.id.coordinator_layout_message)
         db.removeCategory(category)
-        // Snackbar.make(contextView, "Categoria eliminata", Snackbar.LENGTH_SHORT).setAction("Chiudi") {}.show()
+        Snackbar.make(contextView, "Categoria eliminata", Snackbar.LENGTH_SHORT).setAction("Chiudi") {}.show()
         recyclerViewCategory.adapter = CategoryListAdapter(db.getCategoryName(), this)
     }
     //inflate the correct menu for this fragment
