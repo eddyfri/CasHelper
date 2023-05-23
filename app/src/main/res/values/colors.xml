@@ -104,5 +104,6 @@
 
     <!--pieChart Legend-->
     <color name="legend">#727070</color>
+    <color name="hole">#00FFFFFF</color>
 
 </resources>

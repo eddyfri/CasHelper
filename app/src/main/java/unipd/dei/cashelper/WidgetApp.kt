@@ -143,7 +143,7 @@ class WidgetApp : AppWidgetProvider() {
 
         //hole
         pieChart.holeRadius = 30f
-        pieChart.setHoleColor(ContextCompat.getColor(context, R.color.legend))
+        pieChart.setHoleColor(ContextCompat.getColor(context, R.color.hole))
         pieChart.setTransparentCircleAlpha(0)
     }
 
