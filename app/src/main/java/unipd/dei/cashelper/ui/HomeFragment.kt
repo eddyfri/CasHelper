@@ -394,10 +394,12 @@ class HomeFragment: Fragment(), MenuProvider, HomeListAdapter.OnItemDeletedListe
 
         val holeColor : Int
         if(isDarkModeOn(this.requireContext())) {
-            holeColor = ContextCompat.getColor(this.requireContext(), R.color.pink_salomon)
+            holeColor = ContextCompat.getColor(this.requireContext(), R.color.container_dark)
+            pieChart.legend.textColor = ContextCompat.getColor(this.requireContext(), R.color.white)
         }
         else {
             holeColor = ContextCompat.getColor(this.requireContext(), R.color.indaco)
+            pieChart.legend.textColor = ContextCompat.getColor(this.requireContext(), R.color.black)
         }
         pieChart.setHoleColor(holeColor)
 

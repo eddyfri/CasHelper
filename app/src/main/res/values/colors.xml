@@ -13,14 +13,9 @@
     <color name="indaco">#E3E8FF</color>
 
     //dark colors
-    <color name="light_black">#454545</color>
-    <color name="full_orange">#FF6000</color>
-    <color name="light_orange">#FFA559</color>
-    <color name="pink_salomon">#FFE6C7</color>
-    <color name="dark_purple">#393646</color>
-    <color name="purple">#4F4557</color>
-    <color name="light_purple">#6D5D6E</color>
-    <color name="sand">#F4EEE0</color>
+    <color name="container_dark">#454545</color>
+    <color name="button_dark">#615B58</color>
+    <color name="light_black">#676766</color>
 
     //pieChart colors
     <color name="Exits">#EF0B1B</color>
@@ -105,5 +100,8 @@
     <!--pieChart Legend-->
     <color name="legend">#727070</color>
     <color name="hole">#00FFFFFF</color>
+
+    <!--Container item light-->
+    <color name="container_item_light">#D2D2D2</color>
 
 </resources>
