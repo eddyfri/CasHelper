@@ -27,7 +27,7 @@
             android:text="--"
             app:drawableStartCompat="@drawable/list_numbered_icon"
             style="@style/TextAppearance.Material3.TitleMedium"
-            android:textColor="@color/black" />
+            />
 
 
 

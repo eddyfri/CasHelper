@@ -23,7 +23,7 @@
             app:drawableStartCompat="@drawable/add_category_icon"
             android:drawablePadding="2dp"
             style="@style/TextAppearance.Material3.TitleMedium"
-            android:textColor="@color/black" />
+            />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -49,7 +49,8 @@
                 android:layout_height="wrap_content"
                 android:inputType="text"
                 android:maxLength="20"
-                android:hint="@string/category_name"/>
+                android:hint="@string/category_name"
+                />
 
         </com.google.android.material.textfield.TextInputLayout>
 
