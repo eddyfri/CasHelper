@@ -3,6 +3,7 @@ package unipd.dei.cashelper.ui
 import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.content.Context
+import android.content.res.Configuration
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher

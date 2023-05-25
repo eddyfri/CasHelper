@@ -1,6 +1,7 @@
 package unipd.dei.cashelper.ui
 
 import android.content.Context
+import android.content.res.Configuration
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -272,6 +273,11 @@ class UpdateCategoryFragment: Fragment(), CategoryListAdapter.OnCategoryDeletedL
         val hide = view.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         hide.hideSoftInputFromWindow(view.windowToken, 0)
         view.clearFocus()
+    }
+
+    fun isDarkModeOn(context: Context): Boolean {
+        val currentNightMode = context.resources.configuration.uiMode and  Configuration.UI_MODE_NIGHT_MASK
+        return currentNightMode == Configuration.UI_MODE_NIGHT_YES
     }
 
 

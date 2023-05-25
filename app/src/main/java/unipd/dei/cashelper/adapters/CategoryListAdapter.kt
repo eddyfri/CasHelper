@@ -27,6 +27,15 @@ class CategoryListAdapter(private val categoryList: ArrayList<String>, private v
             if(!buttonDelete.isEnabled)
                 buttonDelete.foregroundTintList =
                     AppCompatResources.getColorStateList(updateCategoryFragment.requireContext(), R.color.Disable)
+                else {
+                    if (updateCategoryFragment.isDarkModeOn(updateCategoryFragment.requireContext()))
+                        buttonDelete.foregroundTintList =
+                            AppCompatResources.getColorStateList(updateCategoryFragment.requireContext(), R.color.white)
+                else
+                        buttonDelete.foregroundTintList =
+                            AppCompatResources.getColorStateList(updateCategoryFragment.requireContext(), R.color.black)
+
+                }
 
             buttonDelete.setOnClickListener { v ->
                 val builder = AlertDialog.Builder(v.context)
