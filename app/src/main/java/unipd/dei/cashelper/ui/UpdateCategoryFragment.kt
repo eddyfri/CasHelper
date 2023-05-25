@@ -61,7 +61,7 @@ class UpdateCategoryFragment: Fragment(), CategoryListAdapter.OnCategoryDeletedL
         db = DBHelper(context as Context)
 
         recyclerViewCategory = view.findViewById(R.id.recycler_view_category)
-        recyclerViewCategory.adapter = CategoryListAdapter(db.getCategoryName(), this)
+        recyclerViewCategory.adapter = CategoryListAdapter(db.getCategoryName(), this, this)
         recyclerViewCategory.layoutManager = LinearLayoutManager(this.context, LinearLayoutManager.VERTICAL, false)
 
 
@@ -99,7 +99,7 @@ class UpdateCategoryFragment: Fragment(), CategoryListAdapter.OnCategoryDeletedL
         val contextView = (view as View).findViewById<View>(R.id.coordinator_layout_message)
         db.removeCategory(category)
         Snackbar.make(contextView, "Categoria eliminata", Snackbar.LENGTH_SHORT).setAction("Chiudi") {}.show()
-        recyclerViewCategory.adapter = CategoryListAdapter(db.getCategoryName(), this)
+        recyclerViewCategory.adapter = CategoryListAdapter(db.getCategoryName(), this, this)
     }
     //inflate the correct menu for this fragment
     override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
@@ -253,7 +253,7 @@ class UpdateCategoryFragment: Fragment(), CategoryListAdapter.OnCategoryDeletedL
                     db.addCategory(new_category.toString().trim())
 
                     //update recyclerView
-                    recyclerViewCategory.adapter = CategoryListAdapter(db.getCategoryName(), this)
+                    recyclerViewCategory.adapter = CategoryListAdapter(db.getCategoryName(), this, this)
 
                     Toast.makeText(requireContext(), "Categoria aggiunta", Toast.LENGTH_SHORT).show()
 

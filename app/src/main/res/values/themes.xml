@@ -52,10 +52,11 @@
     </style>
 
     <style name="Delete_category" parent="Widget.MaterialComponents.Button">
-        <item name="android:background">@drawable/basket_light</item>
-        <item name="android:backgroundTint">@color/black</item>
+        <item name="android:outlineProvider">@null</item>
+        <item name="android:stateListAnimator">@null</item>
+        <item name="android:foreground">@drawable/basket_light</item>
+        <item name="android:backgroundTint">?attr/android:color</item>
     </style>
-
 
     <style name="MenuStyle_empty" parent="Widget.AppCompat.ActionButton.Overflow">
         <item name="android:icon">@drawable/backroll_light</item>
