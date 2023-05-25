@@ -222,27 +222,33 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             >
-            <ImageView
-                android:id="@+id/empty_icon"
-                android:layout_width="100dp"
-                android:layout_height="125dp"
-                android:src="@drawable/empty"
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:scaleX="0.6"
+                android:scaleY="0.6"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                android:contentDescription="@string/empty_img"
-                />
-            <TextView
-                android:id="@+id/empty_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/stringTransaction"
-                android:theme="@style/TextStyle"
-                app:layout_constraintTop_toBottomOf="@id/empty_icon"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                android:layout_marginTop="5dp"
-                />
+                >
+                <ImageView
+                    android:id="@+id/empty_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/empty"
+                    android:contentDescription="@string/empty_img"
+                    />
+                <TextView
+                    android:id="@+id/empty_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:theme="@style/TextStyle"
+                    app:layout_constraintTop_toBottomOf="@id/empty_icon"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:layout_marginTop="5dp"
+                    />
+            </FrameLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view"
