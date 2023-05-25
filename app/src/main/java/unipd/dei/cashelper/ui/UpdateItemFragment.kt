@@ -487,7 +487,7 @@ class UpdateItemFragment: Fragment(), MenuProvider {
 
                 //check if the category already exist
                 val categories = db.getCategoryName()
-                val new_category = popupTextView.text
+                val new_category = popupTextView.text.trim()
                 if (categories.contains(new_category.toString())) {
                     val contextView = (view as View).findViewById<View>(R.id.constraint_update_item)
                     Snackbar.make(contextView, "Categoria già esistente", Snackbar.LENGTH_SHORT)
