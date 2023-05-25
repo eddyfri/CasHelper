@@ -75,6 +75,18 @@ class IncomingFragment : Fragment(), MenuProvider {
     private var year by Delegates.notNull<Int>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        if(savedInstanceState != null) {
+            month = savedInstanceState.getString("month").toString()
+            year = savedInstanceState.getInt("year")
+        }
+        else if(HomeFragmentArgs.fromBundle(requireArguments()).month != " " && HomeFragmentArgs.fromBundle(requireArguments()).year != -1) {
+            month = HomeFragmentArgs.fromBundle(requireArguments()).month
+            year = HomeFragmentArgs.fromBundle(requireArguments()).year
+        }
+        else {
+            month = getCurrentMonth()
+            year = getCurrentYear()
+        }
         enterTransition = MaterialFadeThrough()
         exitTransition = MaterialFadeThrough()
         reenterTransition = MaterialFadeThrough()
@@ -98,9 +110,11 @@ class IncomingFragment : Fragment(), MenuProvider {
         val view = inflater.inflate(R.layout.fragment_incoming, container,false)
 
         db = DBHelper(context as Context)
-
+        /*
         month = IncomingFragmentArgs.fromBundle(requireArguments()).month
         year = IncomingFragmentArgs.fromBundle(requireArguments()).year
+
+         */
 
         //qui mi serve per passare all'adapter gli elementi
         allItemIncoming = db.getItemsByType("Entrata", month, year)
@@ -596,6 +610,8 @@ class IncomingFragment : Fragment(), MenuProvider {
             outState.putString("popupSelectedItem_Incoming", selectedItem)
         else
             outState.putString("popupSelectedItem_Incoming", "")
+        outState.putString("month", month)
+        outState.putInt("year", year)
     }
 
 }
