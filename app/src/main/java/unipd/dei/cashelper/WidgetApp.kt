@@ -98,7 +98,6 @@ class WidgetApp : AppWidgetProvider() {
             remoteViews = RemoteViews(viewMapping)
             appWidgetManager.updateAppWidget(appWidgetId, remoteViews)
         }
-        db.sendWidgetUpdateBroadcast(context)
     }
 
     override fun onReceive(context: Context, intent: Intent) {
