@@ -59,7 +59,6 @@ class WidgetApp : AppWidgetProvider() {
         editor.apply()
         // creo un istanza del db
         db = DBHelper(context as Context)
-        //this.appWidgetManager = appWidgetManager
 
         // inizializzo il service della lista del widget se non ancora inizializzato, cioé solamente
         // durante la prima creazione del widget e non ogni aggiornamento (qui con aggiornamento non
