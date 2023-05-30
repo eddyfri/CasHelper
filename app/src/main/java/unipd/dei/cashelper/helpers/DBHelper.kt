@@ -68,7 +68,7 @@ class DBHelper(context: Context): SQLiteOpenHelper(context, DB_NAME, null, DB_VE
     override fun onConfigure(db: SQLiteDatabase) {
         db.setForeignKeyConstraintsEnabled(true)
     }
-    fun sendWidgetUpdateBroadcast(context: Context) {
+    private fun sendWidgetUpdateBroadcast(context: Context) {
 
         val updateIntent = Intent(context, WidgetApp::class.java)
         updateIntent.action = AppWidgetManager.ACTION_APPWIDGET_UPDATE
