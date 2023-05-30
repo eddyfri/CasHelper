@@ -126,7 +126,7 @@ class OutflowFragment : Fragment(), MenuProvider {
 
          */
 
-        //qui mi serve per passare all'adapter gli elementi
+        //get all the variables we need to give to class adapter for the recycleview
         allItemOutflows = db.getItemsByType("Uscita", month, year)
         allCategories = db.getCategoryName()
         itemByCategory = getOutflowByCategory(allCategories, allItemOutflows)
@@ -134,7 +134,7 @@ class OutflowFragment : Fragment(), MenuProvider {
         var totalAmount = getTotalAmount(allItemOutflows)
         var rateArray = getRateByCategory(itemByCategory, totalAmount)
 
-
+        //declare all the variables for button and text view of this UI
         fabBack = view.findViewById<ExtendedFloatingActionButton>(R.id.back_month)
         fabNext = view.findViewById<ExtendedFloatingActionButton>(R.id.next_month)
         monthTextView = view.findViewById<TextView>(R.id.month_text)
@@ -152,7 +152,7 @@ class OutflowFragment : Fragment(), MenuProvider {
         return view
     }
 
-    //get an array of rate for all the categories that have at least one out
+    //get an array of rate for all the categories that have at least one outflow
     private fun getRateByCategory(itemByCategory: MutableMap<String, ArrayList<DBHelper.ItemInfo>>, totalAmount: Double): ArrayList<Double>{
         var rateArray = ArrayList<Double>(itemByCategory.size)
         for (item in itemByCategory) {
@@ -164,21 +164,22 @@ class OutflowFragment : Fragment(), MenuProvider {
         return rateArray
     }
 
-    //get total amount of all incomings for this month and year
-    private fun getTotalAmount(allItem: MutableList<DBHelper.ItemInfo>): Double{
-        var total = 0.0
-        for (item in allItem)
-            total += item.price
-        return total
-    }
-
-    //metodo che data una categoria e la lista di elementi totale mi restituisce un array di elementi per quella categoria
+    //get a mutable map which contains an association "category's name" as key and an array of items of that category as value
+    //if an association contains an empty arraylist, then this method delete this association.
     private fun getCategoryWithOutflows(category: String, allItem: MutableList<DBHelper.ItemInfo>): ArrayList<DBHelper.ItemInfo> {
         var outflowsByCategory = ArrayList<DBHelper.ItemInfo>()
         for (item in allItem)
             if (item.category == category)
                 outflowsByCategory.add(item)
         return outflowsByCategory
+    }
+
+    //get total amount of all outflows for this month and year
+    private fun getTotalAmount(allItem: MutableList<DBHelper.ItemInfo>): Double{
+        var total = 0.0
+        for (item in allItem)
+            total += item.price
+        return total
     }
 
     //metodo che restituisce un associazione "nome categoria"->"array di item di quella categoria"
