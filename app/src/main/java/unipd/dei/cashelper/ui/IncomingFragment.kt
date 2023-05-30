@@ -69,10 +69,10 @@ class IncomingFragment : Fragment(), MenuProvider {
     private lateinit var allItemIncoming : MutableList<DBHelper.ItemInfo>
     private lateinit var allCategories : ArrayList<String>
 
-
-
     private lateinit var month : String
     private var year by Delegates.notNull<Int>()
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if(savedInstanceState != null) {
@@ -87,6 +87,7 @@ class IncomingFragment : Fragment(), MenuProvider {
             month = getCurrentMonth()
             year = getCurrentYear()
         }
+        //insert transition
         enterTransition = MaterialFadeThrough()
         exitTransition = MaterialFadeThrough()
         reenterTransition = MaterialFadeThrough()
@@ -116,7 +117,7 @@ class IncomingFragment : Fragment(), MenuProvider {
 
          */
 
-        //qui mi serve per passare all'adapter gli elementi
+        //get all the variables we need to give to class adapter for the recycleview
         allItemIncoming = db.getItemsByType("Entrata", month, year)
         allCategories = db.getCategoryName()
         itemByCategory = getIncomingByCategory(allCategories, allItemIncoming)
@@ -124,6 +125,7 @@ class IncomingFragment : Fragment(), MenuProvider {
         val totalAmount = getTotalAmount(allItemIncoming)
         val rateArray = getRateByCategory(itemByCategory, totalAmount)
 
+        //declare all the variables for button and text view of this UI
         fabBack = view.findViewById<ExtendedFloatingActionButton>(R.id.back_month)
         fabNext = view.findViewById<ExtendedFloatingActionButton>(R.id.next_month)
         monthTextView = view.findViewById<TextView>(R.id.month_text)
@@ -149,7 +151,6 @@ class IncomingFragment : Fragment(), MenuProvider {
             val rate = (totalThisCategory*100)/totalAmount
             rateArray.add(rate)
         }
-
         return rateArray
     }
 
@@ -161,17 +162,8 @@ class IncomingFragment : Fragment(), MenuProvider {
         return total
     }
 
-    //metodo che data una categoria e la lista di elementi totale mi restituisce un array di elementi per quella categoria
-    private fun getCategoryWithIncomings(category: String, allItem: MutableList<DBHelper.ItemInfo>): ArrayList<DBHelper.ItemInfo> {
-        var incomingsByCategory = ArrayList<DBHelper.ItemInfo>()
-        for (item in allItem)
-            if (item.category == category)
-                incomingsByCategory.add(item)
-        return incomingsByCategory
-    }
-
-    //metodo che restituisce un associazione "nome categoria"->"array di item di quella categoria"
-    //se l'associazione contiene un arraylist vuoto allora elimina l'associazione
+    //get a mutable map which contains an association "category's name" as key and an array of items of that category as value
+    //if an association contains an empty arraylist, then this method delete this association.
     private fun getIncomingByCategory(categories: ArrayList<String>, allItem: MutableList<DBHelper.ItemInfo>): MutableMap<String, ArrayList<DBHelper.ItemInfo>> {
         var incomingByCategory = mutableMapOf<String, ArrayList<DBHelper.ItemInfo>>()
         for (element in categories)
@@ -187,8 +179,21 @@ class IncomingFragment : Fragment(), MenuProvider {
         return incomingByCategory
     }
 
-    //metodo per assegnare ad ogni categoria un colore, in modo tale che il colore sia sempre lo stesso per una categoria
-    //indipendentemente dall'ordine con cui sono salvati gli item
+
+    //get an array of items of the category specified in "category" passed as paramater
+    private fun getCategoryWithIncomings(category: String, allItem: MutableList<DBHelper.ItemInfo>): ArrayList<DBHelper.ItemInfo> {
+        var incomingsByCategory = ArrayList<DBHelper.ItemInfo>()
+        for (item in allItem)
+            if (item.category == category)
+                incomingsByCategory.add(item)
+        return incomingsByCategory
+    }
+
+
+
+    //this function return an arraylist of int, that represent the color. Every color is associated to
+    //a category every time in the same order. In this way every category has only one color every time
+
     private fun setColorCategory(categories: ArrayList<String>, itemByCategory: MutableMap<String, ArrayList<DBHelper.ItemInfo>>): ArrayList<Int> {
         var colorMap = mutableMapOf<String, Int>()
         var colorArray = context?.resources?.getIntArray(R.array.color_array)
@@ -205,8 +210,6 @@ class IncomingFragment : Fragment(), MenuProvider {
         return colorsByCategory
     }
 
-
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         //add MenuProvider
@@ -216,9 +219,11 @@ class IncomingFragment : Fragment(), MenuProvider {
         allCategories = db.getCategoryName()
         itemByCategory = getIncomingByCategory(allCategories, allItemIncoming)
 
-        //imposto le textview di mese e anno nel mese e anno che mi vengono passati dalla schermata home
+        //set the textviews of month and year with the month and year being passed from the home screen
         monthTextView.text = month
         yearTextView.text = year.toString()
+
+        //set the default view when there is not data entered
         constraintLayoutEmptyList.isVisible = itemByCategory.isEmpty()
         emptyIcon.isVisible = itemByCategory.isEmpty()
         emptyText.isVisible = itemByCategory.isEmpty()
@@ -230,14 +235,15 @@ class IncomingFragment : Fragment(), MenuProvider {
         else
             pieChart.visibility = View.VISIBLE
 
-
+        //set buttons to go back with months
         fabBack.setOnClickListener {
-            // cambia mese anno
+            //if the month is "january" when i go back with months, then change year
             if(month == "Gennaio")
                 year--
             month = backMonth(month)
             monthTextView.text = month
             yearTextView.text = year.toString()
+            //insert animation
             val anim = AlphaAnimation(1.0f, 0.0f)
             anim.duration = 200
             anim.repeatCount = 1
@@ -256,10 +262,11 @@ class IncomingFragment : Fragment(), MenuProvider {
             recyclerView.startAnimation(anim)
             pieChart.startAnimation(anim)
         }
+        //set the button to go to the next month
         fabNext.setOnClickListener {
-            // non posso andare più avanti del mese corrente, no mesi futuri
+            //prevent going beyond the current month, so if you are in the current month, then the button is hidden
             if(month != getCurrentMonth() || year != getCurrentYear()) {
-                // cambia mese anno
+                //if the month is "december", then change year
                 if(month == "Dicembre")
                     year++
                 month = nextMonth(month)
@@ -287,7 +294,7 @@ class IncomingFragment : Fragment(), MenuProvider {
                 fabNext.hide()
         }
 
-        //se entro nel fragment nel mese corrente nascondo il bottone per spostarsi al mese successivo
+        //if the screen is accessed directly in the current month, then the button to change to the next month is hidden
         if((month == getCurrentMonth()) && (year == getCurrentYear()))
             fabNext.hide()
 
@@ -314,10 +321,12 @@ class IncomingFragment : Fragment(), MenuProvider {
 
     }
 
+    //return an arraylist of category, that are the keys of mutable map
     private fun catchKeys(itemByCategory: MutableMap<String, ArrayList<DBHelper.ItemInfo>>): ArrayList<String>{
         return ArrayList(itemByCategory.keys)
     }
 
+    //return the total of the entries for the specific category passed by parameter with "category"
     private fun getTotalCategory(category: String, itemByCategory: MutableMap<String, ArrayList<DBHelper.ItemInfo>>): Double{
         var total = 0.0
         var itemsOfThisCategory = itemByCategory[category]
@@ -326,6 +335,8 @@ class IncomingFragment : Fragment(), MenuProvider {
                 total += item.price
         return total
     }
+
+    //create the piechart for this screen
     private fun createPieChart(view: View, itemByCategory: MutableMap<String, ArrayList<DBHelper.ItemInfo>>, categories: ArrayList<String>) {
         pieChart = view.findViewById(R.id.chart_incoming)
 
@@ -361,6 +372,7 @@ class IncomingFragment : Fragment(), MenuProvider {
 
 
 
+        //set the color of the hole in the center of the pie chart
         val holeColor : Int
         if(isDarkModeOn(this.requireContext())) {
             holeColor = ContextCompat.getColor(this.requireContext(), R.color.container_dark)
@@ -477,15 +489,16 @@ class IncomingFragment : Fragment(), MenuProvider {
 
 
 
+    //this function is called every time the user change the month in this screen
     private fun updateAll(month: String, year: Int) {
-        //aggiorna gli item in base al mese che è stato cambiato
+        //update the data according to the month that is changed
         var allItemIncoming = db.getItemsByType("Entrata", month, year)
         var allCategories = db.getCategoryName()
         var itemByCategory = getIncomingByCategory(allCategories, allItemIncoming)
         var colorMap = setColorCategory(allCategories, itemByCategory)
         val totalAmount = getTotalAmount(allItemIncoming)
         val rateArray = getRateByCategory(itemByCategory, totalAmount)
-        //aggiorna la visibilità del bottone nextFab
+        //update the visibility of nextFab
         if (!(month == getCurrentMonth() && year == getCurrentYear()))
             fabNext.show()
         else fabNext.hide()
@@ -503,29 +516,35 @@ class IncomingFragment : Fragment(), MenuProvider {
 
         updatePieChart(itemByCategory, allCategories)
 
-        //aggiornamento recyclerView
+        //update recyclerView
         recyclerView.adapter = IncomingListAdapter(itemByCategory, colorMap, rateArray, this)
     }
+
+    //this method is called when the user click on a category in the recycle view of this screen
+    //the popup show every incoming for category clicked before
     fun createPopUp(selectedCategory: String, itemByCategory: MutableMap<String, ArrayList<DBHelper.ItemInfo>>){
         //save the current category shown
         this.selectedItem = selectedCategory
         this.itemByCategory = itemByCategory
 
 
-        //dichiare l'inflater
+        //declare the inflater
         val inflater = LayoutInflater.from((view as View).context)
-        //inserire nella view il popup
+        //insert the popup in the view
         val popupView = inflater.inflate(R.layout.popup_category_detail, view as ViewGroup, false)
         val popupTitle : TextView = popupView.findViewById(R.id.title_item)
 
+        //array of item for the selected category
         val arrayOfItem = getItemsList(selectedCategory, itemByCategory)
 
+        //set the title and the recycle view for the popup
         popupTitle.text = selectedCategory + ":"
         recyclerViewPopup = popupView.findViewById(R.id.recycler_view_popup)
         recyclerViewPopup.adapter = CategoryDetailAdapter(arrayOfItem)
         recyclerViewPopup.layoutManager = LinearLayoutManager(this.context, LinearLayoutManager.VERTICAL, false)
 
-        //imposta la grandezza del popup all 85% della schermata su cui viene creato
+
+        //sets the size of the popup to 85% of the screen it is created on
         val width = ((view as View).width*0.85).toInt()
         //create the popup with specific size
         popup = PopupWindow(popupView, width, ViewGroup.LayoutParams.WRAP_CONTENT,true)
@@ -571,9 +590,11 @@ class IncomingFragment : Fragment(), MenuProvider {
         wm.updateViewLayout(container, p)
     }
 
+    //return an arraylist with alla the incoming for the selected category
     private fun getItemsList(category: String, itemByCategory: MutableMap<String, ArrayList<DBHelper.ItemInfo>>): ArrayList<DBHelper.ItemInfo> {
         var itemsOfThisCategory = itemByCategory[category]
 
+        //return an array sorted by date
         return sortByDate(itemsOfThisCategory!!)
     }
 
@@ -590,6 +611,7 @@ class IncomingFragment : Fragment(), MenuProvider {
         return true
     }
 
+    //this function return an arraylist sorted by date by descending order
     private fun sortByDate(itemInfo: ArrayList<DBHelper.ItemInfo>) : ArrayList<DBHelper.ItemInfo>{
         itemInfo.sortByDescending { it.day } //it is a lambda expression link to itemInfo
         return itemInfo
