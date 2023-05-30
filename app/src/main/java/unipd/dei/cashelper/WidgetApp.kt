@@ -23,6 +23,7 @@ import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 import unipd.dei.cashelper.adapters.ListWidgetService
 import unipd.dei.cashelper.helpers.DBHelper
+import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -58,12 +59,7 @@ class WidgetApp : AppWidgetProvider() {
         editor.apply()
         // creo un istanza del db
         db = DBHelper(context as Context)
-        this.appWidgetManager = appWidgetManager
-
-
-        val updateIntent = Intent(context, WidgetApp::class.java)
-        updateIntent.action = AppWidgetManager.ACTION_APPWIDGET_UPDATE
-        updateIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, appWidgetIds)
+        //this.appWidgetManager = appWidgetManager
 
         // inizializzo il service della lista del widget se non ancora inizializzato, cioé solamente
         // durante la prima creazione del widget e non ogni aggiornamento (qui con aggiornamento non
@@ -71,9 +67,6 @@ class WidgetApp : AppWidgetProvider() {
         // widget_app_info.xml)
         if(!::serviceIntent.isInitialized)
             serviceIntent = Intent(context, ListWidgetService::class.java)
-
-        // Crea un PendingIntent per l'Intent
-        var pendingUpdateIntent = PendingIntent.getBroadcast(context, 0, updateIntent, PendingIntent.FLAG_IMMUTABLE)
 
         for(appWidgetId in appWidgetIds) {
             // aggiornamento del widget
@@ -201,9 +194,9 @@ class WidgetApp : AppWidgetProvider() {
         pieChart.layout(0, 0, width, height)
         pieChart.draw(canvas)
         wideView.setTextViewText(R.id.month_year_widget_text, "${getCurrentMonth()} ${getCurrentYear()}")
-        wideView.setTextViewText(R.id.incoming_widget_text, "Entrate: ${getIncoming(itemInfo)} €")
-        wideView.setTextViewText(R.id.outflow_widget_text, "Uscite: ${getExits(itemInfo)} €")
-        wideView.setTextViewText(R.id.total_widget_text, "Totale: ${getTotal(itemInfo)} €")
+        wideView.setTextViewText(R.id.incoming_widget_text, "Entrate: ${DecimalFormat("#.##").format(getIncoming(itemInfo)).replace(",",".", true)} €")
+        wideView.setTextViewText(R.id.outflow_widget_text, "Uscite: ${DecimalFormat("#.##").format(getExits(itemInfo)).replace(",",".", true)} €")
+        wideView.setTextViewText(R.id.total_widget_text, "Totale: ${DecimalFormat("#.##").format(getTotal(itemInfo)).replace(",",".", true)} €")
         wideView.setOnClickPendingIntent(R.id.widget_container, pendingIntent)
         val buttonIntent = Intent(context, MainActivity::class.java)
         buttonIntent.action = "OPEN_ADD_ITEM_FRAGMENT"
@@ -214,9 +207,9 @@ class WidgetApp : AppWidgetProvider() {
         pieChart.layout(0, 0, width, height)
         pieChart.draw(canvas)
         tallView.setTextViewText(R.id.month_year_widget_text, "${getCurrentMonth()} ${getCurrentYear()}")
-        tallView.setTextViewText(R.id.incoming_widget_text, "Entrate: ${getIncoming(itemInfo)} €")
-        tallView.setTextViewText(R.id.outflow_widget_text, "Uscite: ${getExits(itemInfo)} €")
-        tallView.setTextViewText(R.id.total_widget_text, "Totale: ${getTotal(itemInfo)} €")
+        tallView.setTextViewText(R.id.incoming_widget_text, "Entrate: ${DecimalFormat("#.##").format(getIncoming(itemInfo)).replace(",",".", true)} €")
+        tallView.setTextViewText(R.id.outflow_widget_text, "Uscite: ${DecimalFormat("#.##").format(getExits(itemInfo)).replace(",",".", true)} €")
+        tallView.setTextViewText(R.id.total_widget_text, "Totale: ${DecimalFormat("#.##").format(getTotal(itemInfo)).replace(",",".", true)} €")
         tallView.setOnClickPendingIntent(R.id.widget_container, pendingIntent)
         tallView.setOnClickPendingIntent(R.id.add_item_widget, pendingButtonIntent)
 
