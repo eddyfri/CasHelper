@@ -79,13 +79,12 @@ class HomeFragment: Fragment(), MenuProvider, HomeListAdapter.OnItemDeletedListe
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // transizioni ingresso e uscita schermata
-        // exitTransition = MaterialElevationScale(/* growing = */ false)
-        // reenterTransition = MaterialElevationScale(/* growing = */ true)
+        //when change ui mode (portrait/landscape)
         if(savedInstanceState != null) {
             month = savedInstanceState.getString("month").toString()
             year = savedInstanceState.getInt("year")
         }
+        //when we change fragment
         else if(HomeFragmentArgs.fromBundle(requireArguments()).month != " " && HomeFragmentArgs.fromBundle(requireArguments()).year != -1) {
             month = HomeFragmentArgs.fromBundle(requireArguments()).month
             year = HomeFragmentArgs.fromBundle(requireArguments()).year
@@ -94,6 +93,7 @@ class HomeFragment: Fragment(), MenuProvider, HomeListAdapter.OnItemDeletedListe
             month = getCurrentMonth()
             year = getCurrentYear()
         }
+        //transition effects
         enterTransition = MaterialFadeThrough()
         exitTransition = MaterialFadeThrough()
         reenterTransition = MaterialFadeThrough()
@@ -143,6 +143,7 @@ class HomeFragment: Fragment(), MenuProvider, HomeListAdapter.OnItemDeletedListe
         emptyChartText = view.findViewById(R.id.empty_chart_text)
 
         recyclerView = view.findViewById(R.id.recycler_view)
+        //sort the item by date
         var itemInfoSorted = sortByDate(itemInfo)
         recyclerView.adapter = HomeListAdapter(itemInfoSorted, this)
         recyclerView.layoutManager = LinearLayoutManager(this.context, LinearLayoutManager.VERTICAL, false)
@@ -193,6 +194,7 @@ class HomeFragment: Fragment(), MenuProvider, HomeListAdapter.OnItemDeletedListe
         emptyChartText.isVisible = itemInfo.isEmpty()
 
         createPieChart(view, itemInfo)
+        //visibility of pieChart
         if(itemInfo.isEmpty())
             pieChart.visibility = View.GONE
         else
@@ -201,10 +203,11 @@ class HomeFragment: Fragment(), MenuProvider, HomeListAdapter.OnItemDeletedListe
             fabNext.hide()
 
         fabBack.setOnClickListener {
-            // cambia mese anno
+            // change month every year
             if(month == "Gennaio")
                 year--
             month = backMonth(month)
+            //animation when changed month
             val anim = AlphaAnimation(1.0f, 0.0f)
             anim.duration = 200
             anim.repeatCount = 1
@@ -227,9 +230,9 @@ class HomeFragment: Fragment(), MenuProvider, HomeListAdapter.OnItemDeletedListe
             pieChart.startAnimation(anim)
         }
         fabNext.setOnClickListener {
-            // non posso andare più avanti del mese corrente, no mesi futuri
+            // i can't go in the next month because we are in the corrent date
             if(month != getCurrentMonth() || year != getCurrentYear()) {
-                // cambia mese anno
+                // change month and year
                 if(month == "Dicembre")
                     year++
                 month = nextMonth(month)
@@ -272,7 +275,7 @@ class HomeFragment: Fragment(), MenuProvider, HomeListAdapter.OnItemDeletedListe
     }
 
     override fun onItemDeleted() {
-        // aggiorna tutta la schermata
+        // update the view
         val contextView = (view as View).findViewById<View>(R.id.coordinator_layout_message)
         Snackbar.make(contextView, "Item eliminato con successo", Snackbar.LENGTH_SHORT).setAction("Chiudi") {}.show()
         updateAll(month, year)
@@ -352,7 +355,7 @@ class HomeFragment: Fragment(), MenuProvider, HomeListAdapter.OnItemDeletedListe
             else -> "Gennaio"
         }
     }
-
+    //fun that return the corrent theme in use
     private fun isDarkModeOn(context: Context): Boolean {
         val currentNightMode = context.resources.configuration.uiMode and  Configuration.UI_MODE_NIGHT_MASK
         return currentNightMode == Configuration.UI_MODE_NIGHT_YES
@@ -511,7 +514,7 @@ class HomeFragment: Fragment(), MenuProvider, HomeListAdapter.OnItemDeletedListe
         if(!(month == getCurrentMonth() && year == getCurrentYear()))
             fabNext.show()
         else fabNext.hide()
-        // aggiorna dati
+        // update date
         itemInfo = db.getItem(month, year)
         constraintLayoutEmptyList.isVisible = itemInfo.isEmpty()
         emptyIcon.isVisible = itemInfo.isEmpty()
@@ -522,11 +525,11 @@ class HomeFragment: Fragment(), MenuProvider, HomeListAdapter.OnItemDeletedListe
             pieChart.visibility = View.GONE
         else
             pieChart.visibility = View.VISIBLE
-        // aggiorna pieChart
+        // update pieChart
         updatePieChart(itemInfo)
-        // aggiorna text view totali
+        // update text view
         updateTotalTextViews(itemInfo)
-        // aggiorna recyclerView
+        // update recyclerView
         var itemInfoSorted = sortByDate(itemInfo)
         recyclerView.adapter = HomeListAdapter(itemInfoSorted, this)
     }

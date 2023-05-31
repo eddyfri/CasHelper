@@ -217,7 +217,7 @@ class UpdateCategoryFragment: Fragment(), CategoryListAdapter.OnCategoryDeletedL
             //If the user click enter the keyboard disappear
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 popupTextView.clearFocus()
-                //Nascondo la tastiera.
+                //hidekeyboard
                 hideKeyboard(popupView)
 
                 return@setOnEditorActionListener true
@@ -274,7 +274,7 @@ class UpdateCategoryFragment: Fragment(), CategoryListAdapter.OnCategoryDeletedL
         hide.hideSoftInputFromWindow(view.windowToken, 0)
         view.clearFocus()
     }
-
+    //fun that return the corrent theme in use
     fun isDarkModeOn(context: Context): Boolean {
         val currentNightMode = context.resources.configuration.uiMode and  Configuration.UI_MODE_NIGHT_MASK
         return currentNightMode == Configuration.UI_MODE_NIGHT_YES

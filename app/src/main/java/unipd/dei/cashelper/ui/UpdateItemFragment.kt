@@ -481,7 +481,7 @@ class UpdateItemFragment: Fragment(), MenuProvider {
 
         addButton.setOnClickListener {
             if (popupTextView.text.isNotEmpty()) {
-                //Hide keyboard
+                //hide keyboard
                 hideKeyboard(popupView)
                 //enable button
                 addButton.isEnabled = true

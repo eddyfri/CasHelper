@@ -33,7 +33,8 @@ import java.util.*
 import kotlin.properties.Delegates
 
 
-class AddItemFragment : Fragment(), MenuProvider {
+class AddItemFragment : Fragment()
+    , MenuProvider {
 
     private lateinit var db: DBHelper
     private lateinit var value: EditText
@@ -338,12 +339,6 @@ class AddItemFragment : Fragment(), MenuProvider {
     }
 
 
-  /* override fun onPause() {
-        super.onPause()
-        //when return to the home fragment show the app bar
-        (requireActivity() as AppCompatActivity).supportActionBar?.show()
-    }*/
-
     private fun hideKeyboard(view: View) {
         val hide = view.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         hide.hideSoftInputFromWindow(view.windowToken, 0)
@@ -465,7 +460,7 @@ class AddItemFragment : Fragment(), MenuProvider {
             //If the user click enter the keyboard disappear
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 popupTextView.clearFocus()
-                //Nascondo la tastiera.
+                //hide keyboard.
                hideKeyboard(popupView)
 
                 return@setOnEditorActionListener true
@@ -484,7 +479,7 @@ class AddItemFragment : Fragment(), MenuProvider {
 
         addButton.setOnClickListener {
             if (popupTextView.text.isNotEmpty()) {
-                //Hide keyboard
+                //hide keyboard
                 hideKeyboard(popupView)
                 //enable button
                 addButton.isEnabled = true
