@@ -1,9 +1,9 @@
 package unipd.dei.cashelper.ui
 
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.content.Context
-import android.content.res.Configuration
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -31,17 +31,17 @@ class UpdateItemFragment: Fragment(), MenuProvider {
     private lateinit var value : EditText
     private lateinit var date : Button
     private lateinit var update : Button
-    private lateinit var selected_category : String
+    private lateinit var selectedCategory : String
     private lateinit var switch: SwitchCompat
     private lateinit var description: EditText
     private lateinit var spinner : Spinner
     private lateinit var constraintLayout : ConstraintLayout
     private var idItem by Delegates.notNull<Int>()
     private lateinit var delete : Button
-    private lateinit var add_category : Button
+    private lateinit var addCategory : Button
 
     //variables for picking
-    private lateinit var switch_choose : String
+    private lateinit var switchChoose : String
     private var price by Delegates.notNull<Double>()
     private  lateinit var desc : String
     private var day by Delegates.notNull<Int>()
@@ -76,20 +76,20 @@ class UpdateItemFragment: Fragment(), MenuProvider {
 
         //set icon backroll
         if ((activity as MainActivity).isDarkModeOn(requireContext()))
-            (activity as MainActivity)?.supportActionBar?.setHomeAsUpIndicator(R.drawable.backroll_dark)
+            (activity as MainActivity).supportActionBar?.setHomeAsUpIndicator(R.drawable.backroll_dark)
         else
-            (activity as MainActivity)?.supportActionBar?.setHomeAsUpIndicator(R.drawable.backroll_light)
+            (activity as MainActivity).supportActionBar?.setHomeAsUpIndicator(R.drawable.backroll_light)
 
         idItem = UpdateItemFragmentArgs.fromBundle(requireArguments()).idItem
-        constraintLayout = view.findViewById<ConstraintLayout>(R.id.constraint_update_item)
+        constraintLayout = view.findViewById(R.id.constraint_update_item)
 
         db = DBHelper(this.requireContext())
-        var itemInfo = db.getItemById(idItem)
+        val itemInfo = db.getItemById(idItem)
         update = view.findViewById(R.id.update_button)
         update.isEnabled = false
         update.backgroundTintList = getColorStateList(requireContext(), R.color.Disable)
         delete = view.findViewById((R.id.delete_button))
-        spinner = view.findViewById<Spinner>(R.id.category_select_update)
+        spinner = view.findViewById(R.id.category_select_update)
         val categories = db.getCategoryName()
 
         //set alphabetic order of category list
@@ -103,7 +103,7 @@ class UpdateItemFragment: Fragment(), MenuProvider {
         //add first element the default string
         categories.add(0, getString(R.string.category_spinner))
 
-        val adapter = ArrayAdapter<String>(
+        val adapter = ArrayAdapter(
             this.requireContext(),
             android.R.layout.simple_spinner_item,
             categories
@@ -114,7 +114,7 @@ class UpdateItemFragment: Fragment(), MenuProvider {
         spinner.setSelection(categories.indexOf(itemInfo.category))
 
         //ediText value
-        value = view.findViewById<EditText>(R.id.value_update_item)
+        value = view.findViewById(R.id.value_update_item)
         value.setText(itemInfo.price.toString())
 
         //button date
@@ -125,7 +125,7 @@ class UpdateItemFragment: Fragment(), MenuProvider {
         if(itemInfo.type == "Entrata")
             switch.isChecked = true
         // default choose
-        switch_choose = itemInfo.type
+        switchChoose = itemInfo.type
 
         // set current date as default
         year = itemInfo.year
@@ -135,12 +135,13 @@ class UpdateItemFragment: Fragment(), MenuProvider {
         description = view.findViewById(R.id.description_update_item)
         description.setText(itemInfo.description)
 
+        val dateText ="$day/${month + 1}/$year"
         //Set date's text
-        date.text = "$day/${month + 1}/$year"
+        date.text = dateText
 
         //popup
-        add_category = view.findViewById<Button>(R.id.update_category)
-        add_category.setOnClickListener {
+        addCategory = view.findViewById(R.id.update_category)
+        addCategory.setOnClickListener {
             //check, if we have already 30 categories (max possible), show a message
             if((db.getCategoryName()).size == 30){
                 Toast.makeText(requireContext(), "Limite massimo categorie raggiunto", Toast.LENGTH_SHORT).show()
@@ -174,7 +175,7 @@ class UpdateItemFragment: Fragment(), MenuProvider {
         var valueCheck = true
 
         switch.setOnCheckedChangeListener { _, isChecked ->
-            switch_choose = if(isChecked)
+            switchChoose = if(isChecked)
                 "Entrata"
             else
                 "Uscita"
@@ -188,9 +189,9 @@ class UpdateItemFragment: Fragment(), MenuProvider {
                 id: Long
             ) {
                 //give the category selected
-                selected_category = parent.getItemAtPosition(position).toString()
+                selectedCategory = parent.getItemAtPosition(position).toString()
                 //confirm button disabled if the selected category is "Seleziona una categoria" (position = 0)
-                categoryCheck = selected_category != getString(R.string.category_spinner)
+                categoryCheck = selectedCategory != getString(R.string.category_spinner)
                 if(valueCheck && categoryCheck) {
                     update.isEnabled = true
                     update.backgroundTintList = getColorStateList(requireContext(), R.color.confirm)
@@ -210,8 +211,9 @@ class UpdateItemFragment: Fragment(), MenuProvider {
         date.setOnClickListener{
             val datePickerDialog = DatePickerDialog(
                 this.requireContext(),
-                DatePickerDialog.OnDateSetListener { _, year, month, day -> //identify the date choose by the user
-                    date.text = "$day/${month + 1}/$year"
+                { _, year, month, day -> //identify the date choose by the user
+                    val dateText = "$day/${month + 1}/$year"
+                    date.text = dateText
                     //take date chosen
                     this.year = year
                     this.day = day
@@ -264,7 +266,7 @@ class UpdateItemFragment: Fragment(), MenuProvider {
             //picking the current values
             picker(view)
             //write in database
-            onClickListener(idItem, switch_choose, selected_category, price, day, monthString, year, desc.trim())
+            onClickListener(idItem, switchChoose, selectedCategory, price, day, monthString, year, desc.trim())
 
             //back to HomeFragment
             val action = UpdateItemFragmentDirections.actionUpdateFragmentToHomeFragment(monthString, year)
@@ -386,6 +388,7 @@ class UpdateItemFragment: Fragment(), MenuProvider {
     }
 
     //Create the popup view for add a category
+    @SuppressLint("CutPasteId")
     private fun createPopup() {
         val inflater = LayoutInflater.from((view as View).context)
         val popupView = inflater.inflate(R.layout.popup_add_category, view as ViewGroup, false)
@@ -488,19 +491,18 @@ class UpdateItemFragment: Fragment(), MenuProvider {
 
                 //check if the category already exist
                 val categories = db.getCategoryName()
-                val new_category = popupTextView.text.trim()
-                if (categories.contains(new_category.toString())) {
+                val newCategory = popupTextView.text.trim()
+                if (categories.contains(newCategory.toString())) {
                     val contextView = (view as View).findViewById<View>(R.id.constraint_update_item)
                     Snackbar.make(contextView, "Categoria già esistente", Snackbar.LENGTH_SHORT)
                         .setAction("Chiudi") {}
                         .show()
                 } else {
                     //add category to database
-                    db.addCategory(new_category.toString().trim())
+                    db.addCategory(newCategory.toString().trim())
 
                     //update the spinner
-                    val categories = db.getCategoryName()
-                    val adapter = ArrayAdapter<String>(
+                    val adapter = ArrayAdapter(
                         this.requireContext(),
                         android.R.layout.simple_spinner_item,
                         categories
@@ -514,7 +516,7 @@ class UpdateItemFragment: Fragment(), MenuProvider {
                     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
                     spinner.adapter = adapter
                     //set the default string as the new category added
-                    val posNew = categories.indexOf(new_category.toString())
+                    val posNew = categories.indexOf(newCategory.toString())
                     spinner.setSelection(posNew)
 
                     Toast.makeText(requireContext(), "Categoria aggiunta", Toast.LENGTH_SHORT)

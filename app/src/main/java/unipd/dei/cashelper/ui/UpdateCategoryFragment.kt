@@ -1,5 +1,6 @@
 package unipd.dei.cashelper.ui
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.Configuration
 import android.os.Bundle
@@ -9,7 +10,6 @@ import android.view.*
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
@@ -22,7 +22,6 @@ import com.google.android.material.transition.MaterialFadeThrough
 import unipd.dei.cashelper.MainActivity
 import unipd.dei.cashelper.R
 import unipd.dei.cashelper.adapters.CategoryListAdapter
-import unipd.dei.cashelper.adapters.HomeListAdapter
 import unipd.dei.cashelper.helpers.DBHelper
 
 class UpdateCategoryFragment: Fragment(), CategoryListAdapter.OnCategoryDeletedListener,
@@ -55,9 +54,9 @@ class UpdateCategoryFragment: Fragment(), CategoryListAdapter.OnCategoryDeletedL
 
         //set icon backroll
         if ((activity as MainActivity).isDarkModeOn(requireContext()))
-            (activity as MainActivity)?.supportActionBar?.setHomeAsUpIndicator(R.drawable.backroll_dark)
+            (activity as MainActivity).supportActionBar?.setHomeAsUpIndicator(R.drawable.backroll_dark)
         else
-            (activity as MainActivity)?.supportActionBar?.setHomeAsUpIndicator(R.drawable.backroll_light)
+            (activity as MainActivity).supportActionBar?.setHomeAsUpIndicator(R.drawable.backroll_light)
 
         db = DBHelper(context as Context)
 
@@ -140,6 +139,7 @@ class UpdateCategoryFragment: Fragment(), CategoryListAdapter.OnCategoryDeletedL
     }
 
     //Create the popup view for add a category
+    @SuppressLint("CutPasteId")
     private fun createPopup() {
         val inflater = LayoutInflater.from((view as View).context)
         val popupView = inflater.inflate(R.layout.popup_add_category, view as ViewGroup, false)
@@ -243,15 +243,15 @@ class UpdateCategoryFragment: Fragment(), CategoryListAdapter.OnCategoryDeletedL
 
                 //check if the category already exist
                 val categories = db.getCategoryName()
-                val new_category = popupTextView.text.trim()
-                if (categories.contains(new_category.toString())) {
+                val newCategory = popupTextView.text.trim()
+                if (categories.contains(newCategory.toString())) {
                     val contextView = (view as View).findViewById<View>(R.id.Constraint_update_category)
                     Snackbar.make(contextView, "Categoria già esistente", Snackbar.LENGTH_SHORT)
                         .setAction("Chiudi") {}
                         .show()
                 } else {
                     //add category to database
-                    db.addCategory(new_category.toString().trim())
+                    db.addCategory(newCategory.toString().trim())
 
                     //update recyclerView
                     recyclerViewCategory.adapter = CategoryListAdapter(db.getCategoryName(), this, this)
