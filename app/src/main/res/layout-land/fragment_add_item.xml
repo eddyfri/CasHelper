@@ -5,8 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="?attr/backgroundColor"
     android:id="@+id/Constraint_add_item"
-    android:clickable="true"
-    android:onClick="hideKeyboard">
+    android:clickable="true">
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline25_horizontal"
         android:layout_width="wrap_content"
@@ -62,7 +61,7 @@
         app:layout_constraintTop_toBottomOf="@id/midline_horizontal"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@id/midline_vertical"
-        android:contentDescription="Seleziona categoria"/>
+        android:contentDescription="@string/category_spinner"/>
     <Button
         android:id="@+id/add_category"
         app:icon="@drawable/add_fab_home"
@@ -71,7 +70,6 @@
         app:layout_constraintStart_toEndOf="@id/category_select"
         app:layout_constraintTop_toBottomOf="@id/midline_horizontal"
         android:gravity="center"
-        android:contentDescription="Aggiungi categoria"
         />
     <EditText
         android:id="@+id/value_add_item"
@@ -84,7 +82,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/midline_vertical"
-        />
+        android:autofillHints="" />
 
     <ImageView
         android:id="@+id/euro"
@@ -94,7 +92,7 @@
         android:layout_margin="15dp"
         app:layout_constraintStart_toEndOf="@id/value_add_item"
         app:layout_constraintBottom_toBottomOf="parent"
-        />
+        android:contentDescription="@string/euro" />
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -125,8 +123,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@id/midline_vertical"
         android:backgroundTint="@color/violet"
-        android:id="@+id/date_add_item"
-        android:contentDescription="Calendario"/>
+        android:id="@+id/date_add_item" />
     <Button
         android:id="@+id/confirm_button"
         android:layout_width="wrap_content"

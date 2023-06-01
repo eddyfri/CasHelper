@@ -1,21 +1,16 @@
 package unipd.dei.cashelper.ui
 
 
-
-import android.app.Activity
+import android.annotation.SuppressLint
 import android.app.DatePickerDialog
-import android.content.ContentValues.TAG
 import android.content.Context
-import android.content.res.ColorStateList
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.*
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources.getColorStateList
 import androidx.appcompat.widget.SwitchCompat
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -23,7 +18,6 @@ import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.findNavController
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.transition.MaterialFadeThrough
 import unipd.dei.cashelper.MainActivity
@@ -40,16 +34,16 @@ class AddItemFragment : Fragment()
     private lateinit var value: EditText
     private lateinit var date: Button
     private lateinit var add: Button
-    private lateinit var selected_category: String
+    private lateinit var selectedCategory: String
     private lateinit var switch: SwitchCompat
     private lateinit var description: EditText
     private lateinit var spinner: Spinner
     private lateinit var constraintLayout: ConstraintLayout
     private lateinit var delete: Button
-    private lateinit var add_category : Button
+    private lateinit var addCategory : Button
 
     //variables for picking
-    private lateinit var switch_choose: String
+    private lateinit var switchChoose: String
     private var price by Delegates.notNull<Double>()
     private lateinit var desc: String
     private var day by Delegates.notNull<Int>()
@@ -83,18 +77,18 @@ class AddItemFragment : Fragment()
 
         //set icon backroll
         if ((activity as MainActivity).isDarkModeOn(requireContext()))
-            (activity as MainActivity)?.supportActionBar?.setHomeAsUpIndicator(R.drawable.backroll_dark)
+            (activity as MainActivity).supportActionBar?.setHomeAsUpIndicator(R.drawable.backroll_dark)
         else
-            (activity as MainActivity)?.supportActionBar?.setHomeAsUpIndicator(R.drawable.backroll_light)
+            (activity as MainActivity).supportActionBar?.setHomeAsUpIndicator(R.drawable.backroll_light)
 
         val view = inflater.inflate(R.layout.fragment_add_item, container, false)
-        constraintLayout = view.findViewById<ConstraintLayout>(R.id.Constraint_add_item)
+        constraintLayout = view.findViewById(R.id.Constraint_add_item)
 
-        db = DBHelper(this.requireContext() as Context)
+        db = DBHelper(this.requireContext())
         add = view.findViewById(R.id.confirm_button)
         add.isEnabled = false
         add.backgroundTintList = getColorStateList(requireContext(), R.color.Disable)
-        spinner = view.findViewById<Spinner>(R.id.category_select)
+        spinner = view.findViewById(R.id.category_select)
         val categories = db.getCategoryName()
 
         //set alphabetic order of category list
@@ -108,7 +102,7 @@ class AddItemFragment : Fragment()
         //add first element the default string
         categories.add(0, getString(R.string.category_spinner))
 
-        val adapter = ArrayAdapter<String>(
+        val adapter = ArrayAdapter(
             this.requireContext(),
             android.R.layout.simple_spinner_item,
             categories
@@ -119,7 +113,7 @@ class AddItemFragment : Fragment()
         spinner.setSelection(0)
 
         //ediText value
-        value = view.findViewById<EditText>(R.id.value_add_item)
+        value = view.findViewById(R.id.value_add_item)
 
         //button date
         date = view.findViewById(R.id.date_add_item)
@@ -130,21 +124,21 @@ class AddItemFragment : Fragment()
         //contain the state of the switch
         switch = view.findViewById(R.id.Switch_add_item)
         // default choose
-        switch_choose = "Uscita"
+        switchChoose = "Uscita"
 
         // set current date as default
         val calendar = Calendar.getInstance()
         year = calendar.get(Calendar.YEAR)
         month = calendar.get(Calendar.MONTH)
         day = calendar.get(Calendar.DAY_OF_MONTH)
-
+        val dateText = "$day/${month + 1}/$year"
         //Set date's text
-        date.text = "$day/${month + 1}/$year"
+        date.text = dateText
 
 
         //popup
-        add_category = view.findViewById<Button>(R.id.add_category)
-        add_category.setOnClickListener {
+        addCategory = view.findViewById(R.id.add_category)
+        addCategory.setOnClickListener {
             //check, if we have already 30 categories (max possible), show a message
             if((db.getCategoryName()).size == 30){
                 Toast.makeText(requireContext(), "Limite massimo categorie raggiunto", Toast.LENGTH_SHORT).show()
@@ -186,7 +180,7 @@ class AddItemFragment : Fragment()
         var valueCheck = false
 
         switch.setOnCheckedChangeListener { _, isChecked ->
-            switch_choose = if (isChecked)
+            switchChoose = if (isChecked)
                 "Entrata"
             else
                 "Uscita"
@@ -201,9 +195,9 @@ class AddItemFragment : Fragment()
                 id: Long
             ) {
                 //give the category selected
-                selected_category = parent.getItemAtPosition(position).toString()
+                selectedCategory = parent.getItemAtPosition(position).toString()
                 //confirm button disabled if the selected category is "Seleziona una categoria" (position = 0)
-                categoryCheck = selected_category != getString(R.string.category_spinner)
+                categoryCheck = selectedCategory != getString(R.string.category_spinner)
                 if (valueCheck && categoryCheck) {
                     add.isEnabled = true
                     add.backgroundTintList = getColorStateList(requireContext(), R.color.confirm)
@@ -224,8 +218,9 @@ class AddItemFragment : Fragment()
         date.setOnClickListener {
             val datePickerDialog = DatePickerDialog(
                 this.requireContext(),
-                DatePickerDialog.OnDateSetListener { _, year, month, day ->
-                    date.text = "$day/${month + 1}/$year"
+                { _, year, month, day ->
+                    val dateText = "$day/${month + 1}/$year"
+                    date.text = dateText
                     //take date
                     this.year = year
                     this.day = day
@@ -245,7 +240,7 @@ class AddItemFragment : Fragment()
 
         delete.setOnClickListener {
             val action = AddItemFragmentDirections.actionAddFragmentToHomeFragment(monthString, year)
-            view?.findNavController()?.navigate(action)
+            view.findNavController().navigate(action)
         }
 
         //value must be not empty
@@ -277,8 +272,8 @@ class AddItemFragment : Fragment()
             picker(view)
             //write in database
             onClickListener(
-                switch_choose,
-                selected_category,
+                switchChoose,
+                selectedCategory,
                 price,
                 day,
                 monthString,
@@ -386,6 +381,7 @@ class AddItemFragment : Fragment()
     }
 
     //Create the popup view for add a category
+    @SuppressLint("CutPasteId")
     private fun createPopup() {
         val inflater = LayoutInflater.from((view as View).context)
         val popupView = inflater.inflate(R.layout.popup_add_category, view as ViewGroup, false)
@@ -486,33 +482,33 @@ class AddItemFragment : Fragment()
 
                 //check if the category already exist
                 val categories = db.getCategoryName()
-                val new_category = popupTextView.text.trim()
-                if (categories.contains(new_category.toString())) {
+                val newCategory = popupTextView.text.trim()
+                if (categories.contains(newCategory.toString())) {
                     val contextView = (view as View).findViewById<View>(R.id.Constraint_add_item)
                     Snackbar.make(contextView, "Categoria già esistente", Snackbar.LENGTH_SHORT)
                         .setAction("Chiudi") {}
                         .show()
                 } else {
                     //add category to database
-                    db.addCategory(new_category.toString().trim())
+                    db.addCategory(newCategory.toString().trim())
 
                     //update the spinner
-                    val categories = db.getCategoryName()
-                    val adapter = ArrayAdapter<String>(
+                    val categoryList = db.getCategoryName()
+                    val adapter = ArrayAdapter(
                         this.requireContext(),
                         android.R.layout.simple_spinner_item,
-                        categories
+                        categoryList
                     )
                     //set alphabetic order of category list
-                    categories.sortWith(String.CASE_INSENSITIVE_ORDER)
+                    categoryList.sortWith(String.CASE_INSENSITIVE_ORDER)
 
                     //set category "Altro" as last category of the spinner
-                    categories.remove("Altro")
-                    categories.add("Altro")
+                    categoryList.remove("Altro")
+                    categoryList.add("Altro")
                     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
                     spinner.adapter = adapter
                     //set the default string as the new category added
-                    val posNew = categories.indexOf(new_category.toString())
+                    val posNew = categoryList.indexOf(newCategory.toString())
                     spinner.setSelection(posNew)
 
                     Toast.makeText(requireContext(), "Categoria aggiunta", Toast.LENGTH_SHORT).show()
@@ -523,7 +519,7 @@ class AddItemFragment : Fragment()
                 addButton.isEnabled = false
 
 
-                popup?.dismiss()
+            popup?.dismiss()
 
         }
     }
