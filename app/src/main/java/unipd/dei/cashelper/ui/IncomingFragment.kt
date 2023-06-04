@@ -590,7 +590,7 @@ class IncomingFragment : Fragment(), MenuProvider {
         wm.updateViewLayout(container, p)
     }
 
-    //return an arraylist with alla the incoming for the selected category
+    //return an arraylist with all the incoming for the selected category
     private fun getItemsList(category: String, itemByCategory: MutableMap<String, ArrayList<DBHelper.ItemInfo>>): ArrayList<DBHelper.ItemInfo> {
         var itemsOfThisCategory = itemByCategory[category]
 
