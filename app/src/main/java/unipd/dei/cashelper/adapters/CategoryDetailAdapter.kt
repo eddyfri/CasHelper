@@ -1,5 +1,6 @@
 package unipd.dei.cashelper.adapters
 
+import android.annotation.SuppressLint
 import android.view.*
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -11,10 +12,14 @@ class CategoryDetailAdapter(private val itemsArray: ArrayList<DBHelper.ItemInfo>
     private lateinit var db :DBHelper
 
     class ItemsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        //declare the textview to show the category of the transaction
         private val itemCategory: TextView = itemView.findViewById(R.id.category_item_detail)
+        //declare the textview to show the price of the transaction
         private val itemPrice: TextView = itemView.findViewById(R.id.price_item_detail)
+        //declare the textview to show the date of the transaction
         private val itemDate: TextView = itemView.findViewById(R.id.date_item_detail)
 
+        @SuppressLint("SetTextI18n")
         fun bind(categoryName: String, price: Double, date: String){
             itemCategory.text = categoryName
             itemPrice.text = price.toString() + "€"
@@ -35,18 +40,15 @@ class CategoryDetailAdapter(private val itemsArray: ArrayList<DBHelper.ItemInfo>
     }
 
     override fun getItemCount(): Int {
-        return itemsArray?.size ?: 10
+        return itemsArray?.size ?: 0
     }
 
     override fun onBindViewHolder(holder: ItemsViewHolder, position: Int) {
         val name = itemsArray!![position].category
-        val price = itemsArray!![position].price
-        val date = itemsArray!![position].day.toString() + "/" + getNumberMonth(itemsArray!![position].month) + "/" + itemsArray!![position].year.toString()
-
-
+        val price = itemsArray[position].price
+        val date = itemsArray[position].day.toString() + "/" + getNumberMonth(itemsArray[position].month) + "/" + itemsArray[position].year.toString()
 
         holder.bind(name, price, date)
-
     }
 
     private fun getNumberMonth(month: String?): String {

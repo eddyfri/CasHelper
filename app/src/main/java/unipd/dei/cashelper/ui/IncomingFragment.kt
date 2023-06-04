@@ -1,6 +1,7 @@
 package unipd.dei.cashelper.ui
 
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.Configuration
 import android.graphics.Color
@@ -121,15 +122,15 @@ class IncomingFragment : Fragment(), MenuProvider {
         allItemIncoming = db.getItemsByType("Entrata", month, year)
         allCategories = db.getCategoryName()
         itemByCategory = getIncomingByCategory(allCategories, allItemIncoming)
-        var colorByCategory = setColorCategory(allCategories, itemByCategory)
+        val colorByCategory = setColorCategory(allCategories, itemByCategory)
         val totalAmount = getTotalAmount(allItemIncoming)
         val rateArray = getRateByCategory(itemByCategory, totalAmount)
 
         //declare all the variables for button and text view of this UI
-        fabBack = view.findViewById<ExtendedFloatingActionButton>(R.id.back_month)
-        fabNext = view.findViewById<ExtendedFloatingActionButton>(R.id.next_month)
-        monthTextView = view.findViewById<TextView>(R.id.month_text)
-        yearTextView = view.findViewById<TextView>(R.id.year_text)
+        fabBack = view.findViewById(R.id.back_month)
+        fabNext = view.findViewById(R.id.next_month)
+        monthTextView = view.findViewById(R.id.month_text)
+        yearTextView = view.findViewById(R.id.year_text)
         constraintLayoutEmptyList = view.findViewById(R.id.constraint_empty_list_incoming)
         emptyIcon = view.findViewById(R.id.empty_icon_incoming)
         emptyText = view.findViewById(R.id.empty_text_incoming)
@@ -145,7 +146,7 @@ class IncomingFragment : Fragment(), MenuProvider {
 
     //get an array of rate for all the categories that have at least one incoming
     private fun getRateByCategory(itemByCategory: MutableMap<String, ArrayList<DBHelper.ItemInfo>>, totalAmount: Double): ArrayList<Double>{
-        var rateArray = ArrayList<Double>(itemByCategory.size)
+        val rateArray = ArrayList<Double>(itemByCategory.size)
         for (item in itemByCategory) {
             val totalThisCategory = getTotalCategory(item.key, itemByCategory)
             val rate = (totalThisCategory*100)/totalAmount
@@ -165,9 +166,9 @@ class IncomingFragment : Fragment(), MenuProvider {
     //get a mutable map which contains an association "category's name" as key and an array of items of that category as value
     //if an association contains an empty arraylist, then this method delete this association.
     private fun getIncomingByCategory(categories: ArrayList<String>, allItem: MutableList<DBHelper.ItemInfo>): MutableMap<String, ArrayList<DBHelper.ItemInfo>> {
-        var incomingByCategory = mutableMapOf<String, ArrayList<DBHelper.ItemInfo>>()
+        val incomingByCategory = mutableMapOf<String, ArrayList<DBHelper.ItemInfo>>()
         for (element in categories)
-            incomingByCategory.put(element, getCategoryWithIncomings(element, allItem))
+            incomingByCategory[element] = getCategoryWithIncomings(element, allItem)
         for (element in categories) {
             if (incomingByCategory.containsKey(element)) {
                 val testList = incomingByCategory[element]
@@ -182,7 +183,7 @@ class IncomingFragment : Fragment(), MenuProvider {
 
     //get an array of items of the category specified in "category" passed as paramater
     private fun getCategoryWithIncomings(category: String, allItem: MutableList<DBHelper.ItemInfo>): ArrayList<DBHelper.ItemInfo> {
-        var incomingsByCategory = ArrayList<DBHelper.ItemInfo>()
+        val incomingsByCategory = ArrayList<DBHelper.ItemInfo>()
         for (item in allItem)
             if (item.category == category)
                 incomingsByCategory.add(item)
@@ -195,13 +196,13 @@ class IncomingFragment : Fragment(), MenuProvider {
     //a category every time in the same order. In this way every category has only one color every time
 
     private fun setColorCategory(categories: ArrayList<String>, itemByCategory: MutableMap<String, ArrayList<DBHelper.ItemInfo>>): ArrayList<Int> {
-        var colorMap = mutableMapOf<String, Int>()
-        var colorArray = context?.resources?.getIntArray(R.array.color_array)
+        val colorMap = mutableMapOf<String, Int>()
+        val colorArray = context?.resources?.getIntArray(R.array.color_array)
             ?: throw java.lang.IllegalStateException()
         for (i in categories.indices)
             colorMap[categories[i]] = colorArray[i]
 
-        var colorsByCategory = ArrayList<Int>()
+        val colorsByCategory = ArrayList<Int>()
         for (item in itemByCategory.keys) {
             val color = colorMap[item]
             if (color != null)
@@ -301,11 +302,9 @@ class IncomingFragment : Fragment(), MenuProvider {
 
 
         //set selectedItem value because when we turn the screen the popup is created before the fragment
-        if (savedInstanceState != null)
-            selectedItem = savedInstanceState.getString("popupSelectedItem_Incoming").toString()
-        else
-        //set the empty value of selectedItem
-            selectedItem = ""
+        selectedItem = savedInstanceState?.getString("popupSelectedItem_Incoming")
+                //set the empty value of selectedItem
+            ?: ""
 
 
 
@@ -329,7 +328,7 @@ class IncomingFragment : Fragment(), MenuProvider {
     //return the total of the entries for the specific category passed by parameter with "category"
     private fun getTotalCategory(category: String, itemByCategory: MutableMap<String, ArrayList<DBHelper.ItemInfo>>): Double{
         var total = 0.0
-        var itemsOfThisCategory = itemByCategory[category]
+        val itemsOfThisCategory = itemByCategory[category]
         if (itemsOfThisCategory != null)
             for (item in itemsOfThisCategory)
                 total += item.price
@@ -345,7 +344,7 @@ class IncomingFragment : Fragment(), MenuProvider {
 
         entries = ArrayList()
         for (element in categoriesWithIncomings) {
-            var total = getTotalCategory(element, itemByCategory)
+            val total = getTotalCategory(element, itemByCategory)
             entries.add(PieEntry(total.toFloat(), element))
         }
 
@@ -405,7 +404,7 @@ class IncomingFragment : Fragment(), MenuProvider {
 
         entries = ArrayList()
         for (element in categoriesWithIncomings) {
-            var total = getTotalCategory(element, itemByCategory)
+            val total = getTotalCategory(element, itemByCategory)
             entries.add(PieEntry(total.toFloat(), element))
         }
 
@@ -492,10 +491,10 @@ class IncomingFragment : Fragment(), MenuProvider {
     //this function is called every time the user change the month in this screen
     private fun updateAll(month: String, year: Int) {
         //update the data according to the month that is changed
-        var allItemIncoming = db.getItemsByType("Entrata", month, year)
-        var allCategories = db.getCategoryName()
-        var itemByCategory = getIncomingByCategory(allCategories, allItemIncoming)
-        var colorMap = setColorCategory(allCategories, itemByCategory)
+        val allItemIncoming = db.getItemsByType("Entrata", month, year)
+        val allCategories = db.getCategoryName()
+        val itemByCategory = getIncomingByCategory(allCategories, allItemIncoming)
+        val colorMap = setColorCategory(allCategories, itemByCategory)
         val totalAmount = getTotalAmount(allItemIncoming)
         val rateArray = getRateByCategory(itemByCategory, totalAmount)
         //update the visibility of nextFab
@@ -522,6 +521,7 @@ class IncomingFragment : Fragment(), MenuProvider {
 
     //this method is called when the user click on a category in the recycle view of this screen
     //the popup show every incoming for category clicked before
+    @SuppressLint("SetTextI18n")
     fun createPopUp(selectedCategory: String, itemByCategory: MutableMap<String, ArrayList<DBHelper.ItemInfo>>){
         //save the current category shown
         this.selectedItem = selectedCategory
@@ -538,7 +538,7 @@ class IncomingFragment : Fragment(), MenuProvider {
         val arrayOfItem = getItemsList(selectedCategory, itemByCategory)
 
         //set the title and the recycle view for the popup
-        popupTitle.text = selectedCategory + ":"
+        popupTitle.text = "$selectedCategory:"
         recyclerViewPopup = popupView.findViewById(R.id.recycler_view_popup)
         recyclerViewPopup.adapter = CategoryDetailAdapter(arrayOfItem)
         recyclerViewPopup.layoutManager = LinearLayoutManager(this.context, LinearLayoutManager.VERTICAL, false)
@@ -592,7 +592,7 @@ class IncomingFragment : Fragment(), MenuProvider {
 
     //return an arraylist with all the incoming for the selected category
     private fun getItemsList(category: String, itemByCategory: MutableMap<String, ArrayList<DBHelper.ItemInfo>>): ArrayList<DBHelper.ItemInfo> {
-        var itemsOfThisCategory = itemByCategory[category]
+        val itemsOfThisCategory = itemByCategory[category]
 
         //return an array sorted by date
         return sortByDate(itemsOfThisCategory!!)

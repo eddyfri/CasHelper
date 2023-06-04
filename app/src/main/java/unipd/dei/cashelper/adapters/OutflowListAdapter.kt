@@ -1,5 +1,6 @@
 package unipd.dei.cashelper.adapters
 
+import android.annotation.SuppressLint
 import android.content.res.ColorStateList
 import android.view.*
 import android.widget.TextView
@@ -14,14 +15,20 @@ class OutflowListAdapter(private val itemByCategory: MutableMap<String, ArrayLis
 
 
     class CategoryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        //declare the circle that contains the color for every category
         private val categoryItem: TextView = itemView.findViewById(R.id.category_item)
+        //declare the textview that contains the name of the category
         private val circle = itemView.findViewById<View>(R.id.category_color)
+        //declare the textview that contains the rate of the category in relation to the total
         private val rateItem: TextView = itemView.findViewById(R.id.rate_item)
+        //declare the textview that contains the total for the category
         private val totalItem: TextView = itemView.findViewById(R.id.total_item)
+
+        @SuppressLint("SetTextI18n")
         fun bind(categoryName: String, total: Double, colorName: Int, rate: String){
             circle.backgroundTintList = ColorStateList.valueOf(colorName)
             categoryItem.text = categoryName
-            rateItem.text = rate + "%"
+            rateItem.text = "$rate%"
             totalItem.text = total.toString() + "€"
         }
     }
@@ -34,7 +41,6 @@ class OutflowListAdapter(private val itemByCategory: MutableMap<String, ArrayLis
         if (!::db.isInitialized){
             db = DBHelper(parent.context)
         }
-
         return CategoryViewHolder(view)
     }
 
@@ -43,35 +49,40 @@ class OutflowListAdapter(private val itemByCategory: MutableMap<String, ArrayLis
     }
 
     override fun onBindViewHolder(holder: CategoryViewHolder, position: Int) {
+        //this variable contains all the category that have at least one incoming
         val categoryName = catchKeys()
+        //this variable contains the total amount for all the categories, in the same order
         val totalByCategory = getTotalCategory()
+        //these variables is needed to specify the format of the total
         val decimalFormat = DecimalFormat("#.#")
         var rateFormatted = decimalFormat.format(rateArray[position])
         //replace "." instead of ","
         rateFormatted = rateFormatted.replace(",",".", true)
 
-        val selectedItem = categoryName[position]
-        holder.bind(selectedItem, totalByCategory[position], categoryColor[position], rateFormatted)
+        holder.bind(categoryName[position], totalByCategory[position], categoryColor[position], rateFormatted)
 
+        //here createPopUp in incoming fragment is called. The name of the selected category and
+        //the mutable list of category and item are passed as parameters.
         holder.itemView.setOnClickListener{
-            outflowFragment.createPopUp(selectedItem, itemByCategory)
+            outflowFragment.createPopUp(categoryName[position], itemByCategory)
         }
 
     }
 
-    //metodo per estrarre l'array di chiavi
+    //his method returns an arraylist containing the keys of the mutable list,
+    //which are the categories that have at least one incoming
     private fun catchKeys(): ArrayList<String>{
         return ArrayList<String>(itemByCategory.keys)
     }
 
-    //metodo per calcolarsi il totale di una categoria
+    //this method return an arraylist that contains the total for every category
+    //in the same order of the category.
     private fun getTotalCategory(): ArrayList<Double>{
-        var totalSize = itemByCategory.size
-        var totalCategory = ArrayList<Double>(totalSize)
+        val totalCategory = ArrayList<Double>(itemByCategory.size)
         var total = 0.0
         for (itemList in itemByCategory.values) {
             for (element in itemList) {
-                total = total + element.price
+                total += element.price
             }
             totalCategory.add(total)
             total = 0.0

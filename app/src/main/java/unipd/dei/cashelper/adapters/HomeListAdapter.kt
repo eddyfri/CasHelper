@@ -1,5 +1,6 @@
 package unipd.dei.cashelper.adapters
 
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.view.*
 import android.widget.TextView
@@ -40,11 +41,12 @@ class HomeListAdapter(private val itemList: MutableList<DBHelper.ItemInfo>, priv
         private val itemPrice: TextView = itemView.findViewById(R.id.price_item)
         private val itemDate: TextView = itemView.findViewById(R.id.date_item)
 
+        @SuppressLint("SetTextI18n")
         fun bind(itemInfo: DBHelper.ItemInfo) {
             itemCategory.text = itemInfo.category
             //add "-" if is an exit
             if(itemInfo.type == "Uscita") {
-                var price = itemInfo.price
+                val price = itemInfo.price
                 val decimalFormat = DecimalFormat("#.##")
                 var priceString = decimalFormat.format(price)
                 //replace "." instead of ","
@@ -52,7 +54,7 @@ class HomeListAdapter(private val itemList: MutableList<DBHelper.ItemInfo>, priv
                 itemPrice.text = "-$priceString €"
             }
             else {
-                var price = itemInfo.price
+                val price = itemInfo.price
                 val decimalFormat = DecimalFormat("#.##")
                 var priceString = decimalFormat.format(price)
                 //replace "." instead of ","

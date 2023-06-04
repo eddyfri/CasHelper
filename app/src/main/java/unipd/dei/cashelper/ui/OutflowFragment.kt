@@ -1,18 +1,11 @@
 package unipd.dei.cashelper.ui
 
-import android.app.DatePickerDialog
-import android.content.ContentValues.TAG
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.Configuration
 import android.graphics.Color
-import android.nfc.Tag
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
-import android.view.View.OnFocusChangeListener
-import android.view.inputmethod.InputMethodManager
 import android.widget.*
-import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -30,7 +23,6 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.properties.Delegates
-import android.util.Log
 import android.view.*
 import android.view.animation.AlphaAnimation
 import android.view.animation.Animation
@@ -40,10 +32,8 @@ import androidx.lifecycle.Lifecycle
 import com.github.mikephil.charting.animation.Easing
 import com.github.mikephil.charting.components.Legend
 import com.google.android.material.transition.MaterialFadeThrough
-import org.w3c.dom.Text
 import unipd.dei.cashelper.MainActivity
 import unipd.dei.cashelper.adapters.CategoryDetailAdapter
-import unipd.dei.cashelper.adapters.IncomingListAdapter
 import unipd.dei.cashelper.adapters.OutflowListAdapter
 
 
@@ -130,15 +120,15 @@ class OutflowFragment : Fragment(), MenuProvider {
         allItemOutflows = db.getItemsByType("Uscita", month, year)
         allCategories = db.getCategoryName()
         itemByCategory = getOutflowByCategory(allCategories, allItemOutflows)
-        var colorByCategory = setColorCategory(allCategories, itemByCategory)
-        var totalAmount = getTotalAmount(allItemOutflows)
-        var rateArray = getRateByCategory(itemByCategory, totalAmount)
+        val colorByCategory = setColorCategory(allCategories, itemByCategory)
+        val totalAmount = getTotalAmount(allItemOutflows)
+        val rateArray = getRateByCategory(itemByCategory, totalAmount)
 
         //declare all the variables for button and text view of this UI
-        fabBack = view.findViewById<ExtendedFloatingActionButton>(R.id.back_month)
-        fabNext = view.findViewById<ExtendedFloatingActionButton>(R.id.next_month)
-        monthTextView = view.findViewById<TextView>(R.id.month_text)
-        yearTextView = view.findViewById<TextView>(R.id.year_text)
+        fabBack = view.findViewById(R.id.back_month)
+        fabNext = view.findViewById(R.id.next_month)
+        monthTextView = view.findViewById(R.id.month_text)
+        yearTextView = view.findViewById(R.id.year_text)
         constraintLayoutEmptyList = view.findViewById(R.id.constraint_empty_list_outflow)
         emptyIcon = view.findViewById(R.id.empty_icon_outflow)
         emptyText = view.findViewById(R.id.empty_text_outflow)
@@ -154,7 +144,7 @@ class OutflowFragment : Fragment(), MenuProvider {
 
     //get an array of rate for all the categories that have at least one outflow
     private fun getRateByCategory(itemByCategory: MutableMap<String, ArrayList<DBHelper.ItemInfo>>, totalAmount: Double): ArrayList<Double>{
-        var rateArray = ArrayList<Double>(itemByCategory.size)
+        val rateArray = ArrayList<Double>(itemByCategory.size)
         for (item in itemByCategory) {
             val totalThisCategory = getTotalCategory(item.key, itemByCategory)
             val rate = (totalThisCategory*100)/totalAmount
@@ -166,7 +156,7 @@ class OutflowFragment : Fragment(), MenuProvider {
 
     //get an array of items of the category specified in "category" passed as paramater
     private fun getCategoryWithOutflows(category: String, allItem: MutableList<DBHelper.ItemInfo>): ArrayList<DBHelper.ItemInfo> {
-        var outflowsByCategory = ArrayList<DBHelper.ItemInfo>()
+        val outflowsByCategory = ArrayList<DBHelper.ItemInfo>()
         for (item in allItem)
             if (item.category == category)
                 outflowsByCategory.add(item)
@@ -184,9 +174,9 @@ class OutflowFragment : Fragment(), MenuProvider {
     //get a mutable map which contains an association "category's name" as key and an array of items of that category as value
     //if an association contains an empty arraylist, then this method delete this association.
     private fun getOutflowByCategory(categories: ArrayList<String>, allItem: MutableList<DBHelper.ItemInfo>): MutableMap<String, ArrayList<DBHelper.ItemInfo>> {
-        var outflowByCategory = mutableMapOf<String, ArrayList<DBHelper.ItemInfo>>()
+        val outflowByCategory = mutableMapOf<String, ArrayList<DBHelper.ItemInfo>>()
         for (element in categories)
-            outflowByCategory.put(element, getCategoryWithOutflows(element, allItem))
+            outflowByCategory[element] = getCategoryWithOutflows(element, allItem)
         for (element in categories) {
             if (outflowByCategory.containsKey(element)) {
                 val testList = outflowByCategory[element]
@@ -201,13 +191,13 @@ class OutflowFragment : Fragment(), MenuProvider {
     //this function return an arraylist of int, that represent the color. Every color is associated to
     //a category every time in the same order. In this way every category has only one color every time
     private fun setColorCategory(categories: ArrayList<String>, itemByCategory: MutableMap<String, ArrayList<DBHelper.ItemInfo>>): ArrayList<Int> {
-        var colorMap = mutableMapOf<String, Int>()
-        var colorArray = context?.resources?.getIntArray(R.array.color_array)
+        val colorMap = mutableMapOf<String, Int>()
+        val colorArray = context?.resources?.getIntArray(R.array.color_array)
             ?: throw java.lang.IllegalStateException()
         for (i in categories.indices)
             colorMap[categories[i]] = colorArray[i]
 
-        var colorsByCategory = ArrayList<Int>()
+        val colorsByCategory = ArrayList<Int>()
         for (item in itemByCategory.keys) {
             val color = colorMap[item]
             if (color != null)
@@ -312,11 +302,9 @@ class OutflowFragment : Fragment(), MenuProvider {
 
 
         //set selectedItem value because when we turn the screen the popup is created before the fragment
-        if (savedInstanceState != null)
-            selectedItem = savedInstanceState.getString("popupSelectedItem_Outflow").toString()
-        else
-        //set the empty value of selectedItem
-            selectedItem = ""
+        selectedItem = savedInstanceState?.getString("popupSelectedItem_Outflow")
+                //set the empty value of selectedItem
+            ?: ""
 
 
         //popup visibility save instance
@@ -338,10 +326,10 @@ class OutflowFragment : Fragment(), MenuProvider {
     //return the total of the entries for the specific category passed by parameter with "category"
     private fun getTotalCategory(category: String, itemByCategory: MutableMap<String, ArrayList<DBHelper.ItemInfo>>): Double{
         var total = 0.0
-        var itemsOfThisCategory = itemByCategory[category]
+        val itemsOfThisCategory = itemByCategory[category]
         if (itemsOfThisCategory != null)
             for (item in itemsOfThisCategory)
-                total = total + item.price
+                total += item.price
         return total
     }
 
@@ -354,7 +342,7 @@ class OutflowFragment : Fragment(), MenuProvider {
 
         entries = ArrayList()
         for (element in categoriesWithOutflow) {
-            var total = getTotalCategory(element, itemByCategory)
+            val total = getTotalCategory(element, itemByCategory)
             entries.add(PieEntry(total.toFloat(), element))
         }
 
@@ -414,7 +402,7 @@ class OutflowFragment : Fragment(), MenuProvider {
 
         entries = ArrayList()
         for (element in categoriesWithIncomings) {
-            var total = getTotalCategory(element, itemByCategory)
+            val total = getTotalCategory(element, itemByCategory)
             entries.add(PieEntry(total.toFloat(), element))
         }
 
@@ -435,6 +423,7 @@ class OutflowFragment : Fragment(), MenuProvider {
 
     //this method is called when the user click on a category in the recycle view of this screen
     //the popup show every incoming for category clicked before
+    @SuppressLint("SetTextI18n")
     fun createPopUp(selectedCategory: String, itemByCategory: MutableMap<String, ArrayList<DBHelper.ItemInfo>>){
         //save the current category shown
         this.selectedItem = selectedCategory
@@ -450,7 +439,7 @@ class OutflowFragment : Fragment(), MenuProvider {
         val arrayOfItem = getItemsList(selectedCategory, itemByCategory)
 
         //set the title and the recycle view for the popup
-        popupTitle.text = selectedCategory + ":"
+        popupTitle.text = "$selectedCategory:"
         recyclerViewPopup = popupView.findViewById(R.id.recycler_view_popup)
         recyclerViewPopup.adapter = CategoryDetailAdapter(arrayOfItem)
         recyclerViewPopup.layoutManager = LinearLayoutManager(this.context, LinearLayoutManager.VERTICAL, false)
@@ -503,7 +492,7 @@ class OutflowFragment : Fragment(), MenuProvider {
 
     //return an arraylist with all the outflows for the selected category
     private fun getItemsList(category: String, itemByCategory: MutableMap<String, ArrayList<DBHelper.ItemInfo>>): ArrayList<DBHelper.ItemInfo> {
-        var itemsOfThisCategory = itemByCategory[category]
+        val itemsOfThisCategory = itemByCategory[category]
         return sortByDate(itemsOfThisCategory!!)
     }
 
@@ -571,12 +560,12 @@ class OutflowFragment : Fragment(), MenuProvider {
     //this function is called every time the user change the month in this screen
     private fun updateAll(month: String, year: Int) {
         //update the data according to the month that is changed
-        var allItemOutflow = db.getItemsByType("Uscita", month, year)
-        var allCategories = db.getCategoryName()
-        var itemByCategory = getOutflowByCategory(allCategories, allItemOutflow)
-        var colorMap = setColorCategory(allCategories, itemByCategory)
-        var totalAmount = getTotalAmount(allItemOutflow)
-        var rateArray = getRateByCategory(itemByCategory, totalAmount)
+        val allItemOutflow = db.getItemsByType("Uscita", month, year)
+        val allCategories = db.getCategoryName()
+        val itemByCategory = getOutflowByCategory(allCategories, allItemOutflow)
+        val colorMap = setColorCategory(allCategories, itemByCategory)
+        val totalAmount = getTotalAmount(allItemOutflow)
+        val rateArray = getRateByCategory(itemByCategory, totalAmount)
 
         //update the visibility of nextFab
         if (!(month == getCurrentMonth() && year == getCurrentYear()))
