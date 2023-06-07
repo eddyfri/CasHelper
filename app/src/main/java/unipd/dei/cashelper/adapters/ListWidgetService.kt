@@ -1,6 +1,5 @@
 package unipd.dei.cashelper.adapters
 
-import android.appwidget.AppWidgetManager
 import android.content.Context
 import android.content.Intent
 import android.widget.RemoteViews
@@ -12,21 +11,21 @@ import java.util.*
 
 class ListWidgetService : RemoteViewsService() {
     override fun onGetViewFactory(intent: Intent): RemoteViewsFactory {
-        return ListRemoteViewsFactory(this.applicationContext, intent)
+        return ListRemoteViewsFactory(this.applicationContext)
     }
 
-    class ListRemoteViewsFactory(private val context: Context, intent: Intent) : RemoteViewsService.RemoteViewsFactory {
+    class ListRemoteViewsFactory(private val context: Context) : RemoteViewsFactory {
 
         private lateinit var db : DBHelper
         private lateinit var itemList: MutableList<DBHelper.ItemInfo>
 
         override fun onCreate() {
-            db = DBHelper(context as Context)
+            db = DBHelper(context)
             itemList = db.getItem(getCurrentMonth(), getCurrentYear())
         }
 
         override fun onDataSetChanged() {
-            db = DBHelper(context as Context)
+            db = DBHelper(context)
             itemList = db.getItem(getCurrentMonth(), getCurrentYear())
         }
 

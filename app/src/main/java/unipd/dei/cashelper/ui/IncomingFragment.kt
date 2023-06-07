@@ -52,7 +52,7 @@ class IncomingFragment : Fragment(), MenuProvider {
 
     private lateinit var db: DBHelper
 
-    // variabili per il chart
+    // chart variables
     private lateinit var pieChart: PieChart
     private lateinit var entries: MutableList<PieEntry>
     private lateinit var set: PieDataSet
@@ -111,11 +111,6 @@ class IncomingFragment : Fragment(), MenuProvider {
         val view = inflater.inflate(R.layout.fragment_incoming, container,false)
 
         db = DBHelper(context as Context)
-        /*
-        month = IncomingFragmentArgs.fromBundle(requireArguments()).month
-        year = IncomingFragmentArgs.fromBundle(requireArguments()).year
-
-         */
 
         //get all the variables we need to give to class adapter for the recycleview
         allItemIncoming = db.getItemsByType("Entrata", month, year)

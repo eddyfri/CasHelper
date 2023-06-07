@@ -44,9 +44,10 @@ class WidgetApp : AppWidgetProvider() {
 
     private lateinit var serviceIntent: Intent
 
-    // salvataggio dei widget ids, in caso di aggiornamento del widget dovuto alla modifica di un item
-    // nel database, verrà richiamato il metodo onReceive. In questo metodo non ho visibilità sui
-    // widget ids utilizzati, quindi mantengo salvati con le sharedPreferences questi dati.
+    // saving widget ids, in case of widget update due to the modification of an element
+    // in the database, the onReceive method will be called.
+    // In onReceive I have no visibility on the widget ids used, so
+    // I keep this data saved with the sharedPreferences.
     companion object {
         private const val PREFS_NAME = "WidgetPrefs"
         private const val KEY_WIDGET_IDS = "widgetIds"
@@ -60,28 +61,28 @@ class WidgetApp : AppWidgetProvider() {
         // creo un istanza del db
         db = DBHelper(context as Context)
 
-        // inizializzo il service della lista del widget se non ancora inizializzato, cioé solamente
-        // durante la prima creazione del widget e non ogni aggiornamento (qui con aggiornamento non
-        // intendo l'aggiornamento del db ma l'aggioramento temporale del widget, indicato file
-        // widget_app_info.xml)
+        // I initialize the widget list service if it hasn't been initialized yet,
+        // i.e. only during the first creation of the widget and not every update
+        // (here with update I don't mean the update of the db but the temporal update of the widget,
+        // indicated file widget_app_info.xml)
         if(!::serviceIntent.isInitialized)
             serviceIntent = Intent(context, ListWidgetService::class.java)
 
         for(appWidgetId in appWidgetIds) {
-            // aggiornamento del widget
+            // update widget
             updateWidget(context)
-            // aggiunge il widget id come dato extra di serviceIntent, specifica quale widget deve modificare
+            // add widget id as extra data of serviceIntent, specify which widget to modify
             serviceIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
-            // gli elementi del widget id vengono aggiornati a quelli correnti
+            // the widget id items are updated to the current ones
             serviceIntent.data = Uri.parse(serviceIntent.toUri(Intent.URI_INTENT_SCHEME))
-            // viene settato il serviceIntent come remoteAdapter di item_list_widget
+            // set the serviceIntent as remoteAdapter of item_list_widget
             tallView.setRemoteAdapter(R.id.item_list_widget, serviceIntent)
 
-            // creazione di un unica remoteView composta dalle tre diverse remoteView di dimensioni differenti,
-            // a seconda della dimensione del widget cambierà il file xml corrispondente:
-            // larghezza <= 140f e altezza <= 110f allora carica la smallView,
-            // 140f <= larghezza <= 140f oppure altezza <= 110f allora carica la wideView,
-            // larghezza >= 140f oppure altezza >= 110f allora carica la tallView,
+            // creation of a single remoteView made up of three different remoteViews of different sizes,
+            // depending on the size of the widget the corresponding xml file will change:
+            // width <= 140f and height <= 110f then load the smallView,
+            // 140f <= width <= 140f or height <= 110f then load the wideView,
+            // width >= 140f or height >= 110f then load the tallView
             val viewMapping: Map<SizeF, RemoteViews> = mapOf(
                 SizeF(140f, 110f) to smallView,
                 SizeF(270f, 110f) to wideView,
@@ -95,25 +96,25 @@ class WidgetApp : AppWidgetProvider() {
     override fun onReceive(context: Context, intent: Intent) {
         super.onReceive(context, intent)
         db = DBHelper(context as Context)
-        // entra all'interno del widget solo quando deve essere aggiornato, il programma è stato
-        // gestito in modo tale che intent.action == AppWidgetManager.ACTION_APPWIDGET_UPDATE solo quando
-        // viene effettuata la richiesta broadcast da parte del database.
+        // enters the widget only when it needs to be updated, the program has been
+        // handled so that intent.action == AppWidgetManager.ACTION_APPWIDGET_UPDATE only when
+        // the broadcast request is made by the database.
         if(intent.action == AppWidgetManager.ACTION_APPWIDGET_UPDATE) {
-            // recupera l'istanza di appWidgetManager
+            // restore appWidgetManager instance
             val appWidgetManager = AppWidgetManager.getInstance(context)
-            // recupero tramite le sharedPreferences dei widget ids
+            // restore widgetIds with sharedPreferences
             val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
             val widgetIdsString = prefs.getString(KEY_WIDGET_IDS, null)
             val widgetIds = widgetIdsString?.split(",")?.mapNotNull { it.toIntOrNull() }?.toIntArray()
 
-            // per ogni widget ids aggiorno i suoi elementi
+            // for each widgetIds update the elements
             widgetIds?.let { widgetIds ->
                 for(appWidgetId in widgetIds) {
-                    // aggiornamento widget
+                    // update widget
                     updateWidget(context)
-                    // aggiornamento lista del widget, notifico al service che i dati sono stati cambiati,
-                    // esso provvederà a recuperare l'istanza aggiornata del database e a modificare i dati
-                    // della lista.
+                    // updating the widget list, notifying the service that the data has been changed,
+                    // it will fetch the updated instance of the database and modify the data
+                    // of the list.
                     tallView.setRemoteAdapter(R.id.item_list_widget, Intent(context, ListWidgetService::class.java))
                     appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetId, R.id.item_list_widget)
                     appWidgetManager.updateAppWidget(appWidgetId, tallView)
@@ -130,7 +131,7 @@ class WidgetApp : AppWidgetProvider() {
         }
     }
 
-    // Creazione PieChart
+    // create PieChart
     private fun createPieChartWidget(itemInfo: MutableList<DBHelper.ItemInfo>, context: Context) {
         val totIncoming = getIncoming(itemInfo)
         val totExits = getExits(itemInfo)
@@ -166,15 +167,15 @@ class WidgetApp : AppWidgetProvider() {
         pieChart.setTransparentCircleAlpha(0)
     }
 
-    // Aggiornamento effettivo widget, tutti gli elementi tranne la lista
+    // update widget, all the elements except the listView
     private fun updateWidget(context: Context) {
         val itemInfo: MutableList<DBHelper.ItemInfo>
         itemInfo = db.getItem(getCurrentMonth(), getCurrentYear())
         pieChart = PieChart(context)
 
-        // Crea una Bitmap del PieChart
-        val width = 400 // Larghezza della Bitmap
-        val height = 400 // Altezza della Bitmap
+        // create Bitmap of the PieChart
+        val width = 400 // Bitmap width
+        val height = 400 // Bitmap height
         val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(bitmap)
 
@@ -183,7 +184,7 @@ class WidgetApp : AppWidgetProvider() {
 
         smallView = RemoteViews(context.packageName, R.layout.widget_app)
         createPieChartWidget(itemInfo, context)
-        // Imposta la Bitmap come immagine della ImageView all'interno della RemoteViews
+        // Set the Bitmap as an image of the ImageView inside the RemoteViews
         smallView.setImageViewBitmap(R.id.pieChartWidget, bitmap)
         pieChart.layout(0, 0, width, height)
         pieChart.draw(canvas)

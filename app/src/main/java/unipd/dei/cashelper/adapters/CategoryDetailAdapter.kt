@@ -1,6 +1,5 @@
 package unipd.dei.cashelper.adapters
 
-import android.annotation.SuppressLint
 import android.view.*
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -19,10 +18,10 @@ class CategoryDetailAdapter(private val itemsArray: ArrayList<DBHelper.ItemInfo>
         //declare the textview to show the date of the transaction
         private val itemDate: TextView = itemView.findViewById(R.id.date_item_detail)
 
-        @SuppressLint("SetTextI18n")
         fun bind(categoryName: String, price: Double, date: String){
             itemCategory.text = categoryName
-            itemPrice.text = price.toString() + "€"
+            val priceString = price.toString() + "€"
+            itemPrice.text = priceString
             itemDate.text = date
         }
     }

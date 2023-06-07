@@ -51,7 +51,7 @@ class OutflowFragment : Fragment(), MenuProvider {
 
     private lateinit var db: DBHelper
 
-    // variabili per il chart
+    // chart varables
     private lateinit var pieChart: PieChart
     private lateinit var entries: MutableList<PieEntry>
     private lateinit var set: PieDataSet

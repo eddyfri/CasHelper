@@ -63,7 +63,7 @@ class HomeFragment: Fragment(), MenuProvider, HomeListAdapter.OnItemDeletedListe
 
     private lateinit var db: DBHelper
 
-    // variabili per il chart
+    // chart variables
     private lateinit var pieChart: PieChart
     private lateinit var entries: MutableList<PieEntry>
     private lateinit var set: PieDataSet

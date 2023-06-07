@@ -61,10 +61,10 @@ class DBHelper(context: Context): SQLiteOpenHelper(context, DB_NAME, null, DB_VE
         db.execSQL(categoryValues)
     }
 
-    // non previsti aggiornamenti
+    // no updates planned
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {}
 
-    // abilito l'utilizzo delle foreign keys
+    // enable the use of foreign keys
     override fun onConfigure(db: SQLiteDatabase) {
         db.setForeignKeyConstraintsEnabled(true)
     }
@@ -122,15 +122,11 @@ class DBHelper(context: Context): SQLiteOpenHelper(context, DB_NAME, null, DB_VE
             put("Anno", year)
         }
         Log.d(TAG, "aggiunta item")
-        // da cambiare: fare solo per mese e anno attuale
         val check = writableDatabase.insert("Item", null, values) != -1L
-        // notifyWidgetChange()
         sendWidgetUpdateBroadcast(appContext)
         return check
     }
 
-    // NON SICURO, CONTROLLARE !!!!
-    // true se l'aggiornamento dei valori item ha successo
     fun updateItem(originalId: Int = -1, description: String = "", price: Double = -1.0, type: String = "", category: String = "", day: Int = -1, month: String = "", year: Int = -1): Boolean {
         if(originalId == -1)
             return false
@@ -168,7 +164,6 @@ class DBHelper(context: Context): SQLiteOpenHelper(context, DB_NAME, null, DB_VE
         return check
     }
 
-    // testare!!
     fun removeCategory(nomeCategoria: String): Boolean {
         val check = writableDatabase.delete("Categoria", "Nome=?", arrayOf("$nomeCategoria")) > 0
         sendWidgetUpdateBroadcast(appContext)
@@ -293,11 +288,4 @@ class DBHelper(context: Context): SQLiteOpenHelper(context, DB_NAME, null, DB_VE
         var type: String = ""
         var description: String = ""
     }
-
-    /*
-    interface DatabaseObserver {
-        fun changeWidget(context: Context, appWidgetManager: AppWidgetManager, appWidgetId: Int)
-    }
-
-     */
 }
