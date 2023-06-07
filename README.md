@@ -5,7 +5,7 @@ CasHelper è un applicazione di aiuto per la gestione delle finanze sviluppata d
 ## Specifiche
 
 - Versione minima Android 12 (API 33 o maggiore)
-- Report (inserire link)
+- [Report](https://drive.google.com/file/d/1M7m-aQyPJVuY1szIaqFmgJtp4dcPHwHH/view?usp=drive_link)
 
 ## Immagini Applicazione
 
