@@ -101,6 +101,5 @@ class ListWidgetService : RemoteViewsService() {
                 else -> "12"
             }
         }
-
     }
 }
