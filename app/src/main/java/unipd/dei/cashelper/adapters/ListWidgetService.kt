@@ -22,11 +22,13 @@ class ListWidgetService : RemoteViewsService() {
         override fun onCreate() {
             db = DBHelper(context)
             itemList = db.getItem(getCurrentMonth(), getCurrentYear())
+            itemList = sortByDate(itemList)
         }
 
         override fun onDataSetChanged() {
             db = DBHelper(context)
             itemList = db.getItem(getCurrentMonth(), getCurrentYear())
+            itemList = sortByDate(itemList)
         }
 
         override fun onDestroy() {
@@ -100,6 +102,10 @@ class ListWidgetService : RemoteViewsService() {
                 "Novembre" -> "11"
                 else -> "12"
             }
+        }
+        private fun sortByDate(itemInfo: MutableList<DBHelper.ItemInfo>) : MutableList<DBHelper.ItemInfo>{
+            itemInfo.sortByDescending { it.day } //it is a lambda expression link to itemInfo
+            return itemInfo
         }
     }
 }

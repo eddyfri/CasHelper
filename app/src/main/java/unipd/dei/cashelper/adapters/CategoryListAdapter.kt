@@ -1,20 +1,18 @@
 package unipd.dei.cashelper.adapters
 
 import android.app.AlertDialog
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.content.res.AppCompatResources
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.recyclerview.widget.RecyclerView
 import unipd.dei.cashelper.R
 import unipd.dei.cashelper.helpers.DBHelper
 import unipd.dei.cashelper.ui.UpdateCategoryFragment
 
-class CategoryListAdapter(private val categoryList: ArrayList<String>, private var listener: CategoryListAdapter.OnCategoryDeletedListener, private val updateCategoryFragment: UpdateCategoryFragment) : RecyclerView.Adapter<CategoryListAdapter.ItemsViewHolder>() {
+class CategoryListAdapter(private val categoryList: ArrayList<String>, private var listener: OnCategoryDeletedListener, private val updateCategoryFragment: UpdateCategoryFragment) : RecyclerView.Adapter<CategoryListAdapter.ItemsViewHolder>() {
     private lateinit var db: DBHelper
     private lateinit var defaultCategories: ArrayList<String>
     inner class ItemsViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {

@@ -72,7 +72,7 @@ class OutflowListAdapter(private val itemByCategory: MutableMap<String, ArrayLis
     //his method returns an arraylist containing the keys of the mutable list,
     //which are the categories that have at least one incoming
     private fun catchKeys(): ArrayList<String>{
-        return ArrayList<String>(itemByCategory.keys)
+        return ArrayList(itemByCategory.keys)
     }
 
     //this method return an arraylist that contains the total for every category
