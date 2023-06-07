@@ -54,7 +54,7 @@ class CreditsFragment: Fragment(), MenuProvider {
         reportButton = view.findViewById(R.id.report_button)
         reportButton.setOnClickListener {
             // inserire link report
-            val link = "https://www.google.com"
+            val link = "https://drive.google.com/file/d/1M7m-aQyPJVuY1szIaqFmgJtp4dcPHwHH/view?usp=drive_link"
             val uri: Uri = Uri.parse(link)
             val intent = Intent(Intent.ACTION_VIEW, uri)
             startActivity(intent)
