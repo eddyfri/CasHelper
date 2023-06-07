@@ -13,7 +13,6 @@ import unipd.dei.cashelper.WidgetApp
 class DBHelper(context: Context): SQLiteOpenHelper(context, DB_NAME, null, DB_VERSION) {
 
     private val appContext = context
-    private var prefCategory: ArrayList<String> = ArrayList<String>()
 
     override fun onCreate(db: SQLiteDatabase) {
         val categoryTable = "CREATE TABLE Categoria(\n" +
@@ -75,10 +74,6 @@ class DBHelper(context: Context): SQLiteOpenHelper(context, DB_NAME, null, DB_VE
         context.sendBroadcast(updateIntent)
     }
 
-    fun isDefaultCategories(category: String): Boolean {
-        return prefCategory.contains(category)
-    }
-
     fun addCategory(name: String): Boolean {
         val cv = ContentValues()
         if(getCategoryName().contains(name))
@@ -95,15 +90,6 @@ class DBHelper(context: Context): SQLiteOpenHelper(context, DB_NAME, null, DB_VE
             names.add(cursor.getString(0))
         cursor.close()
         return names
-    }
-
-    fun addDate(day: Int, month: String, year: Int): Boolean {
-        val values = ContentValues().apply {
-            put("Giorno", day)
-            put("Mese", month)
-            put("Anno", year)
-        }
-        return writableDatabase.insert("Data", null, values) != -1L
     }
 
     fun addItem(description: String, price: Double, type: String, category: String, day: Int, month: String, year: Int): Boolean {
@@ -165,7 +151,7 @@ class DBHelper(context: Context): SQLiteOpenHelper(context, DB_NAME, null, DB_VE
     }
 
     fun removeCategory(nomeCategoria: String): Boolean {
-        val check = writableDatabase.delete("Categoria", "Nome=?", arrayOf("$nomeCategoria")) > 0
+        val check = writableDatabase.delete("Categoria", "Nome=?", arrayOf(nomeCategoria)) > 0
         sendWidgetUpdateBroadcast(appContext)
         return check
     }
@@ -204,28 +190,8 @@ class DBHelper(context: Context): SQLiteOpenHelper(context, DB_NAME, null, DB_VE
             item.year = cursor.getInt(cursor.getColumnIndexOrThrow("Anno"))
             item.type = cursor.getString(cursor.getColumnIndexOrThrow("Tipo"))
         }
-
-        return item
-    }
-
-    fun getItemByCategory(category: String, month: String, year: Int): ArrayList<ItemInfo> {
-        val cursor = readableDatabase.rawQuery("SELECT * FROM Item WHERE Mese ='${month}' AND Anno ='${year}' AND Nome='${category}'", null)
-        val ret = ArrayList<ItemInfo>()
-
-        while(cursor.moveToNext()) {
-            val item = ItemInfo("")
-            item.id = cursor.getInt(cursor.getColumnIndexOrThrow("Id"))
-            item.category = cursor.getString(cursor.getColumnIndexOrThrow("Nome"))
-            item.price = cursor.getDouble(cursor.getColumnIndexOrThrow("Prezzo"))
-            item.day = cursor.getInt(cursor.getColumnIndexOrThrow("Giorno"))
-            item.month = cursor.getString(cursor.getColumnIndexOrThrow("Mese"))
-            item.year = cursor.getInt(cursor.getColumnIndexOrThrow("Anno"))
-            item.type = cursor.getString(cursor.getColumnIndexOrThrow("Tipo"))
-            item.description = cursor.getString(cursor.getColumnIndexOrThrow("Descrizione"))
-            ret.add(item)
-        }
         cursor.close()
-        return ret
+        return item
     }
     
     fun getItemsByType(type: String, month: String, year:Int): ArrayList<ItemInfo> {
@@ -256,7 +222,7 @@ class DBHelper(context: Context): SQLiteOpenHelper(context, DB_NAME, null, DB_VE
     {
         private const val DB_NAME = "database.db"
         private const val DB_VERSION = 1
-        private val DEFAULT_CAT: ArrayList<String> = ArrayList<String>()
+        private val DEFAULT_CAT: ArrayList<String> = ArrayList()
         init {
             DEFAULT_CAT.add("Salario")
             DEFAULT_CAT.add("Alimentari")
@@ -270,12 +236,6 @@ class DBHelper(context: Context): SQLiteOpenHelper(context, DB_NAME, null, DB_VE
             DEFAULT_CAT.add("Regali")
             DEFAULT_CAT.add("Altro")
         }
-    }
-
-    data class DateInfo(var changes: String) {
-        var day : Int = -1
-        var month: String = ""
-        var year: Int = -1
     }
 
     data class ItemInfo(var changes: String) {
