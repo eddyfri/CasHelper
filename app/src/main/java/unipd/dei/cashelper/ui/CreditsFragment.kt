@@ -38,9 +38,9 @@ class CreditsFragment: Fragment(), MenuProvider {
 
         //set icon backroll
         if ((activity as MainActivity).isDarkModeOn(requireContext()))
-            (activity as MainActivity)?.supportActionBar?.setHomeAsUpIndicator(R.drawable.backroll_dark)
+            (activity as MainActivity).supportActionBar?.setHomeAsUpIndicator(R.drawable.backroll_dark)
         else
-            (activity as MainActivity)?.supportActionBar?.setHomeAsUpIndicator(R.drawable.backroll_light)
+            (activity as MainActivity).supportActionBar?.setHomeAsUpIndicator(R.drawable.backroll_light)
 
         val view = inflater.inflate(R.layout.fragment_credits, container,false)
 

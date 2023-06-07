@@ -1,6 +1,5 @@
 package unipd.dei.cashelper.ui
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.Configuration
 import android.graphics.Color
@@ -103,9 +102,9 @@ class OutflowFragment : Fragment(), MenuProvider {
 
         //set icon backroll
         if ((activity as MainActivity).isDarkModeOn(requireContext()))
-            (activity as MainActivity)?.supportActionBar?.setHomeAsUpIndicator(R.drawable.backroll_dark)
+            (activity as MainActivity).supportActionBar?.setHomeAsUpIndicator(R.drawable.backroll_dark)
         else
-            (activity as MainActivity)?.supportActionBar?.setHomeAsUpIndicator(R.drawable.backroll_light)
+            (activity as MainActivity).supportActionBar?.setHomeAsUpIndicator(R.drawable.backroll_light)
 
         val view = inflater.inflate(R.layout.fragment_outflow, container,false)
 
@@ -423,7 +422,6 @@ class OutflowFragment : Fragment(), MenuProvider {
 
     //this method is called when the user click on a category in the recycle view of this screen
     //the popup show every incoming for category clicked before
-    @SuppressLint("SetTextI18n")
     fun createPopUp(selectedCategory: String, itemByCategory: MutableMap<String, ArrayList<DBHelper.ItemInfo>>){
         //save the current category shown
         this.selectedItem = selectedCategory
@@ -439,7 +437,8 @@ class OutflowFragment : Fragment(), MenuProvider {
         val arrayOfItem = getItemsList(selectedCategory, itemByCategory)
 
         //set the title and the recycle view for the popup
-        popupTitle.text = "$selectedCategory:"
+        val s = "$selectedCategory:"
+        popupTitle.text = s
         recyclerViewPopup = popupView.findViewById(R.id.recycler_view_popup)
         recyclerViewPopup.adapter = CategoryDetailAdapter(arrayOfItem)
         recyclerViewPopup.layoutManager = LinearLayoutManager(this.context, LinearLayoutManager.VERTICAL, false)
